@@ -5,6 +5,7 @@
 
 import logging
 import asyncio
+import re
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -13,6 +14,7 @@ from aiogram.fsm.state import State, StatesGroup
 
 from config import BOT_TOKEN, WELCOME_MESSAGE, ADMIN_IDS, ADMIN_USERNAME, SCIENTIFIC_DISCIPLINES, EDUCATION_LEVELS
 from database import LongevityDatabase
+from hypothesis_evaluator import HypothesisEvaluator, HypothesisEvaluation
 
 # Настройка логирования
 logging.basicConfig(
@@ -30,6 +32,10 @@ class RegistrationStates(StatesGroup):
     waiting_for_education_level = State()
     waiting_for_contact = State()
 
+
+class HypothesisStates(StatesGroup):
+    waiting_for_text = State()
+
 # Инициализация бота
 bot = Bot(token=BOT_TOKEN)
 storage = MemoryStorage()
@@ -37,6 +43,7 @@ dp = Dispatcher(storage=storage)
 
 # Инициализация базы данных
 db = LongevityDatabase()
+hypothesis_evaluator = HypothesisEvaluator()
 
 # Проверка админа
 def is_admin(user_id: int) -> bool:
@@ -296,6 +303,54 @@ async def handle_contact_input(message: types.Message, state: FSMContext):
         logger.error(f"Ошибка обработки контактов: {e}")
         await message.answer("❌ Произошла ошибка. Попробуйте еще раз:")
 
+
+@dp.message(Command("hypothesis"))
+async def hypothesis_command(message: types.Message, state: FSMContext):
+    """Запрос текста гипотезы для оценки"""
+    try:
+        await state.clear()
+        await state.set_state(HypothesisStates.waiting_for_text)
+
+        await message.answer(
+            "🧪 **Оценка гипотезы**\n\n"
+            "Отправьте текст гипотезы одним сообщением. "
+            "Дополнительно можно добавить строки с контекстом:\n"
+            "`Кейсы: пример 1; пример 2`\n"
+            "`Новое: что именно добавляет гипотеза`\n"
+            "`Прогнозы: ожидаемые исходы`\n"
+            "`Тесты: способы проверки`\n\n"
+            "После ответа бот построит отчёт по пяти критериям.",
+            parse_mode="Markdown"
+        )
+    except Exception as e:
+        logger.error(f"Ошибка команды /hypothesis: {e}")
+        await message.answer("❌ Не удалось запустить оценку. Попробуйте позже.")
+
+
+@dp.message(HypothesisStates.waiting_for_text)
+async def handle_hypothesis_submission(message: types.Message, state: FSMContext):
+    """Обработка текста гипотезы"""
+    try:
+        raw_text = (message.text or "").strip()
+        hypothesis_text, context = extract_hypothesis_context(raw_text)
+
+        if len(hypothesis_text) < 20:
+            await message.answer(
+                "❌ Похоже, гипотеза слишком короткая. "
+                "Опишите основные предпосылки и предсказания (минимум 20 символов)."
+            )
+            return
+
+        evaluation = hypothesis_evaluator.evaluate(hypothesis_text, context)
+        response = format_hypothesis_evaluation(evaluation, context)
+
+        await message.answer(response, parse_mode="Markdown")
+        await state.clear()
+    except ValueError as err:
+        await message.answer(f"❌ {err}")
+    except Exception as e:
+        logger.error(f"Ошибка обработки гипотезы: {e}")
+        await message.answer("❌ Не удалось оценить гипотезу. Попробуйте позже.")
 # Команда поиска (только для админов)
 @dp.message(Command("find"))
 async def find_command(message: types.Message):
@@ -569,6 +624,7 @@ async def help_command(message: types.Message):
 **Основные команды:**
 /start - Начать работу с ботом
 /help - Показать эту справку
+/hypothesis - Оценить гипотезу по 5 критериям
 /find <ключевые слова> - Поиск участников по интересам
 /match interdisciplinary - Междисциплинарные команды
 /stats - Статистика сообщества
@@ -767,6 +823,94 @@ def create_education_keyboard() -> types.InlineKeyboardMarkup:
         keyboard.append(row)
     
     return types.InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+
+HYPOTHESIS_CONTEXT_ALIASES = {
+    "historical_cases": ("кейсы", "cases", "история", "history"),
+    "novel_findings": ("новое", "новизна", "novel", "novelty"),
+    "predictions": ("прогнозы", "предсказания", "predictions"),
+    "test_plan": ("тесты", "tests", "проверки", "verification"),
+}
+
+
+def format_hypothesis_evaluation(
+    evaluation: HypothesisEvaluation,
+    context: dict,
+) -> str:
+    """Форматирует результат оценки для выдачи пользователю."""
+    lines = [
+        "🧪 **Оценка гипотезы**",
+        f"Общий балл: **{evaluation.as_percentage()} / 100**",
+        "",
+        "**Критерии:**",
+    ]
+
+    for prop in evaluation.property_scores:
+        lines.append(
+            f"• **{prop.name}:** {prop.as_percentage()} / 100 — {prop.rationale}"
+        )
+
+    if context:
+        lines.append("")
+        lines.append("📎 Учитывались дополнительные данные:")
+        human_labels = {
+            "historical_cases": "Кейсы",
+            "novel_findings": "Новое",
+            "predictions": "Прогнозы",
+            "test_plan": "Тесты",
+        }
+        for key, values in context.items():
+            if not values:
+                continue
+            label = human_labels.get(key, key)
+            preview = ", ".join(values[:3])
+            suffix = " ..." if len(values) > 3 else ""
+            lines.append(f"- {label}: {preview}{suffix}")
+
+    lines.append("")
+    lines.append("💡 Добавьте больше конкретики, чтобы повысить оценки по критериям.")
+
+    return "\n".join(lines)
+
+
+def extract_hypothesis_context(raw_text: str) -> tuple[str, dict]:
+    """Выделяет основной текст гипотезы и структурированный контекст."""
+    context = {key: [] for key in HYPOTHESIS_CONTEXT_ALIASES}
+    body_lines = []
+
+    for line in raw_text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+
+        matched_key = None
+        lower_line = stripped.lower()
+
+        for ctx_key, aliases in HYPOTHESIS_CONTEXT_ALIASES.items():
+            for alias in aliases:
+                prefix = f"{alias.lower()}:"
+                if lower_line.startswith(prefix):
+                    payload = stripped.split(":", 1)[1].strip()
+                    if payload:
+                        context[ctx_key].extend(
+                            [
+                                item.strip()
+                                for item in re.split(r"[;,]", payload)
+                                if item.strip()
+                            ]
+                        )
+                    matched_key = ctx_key
+                    break
+            if matched_key:
+                break
+
+        if not matched_key:
+            body_lines.append(stripped)
+
+    body_text = " ".join(body_lines).strip()
+    cleaned_context = {key: values for key, values in context.items() if values}
+
+    return body_text, cleaned_context
 
 # Основная функция запуска бота
 async def main():
