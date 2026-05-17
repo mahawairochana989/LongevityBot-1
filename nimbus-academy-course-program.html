@@ -726,8 +726,9 @@
         <div class="kicker">Nimbus Academy • Course Program • Brain Behind the Signal</div>
         <h1>Нейрофизиология как визитная карточка</h1>
         <p class="subtitle">
-          Полноценная программа BCI-курса: нейрофизиология каждого сигнала, практики
-          составления пайплайнов и сквозной портфолио-проект от сырой ЭЭГ до demo-системы.
+          Полноценная программа BCI-курса, выстроенная вокруг Nimbus Studio и NimbusSDK:
+          визуальные пайплайны, feature-space inference, Bayesian uncertainty и путь
+          от сырой ЭЭГ до real-time demo-системы.
         </p>
         <div class="quote">
           «Мы не просто учим работать с сигналом — мы учим понимать мозг, который его создаёт»
@@ -742,8 +743,8 @@
     <section class="stats" aria-label="Ключевые параметры программы">
       <div class="stat"><strong>4</strong><span>уровня программы</span></div>
       <div class="stat"><strong>35+</strong><span>Brain Behind the Signal модулей</span></div>
-      <div class="stat"><strong>20+</strong><span>практических пайплайнов</span></div>
-      <div class="stat"><strong>1</strong><span>сквозной портфолио-проект</span></div>
+      <div class="stat"><strong>Nimbus</strong><span>Studio + SDK workflow</span></div>
+      <div class="stat"><strong>1</strong><span>deployable portfolio pipeline</span></div>
     </section>
 
     <article class="document">
@@ -779,13 +780,79 @@
       <section class="section">
         <div class="section-header">
           <div>
+            <p class="eyebrow">Nimbus platform logic</p>
+            <h2>Курс учит мыслить как Nimbus: визуальный граф пайплайна плюс строгий контракт данных</h2>
+          </div>
+          <p class="lead">
+            Nimbus Studio работает как визуальный конструктор BCI-пайплайнов: студент соединяет
+            узлы обработки, проверяет конфигурацию, запускает эксперименты, сравнивает варианты,
+            экспортирует код и переносит тот же пайплайн в real-time. NimbusSDK при этом отвечает
+            за вероятностный inference, confidence и uncertainty — но получает не сырой EEG,
+            а подготовленные признаки.
+          </p>
+        </div>
+
+        <div class="pipeline-map">
+          <article class="pipeline-card">
+            <h3>Nimbus pipeline contract</h3>
+            <div class="pipeline-meta">
+              <span class="pill">raw EEG ≠ model input</span>
+              <span class="pill">features first</span>
+              <span class="pill">metadata required</span>
+            </div>
+            <ol class="pipeline-steps">
+              <li><strong>Acquisition:</strong> EEG приходит из файла, публичного датасета, LSL, BrainFlow или поддерживаемого устройства.</li>
+              <li><strong>Preprocessing:</strong> фильтрация, удаление артефактов, epoching и feature extraction выполняются до NimbusSDK.</li>
+              <li><strong>Feature-space handoff:</strong> в Nimbus передаются CSP, bandpower, ERP amplitude, CCA или другие признаки с фиксированной формой.</li>
+              <li><strong>Inference:</strong> NimbusLDA/QDA/Softmax/STS возвращают posterior probabilities, prediction, confidence и uncertainty.</li>
+              <li><strong>Safety policy:</strong> приложение решает, выполнить команду, запросить подтверждение или отклонить trial по confidence threshold.</li>
+            </ol>
+            <div class="deliverable"><strong>Учебный принцип:</strong> студент проектирует не «скрипт анализа», а воспроизводимый BCI data contract.</div>
+          </article>
+
+          <article class="pipeline-card">
+            <h3>Visual Studio workflow</h3>
+            <div class="pipeline-meta">
+              <span class="pill">drag-and-drop</span>
+              <span class="pill">instant validation</span>
+              <span class="pill">Python export</span>
+              <span class="pill">same pipeline online</span>
+            </div>
+            <ol class="pipeline-steps">
+              <li><strong>Design:</strong> собрать граф из узлов data source → preprocessing → features → model → metrics → deployment.</li>
+              <li><strong>Validate:</strong> проверить частоту дискретизации, каналы, feature count, label mapping, shape и normalization params.</li>
+              <li><strong>Benchmark:</strong> прогнать несколько вариантов на MOABB/OpenNeuro или загруженном датасете.</li>
+              <li><strong>Export:</strong> выгрузить чистый Python-код и README, чтобы пайплайн можно было кастомизировать вне Studio.</li>
+              <li><strong>Deploy:</strong> подключить streaming через LSL/BrainFlow и использовать те же preprocessing и normalization параметры.</li>
+            </ol>
+            <div class="deliverable"><strong>Итог курса:</strong> студент умеет объяснить и визуальный pipeline graph, и код, который Studio экспортирует.</div>
+          </article>
+        </div>
+
+        <div class="tracks" style="margin-top: 22px;">
+          <article class="track" style="--track-color: var(--cyan);">
+            <div class="track-header"><h3>Модельная карта Nimbus</h3><p>Как студент выбирает модель под BCI-парадигму и ограничения сигнала.</p></div>
+            <table><thead><tr><th>Парадигма / ситуация</th><th>Признаки до Nimbus</th><th>Nimbus model</th><th>Почему</th></tr></thead><tbody>
+              <tr><td>Motor Imagery</td><td>8-30 Hz, CSP или FBCSP, log-variance</td><td>NimbusLDA</td><td>Быстрый baseline, shared covariance, хорошо подходит для CSP-пространства.</td></tr>
+              <tr><td>P300 / Oddball</td><td>0.5-10 Hz, ERP amplitude 300-500 ms</td><td>NimbusQDA</td><td>Target/non-target распределения часто перекрываются и имеют разные ковариации.</td></tr>
+              <tr><td>SSVEP</td><td>target ± 2 Hz, CCA или bandpower по гармоникам</td><td>NimbusLDA / NimbusQDA</td><td>Выбор зависит от числа целей и перекрытия гармоник.</td></tr>
+              <tr><td>Long session / cross-day</td><td>Стабильные признаки + сохранённая нормализация</td><td>NimbusSTS</td><td>Stateful adaptive model для neural drift и нестационарности.</td></tr>
+              <tr><td>Complex multi-class</td><td>Согласованный feature vector + calibration set</td><td>NimbusSoftmax</td><td>Гибкая вероятностная multi-class граница, когда LDA/QDA недостаточно.</td></tr>
+            </tbody></table>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <div>
             <p class="eyebrow">Полная структура курса</p>
             <h2>Каждый урок состоит из нейрофизиологии, практики пайплайна и портфолио-артефакта</h2>
           </div>
           <p class="lead">
             Nimbus Academy строится как инженерный курс: студент не только понимает механизм сигнала,
-            но и последовательно собирает воспроизводимые BCI-пайплайны — от загрузки EEG-данных
-            до онлайн-декодера, отчёта качества, исследовательской статьи и продуктового прототипа.
+            но и последовательно собирает Nimbus-style BCI-пайплайны — визуально в Studio,
+            программно через Python/MNE и концептуально как строгий feature-space contract для NimbusSDK.
           </p>
         </div>
 
@@ -796,26 +863,26 @@
           </div>
           <div class="concept-card">
             <strong>2. Pipeline Practice</strong>
-            Практика: студент пишет шаги обработки, запускает код, проверяет качество и фиксирует решения.
+            Практика: студент собирает pipeline graph, реализует preprocessing, извлекает признаки и обучает Nimbus-модель.
           </div>
           <div class="concept-card">
             <strong>3. Pipeline Review</strong>
-            Разбор: что сломалось, какие предположения нарушены, как это связано с нейрофизиологией.
+            Разбор: что сломалось в data contract, где упала confidence, какие предположения нарушены и почему.
           </div>
         </div>
 
         <div class="tool-grid" style="margin-top: 18px;">
           <div class="tool-card">
-            <strong>Базовый стек</strong>
-            Python, NumPy, SciPy, pandas, matplotlib, seaborn, Jupyter, Git.
+            <strong>Nimbus слой</strong>
+            Nimbus Studio для визуального графа; NimbusSDK для LDA/QDA/Softmax/STS, confidence и streaming.
           </div>
           <div class="tool-card">
-            <strong>EEG / BCI стек</strong>
-            MNE-Python, PyRiemann, scikit-learn, statsmodels, BIDS, MOABB/OpenNeuro datasets.
+            <strong>Preprocessing слой</strong>
+            MNE-Python, PyRiemann, scikit-learn, BIDS, MOABB/OpenNeuro, CSP, bandpower, ERP, CCA.
           </div>
           <div class="tool-card">
             <strong>Финальный артефакт</strong>
-            Репозиторий с пайплайнами, отчётами качества, notebook-разборами и личным нейронаучным журналом.
+            Visual pipeline spec, exported Python code, trained Nimbus model, normalization params, metrics и safety policy.
           </div>
         </div>
       </section>
@@ -828,8 +895,9 @@
           </div>
           <p class="lead">
             Практическая часть курса устроена как серия инженерных лабораторных работ. В каждой
-            работе студент собирает конкретный пайплайн, документирует решения, связывает каждый
-            шаг с нейрофизиологическим механизмом и добавляет результат в портфолио.
+            работе студент сначала проектирует pipeline graph в стиле Nimbus Studio, затем реализует
+            preprocessing и feature extraction, передаёт признаки в NimbusSDK, анализирует confidence
+            и добавляет результат в портфолио.
           </p>
         </div>
 
@@ -839,6 +907,7 @@
             <div class="pipeline-meta">
               <span class="pill">сырой EEG</span>
               <span class="pill">preprocessing</span>
+              <span class="pill">feature contract</span>
               <span class="pill">quality report</span>
             </div>
             <p>
@@ -846,15 +915,15 @@
               Главная цель уровня — понять, какие решения обработки меняют физиологический смысл сигнала.
             </p>
             <ol class="pipeline-steps">
-              <li><strong>Data intake:</strong> загрузить EDF/FIF/CSV, проверить каналы, частоту дискретизации, события, montage и metadata.</li>
-              <li><strong>Referencing:</strong> сравнить average reference, mastoids и linked ears; объяснить, как референс меняет вид источника.</li>
-              <li><strong>Filtering:</strong> собрать high-pass, low-pass и notch-фильтры; проверить ringing, phase distortion и потерю медленных компонентов.</li>
-              <li><strong>Artifact detection:</strong> разметить EOG, EMG, ECG, bad channels, motion artifacts и slow drifts.</li>
-              <li><strong>ICA cleaning:</strong> обучить ICA, классифицировать компоненты, удалить глазные/мышечные источники и проверить остаточный спектр.</li>
-              <li><strong>Epoching and baseline:</strong> нарезать события, применить baseline correction, сравнить trial-level и subject-level нормализацию.</li>
-              <li><strong>Quality report:</strong> собрать автоматический отчёт: PSD, topomaps, rejected epochs, SNR, impedance notes, до/после очистки.</li>
+              <li><strong>Studio graph:</strong> описать визуальный граф data source → filters → artifact handling → epochs → features → diagnostics.</li>
+              <li><strong>Data intake:</strong> загрузить EDF/FIF/CSV/MOABB, проверить каналы, sampling rate, events, montage и metadata.</li>
+              <li><strong>Preprocessing:</strong> настроить reference, bandpass/notch, ICA/EOG/EMG rejection и объяснить физиологическую цену каждого шага.</li>
+              <li><strong>Feature extraction:</strong> получить CSP, bandpower или ERP features вместо передачи сырого EEG в NimbusSDK.</li>
+              <li><strong>Data contract:</strong> зафиксировать feature type, feature count, labels, time window, normalization policy и expected shape.</li>
+              <li><strong>Diagnostics:</strong> проверить NaN/Inf, constant features, scale shifts, PSD/topomaps, rejected epochs и SNR.</li>
+              <li><strong>Export:</strong> сохранить preprocessing config и Python notebook как основу для Nimbus Studio export-to-code workflow.</li>
             </ol>
-            <div class="deliverable"><strong>Итог:</strong> воспроизводимый preprocessing notebook + HTML/PDF отчёт качества данных.</div>
+            <div class="deliverable"><strong>Итог:</strong> Nimbus-ready feature dataset + preprocessing notebook + HTML/PDF quality report.</div>
           </article>
 
           <article class="pipeline-card">
@@ -863,22 +932,22 @@
               <span class="pill">P300</span>
               <span class="pill">SSVEP</span>
               <span class="pill">Motor Imagery</span>
-              <span class="pill">uncertainty</span>
+              <span class="pill">NimbusLDA/QDA/STS</span>
             </div>
             <p>
               Студент строит несколько BCI-декодеров и учится выбирать пайплайн под парадигму,
               а не под удобную метрику. Уровень связывает признаки, модели и uncertainty с механизмами мозга.
             </p>
             <ol class="pipeline-steps">
-              <li><strong>Paradigm selection:</strong> выбрать P300, SSVEP или Motor Imagery и описать нейронный механизм, который делает парадигму возможной.</li>
-              <li><strong>Feature extraction:</strong> реализовать bandpower, ERD/ERS, CSP, Riemannian covariance, ERP amplitude/latency и SSVEP CCA features.</li>
-              <li><strong>Model training:</strong> обучить LDA/QDA, logistic regression, SVM или Riemannian classifier с cross-validation без leakage.</li>
-              <li><strong>Bayesian layer:</strong> добавить posterior probabilities, calibration curve и confidence threshold для отказа от сомнительных решений.</li>
-              <li><strong>Drift handling:</strong> сравнить статичную модель, rolling recalibration, session normalization и adaptive update.</li>
-              <li><strong>Online loop:</strong> собрать имитацию real-time pipeline: buffer → windowing → feature extraction → prediction → feedback.</li>
-              <li><strong>Metrics:</strong> посчитать accuracy, balanced accuracy, ITR, latency, calibration error, confusion matrix и user-level reliability.</li>
+              <li><strong>Paradigm-to-model mapping:</strong> выбрать P300→NimbusQDA, MI→NimbusLDA, SSVEP→NimbusLDA/QDA, long session→NimbusSTS.</li>
+              <li><strong>Feature extraction:</strong> реализовать CSP/FBCSP, ERP amplitude 300-500 ms, SSVEP CCA/bandpower и сохранить feature metadata.</li>
+              <li><strong>Normalization:</strong> оценить z-score/robust параметры только на train/calibration data и переиспользовать на test/deployment.</li>
+              <li><strong>Nimbus training:</strong> обучить NimbusLDA/QDA/Softmax/STS, сравнить posterior probabilities, entropy и confidence.</li>
+              <li><strong>Safety gate:</strong> задать thresholds: execute, request confirmation, reject trial; объяснить риск ложной команды.</li>
+              <li><strong>Streaming loop:</strong> собрать acquisition → preprocessing → feature chunks → StreamingSession → command с latency budget.</li>
+              <li><strong>Metrics:</strong> посчитать accuracy, ITR, latency, calibration error, rejection rate, drift и confidence reliability.</li>
             </ol>
-            <div class="deliverable"><strong>Итог:</strong> работающий BCI decoder notebook + сравнительная таблица парадигм и моделей.</div>
+            <div class="deliverable"><strong>Итог:</strong> Nimbus decoder package: model, norm params, metadata, confidence policy и streaming demo.</div>
           </article>
 
           <article class="pipeline-card">
@@ -887,7 +956,7 @@
               <span class="pill">experiment design</span>
               <span class="pill">ERP / TF</span>
               <span class="pill">statistics</span>
-              <span class="pill">paper-ready report</span>
+              <span class="pill">reproducible Nimbus pipeline</span>
             </div>
             <p>
               Студент превращает пайплайн в исследовательский протокол: формулирует гипотезу,
@@ -895,15 +964,15 @@
               чтобы его можно было воспроизвести и защитить перед нейрофизиологом.
             </p>
             <ol class="pipeline-steps">
-              <li><strong>Protocol design:</strong> сформулировать гипотезу, выбрать задачу, переменные, population, exclusion criteria и power assumptions.</li>
-              <li><strong>ERP pipeline:</strong> построить preprocessing → epoching → averaging → component window → topography → amplitude/latency statistics.</li>
-              <li><strong>Time-frequency pipeline:</strong> реализовать Morlet/STFT, baseline normalization, ERD/ERS maps и анализ cross-frequency coupling.</li>
-              <li><strong>Connectivity pipeline:</strong> сравнить coherence, phase-locking value, imaginary coherence и graph metrics с контролем volume conduction.</li>
-              <li><strong>Source hypothesis:</strong> оформить source localization как физиологическую гипотезу, указать ограничения head model и depth sensitivity.</li>
-              <li><strong>MVPA pipeline:</strong> построить temporal decoding, cross-condition generalization, permutation test и interpretation checklist.</li>
-              <li><strong>Reproducibility:</strong> упаковать данные в BIDS-like структуру, зафиксировать config, random seeds, environment и analysis log.</li>
+              <li><strong>Protocol design:</strong> сформулировать гипотезу, парадигму, feature contract, validation split и expected Nimbus model.</li>
+              <li><strong>ERP/TF pipeline:</strong> построить preprocessing → epochs → features → NimbusQDA/LDA comparison → posterior analysis.</li>
+              <li><strong>Configuration sweep:</strong> протестировать несколько frequency bands, windows, feature types и моделей как варианты Studio graph.</li>
+              <li><strong>Reproducibility:</strong> сохранить полный pipeline spec: parameters, labels, normalization, SDK version, model metadata и metrics.</li>
+              <li><strong>Statistics:</strong> сравнить модели по accuracy, confidence calibration, rejection rate и subject/session generalization.</li>
+              <li><strong>Export-to-code review:</strong> показать, какие части можно экспортировать из Studio, а какие требуют ручного исследования.</li>
+              <li><strong>Paper-style reporting:</strong> описать Methods через data contract и Discussion через нейрофизиологический механизм.</li>
             </ol>
-            <div class="deliverable"><strong>Итог:</strong> mini-paper с Methods, Results, Discussion, limitations и ссылкой на воспроизводимый pipeline repository.</div>
+            <div class="deliverable"><strong>Итог:</strong> mini-paper + reproducible Nimbus pipeline spec + exported code / notebook.</div>
           </article>
 
           <article class="pipeline-card">
@@ -912,7 +981,7 @@
               <span class="pill">clinical</span>
               <span class="pill">cognitive</span>
               <span class="pill">product</span>
-              <span class="pill">computational</span>
+              <span class="pill">deployment</span>
             </div>
             <p>
               На последнем уровне студент выбирает специализацию и собирает профессиональный
@@ -920,13 +989,13 @@
               продуктовый BCI-интерфейс или вычислительную модель.
             </p>
             <ol class="pipeline-steps">
-              <li><strong>Clinical:</strong> пайплайн для клинического EEG report: паттерны, biomarker rationale, QC, false positives и regulatory notes.</li>
-              <li><strong>Cognitive:</strong> пайплайн когнитивного нейромаркера: задача, компонент/ритм, confounds, validation и interpretation boundary.</li>
-              <li><strong>Product:</strong> пайплайн UX-BCI прототипа: workload monitoring, latency budget, feedback loop, frustration detection и safety guardrails.</li>
-              <li><strong>Computational:</strong> пайплайн модели: биофизическое предположение → симуляция → предсказание → экспериментальная проверка.</li>
-              <li><strong>Capstone review:</strong> защита перед экспертной комиссией: что измеряем, почему это мозг, где ограничения и как пайплайн масштабируется.</li>
+              <li><strong>Clinical:</strong> клинический Nimbus-ready report: quality gates, false positives, confidence thresholds и biomarker rationale.</li>
+              <li><strong>Cognitive:</strong> когнитивный marker pipeline: task → feature → Nimbus model → posterior interpretation → confound log.</li>
+              <li><strong>Product:</strong> BCI product prototype: BrainFlow/LSL input, real-time confidence, fallback behavior и command safety.</li>
+              <li><strong>Computational:</strong> модельная гипотеза: биофизика → simulated features → Nimbus inference → проверяемое предсказание.</li>
+              <li><strong>Capstone review:</strong> защита Studio graph, exported code, model metadata, latency budget, risk log и deployment plan.</li>
             </ol>
-            <div class="deliverable"><strong>Итог:</strong> capstone pipeline package: код, отчёт, demo, risk log, neurophysiology rationale и roadmap улучшений.</div>
+            <div class="deliverable"><strong>Итог:</strong> deployable Nimbus pipeline package: Studio spec, code, model, normalization, demo, safety policy.</div>
           </article>
         </div>
       </section>
@@ -946,51 +1015,53 @@
 
         <div class="tracks">
           <article class="track" style="--track-color: var(--blue);">
-            <div class="track-header"><h3>Level 1 — Analyst Labs</h3><p>Базовые пайплайны для чтения, очистки и контроля качества EEG.</p></div>
+            <div class="track-header"><h3>Level 1 — Analyst Labs</h3><p>Базовые пайплайны для чтения, очистки и подготовки feature-space данных для Nimbus.</p></div>
             <table><thead><tr><th>Практика</th><th>Пайплайн</th><th>Что студент сдаёт</th></tr></thead><tbody>
-              <tr><td>L1-P1</td><td>Raw EEG intake pipeline: loading, montage, channel types, events, metadata validation.</td><td>Notebook с проверкой структуры данных и списком рисков.</td></tr>
-              <tr><td>L1-P2</td><td>Referencing + filtering pipeline: average/mastoid reference, notch, band-pass, filter diagnostics.</td><td>Сравнение спектров и объяснение выбранных параметров.</td></tr>
+              <tr><td>L1-P1</td><td>Studio graph intake: data source, montage, channel types, events, sampling rate, metadata validation.</td><td>Pipeline graph + notebook с проверкой структуры данных и списком рисков.</td></tr>
+              <tr><td>L1-P2</td><td>Referencing + filtering node chain: average/mastoid reference, notch, paradigm-specific bandpass.</td><td>Сравнение спектров и объяснение параметров как Nimbus preprocessing config.</td></tr>
               <tr><td>L1-P3</td><td>Artifact annotation pipeline: EOG/EMG/ECG detection, bad channels, epoch rejection rules.</td><td>Размеченный датасет и таблица источников артефактов.</td></tr>
               <tr><td>L1-P4</td><td>ICA cleaning pipeline: fit, inspect, label, remove components, validate before/after.</td><td>ICA report с topomaps, time courses и PSD до/после.</td></tr>
-              <tr><td>L1-P5</td><td>Quality dashboard pipeline: SNR, PSD, rejected epochs, alpha peak, channel variance.</td><td>HTML/PDF dashboard качества записи.</td></tr>
-              <tr><td>L1-P6</td><td>Public dataset replication pipeline: взять внешний датасет и повторить preprocessing end-to-end.</td><td>Воспроизводимый скрипт + README для запуска.</td></tr>
+              <tr><td>L1-P5</td><td>Nimbus feature contract: CSP/bandpower/ERP extraction, feature count, labels, expected shape.</td><td>Feature dataset, metadata JSON и validation checklist.</td></tr>
+              <tr><td>L1-P6</td><td>Quality dashboard pipeline: SNR, PSD, rejected epochs, alpha peak, channel variance, finite values.</td><td>HTML/PDF dashboard качества + diagnose_preprocessing-style notes.</td></tr>
+              <tr><td>L1-P7</td><td>Public dataset replication pipeline: MOABB/OpenNeuro dataset → preprocessing → Nimbus-ready features.</td><td>Воспроизводимый скрипт + README для запуска и Studio reconstruction.</td></tr>
             </tbody></table>
           </article>
 
           <article class="track" style="--track-color: var(--yellow);">
-            <div class="track-header"><h3>Level 2 — Engineer Labs</h3><p>Пайплайны декодирования BCI-парадигм, uncertainty и online-loop.</p></div>
+            <div class="track-header"><h3>Level 2 — Engineer Labs</h3><p>Пайплайны декодирования BCI-парадигм через NimbusSDK, uncertainty и online-loop.</p></div>
             <table><thead><tr><th>Практика</th><th>Пайплайн</th><th>Что студент сдаёт</th></tr></thead><tbody>
-              <tr><td>L2-P1</td><td>P300 decoder pipeline: epoching, ERP features, LDA/QDA, calibration, confusion matrix.</td><td>P300 spelling-style decoder + report по ошибкам.</td></tr>
-              <tr><td>L2-P2</td><td>SSVEP pipeline: frequency tagging, CCA features, harmonic analysis, latency estimate.</td><td>SSVEP classifier и объяснение выбора частот.</td></tr>
-              <tr><td>L2-P3</td><td>Motor Imagery pipeline: mu/beta filters, CSP, Riemannian covariance, ERD/ERS visualisation.</td><td>MI classifier + карты источников discriminative features.</td></tr>
-              <tr><td>L2-P4</td><td>Bayesian uncertainty pipeline: posterior, thresholding, abstention, calibration curve.</td><td>Модель, которая умеет говорить «не уверен».</td></tr>
-              <tr><td>L2-P5</td><td>Neural drift pipeline: session split, adaptive normalization, rolling update, drift metrics.</td><td>Сравнение static vs adaptive decoder.</td></tr>
-              <tr><td>L2-P6</td><td>Online BCI simulation: streaming buffer, sliding windows, prediction latency, feedback events.</td><td>Demo real-time loop на записанном датасете.</td></tr>
-              <tr><td>L2-P7</td><td>BCI metrics pipeline: accuracy, ITR, latency, calibration error, user reliability.</td><td>Единый metrics dashboard для сравнения моделей.</td></tr>
+              <tr><td>L2-P1</td><td>P300 NimbusQDA pipeline: 0.5-10 Hz, ERP window, class-specific covariance, posterior confidence.</td><td>P300 spelling-style decoder + report по ошибкам и confidence.</td></tr>
+              <tr><td>L2-P2</td><td>SSVEP NimbusLDA/QDA pipeline: target ±2 Hz, CCA/bandpower, harmonic analysis, latency estimate.</td><td>SSVEP classifier и объяснение выбора модели под число целей.</td></tr>
+              <tr><td>L2-P3</td><td>Motor Imagery NimbusLDA pipeline: 8-30 Hz, CSP/FBCSP, log-variance, ERD/ERS visualisation.</td><td>MI classifier + карты discriminative CSP features.</td></tr>
+              <tr><td>L2-P4</td><td>Feature normalization pipeline: train-only zscore/robust params, reuse on test and streaming.</td><td>Saved norm params + demonstration of leakage vs correct workflow.</td></tr>
+              <tr><td>L2-P5</td><td>Bayesian uncertainty pipeline: posterior, entropy, thresholding, abstention, calibration curve.</td><td>Модель, которая умеет говорить «не уверен», с safety policy.</td></tr>
+              <tr><td>L2-P6</td><td>NimbusSTS drift pipeline: session split, latent state, adaptive update, drift metrics.</td><td>Сравнение static LDA/QDA vs adaptive STS decoder.</td></tr>
+              <tr><td>L2-P7</td><td>Online BCI simulation: feature chunks, StreamingSession, weighted vote, prediction latency, feedback events.</td><td>Demo real-time loop на записанном датасете.</td></tr>
+              <tr><td>L2-P8</td><td>BCI metrics pipeline: accuracy, ITR, latency, calibration error, rejection rate, user reliability.</td><td>Единый metrics dashboard для сравнения Nimbus-моделей.</td></tr>
             </tbody></table>
           </article>
 
           <article class="track" style="--track-color: var(--orange);">
-            <div class="track-header"><h3>Level 3 — Research Labs</h3><p>Исследовательские пайплайны: эксперимент, статистика, воспроизводимость, статья.</p></div>
+            <div class="track-header"><h3>Level 3 — Research Labs</h3><p>Исследовательские Nimbus-пайплайны: эксперимент, статистика, reproducibility и статья.</p></div>
             <table><thead><tr><th>Практика</th><th>Пайплайн</th><th>Что студент сдаёт</th></tr></thead><tbody>
-              <tr><td>L3-P1</td><td>Experiment design pipeline: hypothesis, task, confounds, sample plan, preregistration draft.</td><td>Короткий preregistration document.</td></tr>
-              <tr><td>L3-P2</td><td>ERP analysis pipeline: component windows, grand average, topography, latency/amplitude testing.</td><td>ERP figure set + Methods paragraph.</td></tr>
-              <tr><td>L3-P3</td><td>Time-frequency pipeline: wavelets/STFT, baseline, ERD/ERS, cluster statistics.</td><td>TF maps + interpretation through oscillatory mechanism.</td></tr>
-              <tr><td>L3-P4</td><td>Connectivity pipeline: coherence/PLV/imaginary coherence, network graph, volume conduction checks.</td><td>Connectivity report with anatomical caveats.</td></tr>
-              <tr><td>L3-P5</td><td>Source localization pipeline: forward/inverse assumptions, atlas labels, uncertainty of sources.</td><td>Source hypothesis memo, not overclaimed localization.</td></tr>
-              <tr><td>L3-P6</td><td>MVPA pipeline: temporal decoding, cross-validation, permutation, generalization matrix.</td><td>Decoding analysis + interpretation boundary.</td></tr>
-              <tr><td>L3-P7</td><td>Statistics pipeline: multiple comparisons, cluster permutation, effect size, Bayesian sensitivity.</td><td>Statistical decision log.</td></tr>
-              <tr><td>L3-P8</td><td>Paper pipeline: reproducible figures, Methods, Results, Discussion, limitations.</td><td>Mini-paper на 4-6 страниц.</td></tr>
+              <tr><td>L3-P1</td><td>Experiment design pipeline: hypothesis, task, feature contract, validation split, preregistration draft.</td><td>Короткий preregistration document + pipeline spec.</td></tr>
+              <tr><td>L3-P2</td><td>ERP-to-Nimbus pipeline: component windows, ERP features, NimbusQDA, posterior interpretation.</td><td>ERP figure set + Methods paragraph through data contract.</td></tr>
+              <tr><td>L3-P3</td><td>Time-frequency feature pipeline: wavelets/STFT, ERD/ERS features, model comparison.</td><td>TF maps + Nimbus feature table and interpretation.</td></tr>
+              <tr><td>L3-P4</td><td>Connectivity-to-feature pipeline: coherence/PLV features, graph metrics, leakage controls.</td><td>Connectivity report with anatomical and model caveats.</td></tr>
+              <tr><td>L3-P5</td><td>Configuration sweep pipeline: frequency bands, windows, normalization, LDA/QDA/Softmax comparison.</td><td>Benchmark matrix and chosen Studio graph variant.</td></tr>
+              <tr><td>L3-P6</td><td>MVPA/Nimbus pipeline: temporal decoding, cross-validation, permutation, posterior confidence.</td><td>Decoding analysis + interpretation boundary.</td></tr>
+              <tr><td>L3-P7</td><td>Reproducibility pipeline: BIDS-like data, exported code, SDK version, model metadata, random seeds.</td><td>Reproducibility bundle and audit log.</td></tr>
+              <tr><td>L3-P8</td><td>Paper pipeline: reproducible figures, Methods, Results, Discussion, limitations, model card.</td><td>Mini-paper на 4-6 страниц + Nimbus model card.</td></tr>
             </tbody></table>
           </article>
 
           <article class="track" style="--track-color: var(--red);">
             <div class="track-header"><h3>Level 4 — Specialist Capstones</h3><p>Финальные проекты по выбранной специализации.</p></div>
             <table><thead><tr><th>Трек</th><th>Capstone pipeline</th><th>Что студент защищает</th></tr></thead><tbody>
-              <tr><td>Clinical</td><td>Clinical EEG biomarker pipeline: паттерн, QC, patient-level report, regulatory rationale.</td><td>Клинический протокол с ограничениями и рисками.</td></tr>
-              <tr><td>Cognitive</td><td>Cognitive marker pipeline: задача, нейромаркер, validation, confounds, interpretability.</td><td>Экспериментальный дизайн и demo анализа.</td></tr>
-              <tr><td>Product</td><td>BCI product pipeline: workload/frustration monitoring, feedback latency, user safety, UX metrics.</td><td>Продуктовый прототип и decision memo.</td></tr>
-              <tr><td>Computational</td><td>Computational neuroscience pipeline: model assumption, simulation, prediction, validation test.</td><td>Модель, предсказание и экспериментальный план проверки.</td></tr>
+              <tr><td>Clinical</td><td>Clinical EEG biomarker pipeline: QC, patient-level report, confidence thresholds, regulatory rationale.</td><td>Клинический протокол с risk log и rejection policy.</td></tr>
+              <tr><td>Cognitive</td><td>Cognitive marker pipeline: task, feature family, Nimbus model, validation, confounds, interpretability.</td><td>Экспериментальный дизайн и demo анализа.</td></tr>
+              <tr><td>Product</td><td>BCI product pipeline: BrainFlow/LSL input, workload/frustration monitoring, feedback latency, user safety.</td><td>Продуктовый прототип, latency budget и decision memo.</td></tr>
+              <tr><td>Computational</td><td>Computational neuroscience pipeline: model assumption, simulated features, Nimbus inference, validation test.</td><td>Модель, предсказание и экспериментальный план проверки.</td></tr>
             </tbody></table>
           </article>
         </div>
@@ -1004,8 +1075,9 @@
           </div>
           <p class="lead">
             На протяжении курса студент ведёт один репозиторий. Каждый уровень добавляет новый слой:
-            очистку данных, декодирование, исследовательскую валидацию и специализацию. Финальный
-            результат можно показать работодателю, лаборатории или инвестору как доказательство навыка.
+            visual pipeline spec, preprocessing, feature contract, Nimbus-модель, confidence policy,
+            streaming demo и специализацию. Финальный результат можно показать работодателю,
+            лаборатории или инвестору как доказательство навыка.
           </p>
         </div>
 
@@ -1013,36 +1085,36 @@
           <div class="capstone-card">
             <h4>Data Layer</h4>
             <ul>
-              <li>структура данных</li>
+              <li>Studio graph source nodes</li>
               <li>preprocessing config</li>
+              <li>feature contract</li>
               <li>quality report</li>
-              <li>artifact log</li>
             </ul>
           </div>
           <div class="capstone-card">
-            <h4>Decoder Layer</h4>
+            <h4>Nimbus Layer</h4>
             <ul>
-              <li>feature pipelines</li>
-              <li>model comparison</li>
+              <li>NimbusLDA/QDA/STS model</li>
+              <li>normalization params</li>
               <li>uncertainty calibration</li>
-              <li>online simulation</li>
+              <li>model metadata</li>
             </ul>
           </div>
           <div class="capstone-card">
-            <h4>Research Layer</h4>
+            <h4>Deployment Layer</h4>
             <ul>
-              <li>hypothesis</li>
-              <li>statistical plan</li>
-              <li>figures</li>
-              <li>mini-paper</li>
+              <li>LSL / BrainFlow handoff</li>
+              <li>StreamingSession</li>
+              <li>latency budget</li>
+              <li>safety policy</li>
             </ul>
           </div>
           <div class="capstone-card">
-            <h4>Specialist Layer</h4>
+            <h4>Portfolio Layer</h4>
             <ul>
-              <li>clinical/product/model track</li>
+              <li>exported Python code</li>
+              <li>demo video / replay</li>
               <li>risk log</li>
-              <li>demo</li>
               <li>defense deck</li>
             </ul>
           </div>
@@ -1424,29 +1496,31 @@
       <section class="section">
         <div class="section-header">
           <div>
-            <p class="eyebrow">Интерфейс Academy</p>
-            <h2>Каждый урок открывается двумя вкладками</h2>
+            <p class="eyebrow">Интерфейс Academy x Nimbus Studio</p>
+            <h2>Каждый урок открывается как связка нейрофизиологии, Studio graph и SDK inference</h2>
           </div>
           <p class="lead">
-            Студент сначала проходит <strong>Brain Behind the Signal</strong> за 15 минут и только потом
-            переходит к <strong>Pipeline Practice</strong>. После практики он отвечает на вопрос,
-            связывающий техническое действие с нейрофизиологическим механизмом.
+            Студент сначала проходит <strong>Brain Behind the Signal</strong> за 15 минут, затем собирает
+            <strong>Pipeline Practice</strong> как Nimbus-style graph, проверяет data contract и запускает
+            NimbusSDK inference. После практики он отвечает на вопрос, связывающий техническое действие
+            с нейрофизиологическим механизмом.
           </p>
         </div>
         <div class="interface-card">
           <div class="tabs">
             <div class="tab active">🧠 Brain Behind the Signal</div>
-            <div class="tab">⚙️ Pipeline Practice</div>
+            <div class="tab">🧩 Nimbus Studio Graph</div>
+            <div class="tab">⚙️ NimbusSDK Inference</div>
           </div>
           <p>
             После практики студент получает короткий вопрос:
           </p>
           <div class="journal">
-            «Какой нейрофизиологический механизм объясняет то, что вы только что сделали?»
+            «Какой нейрофизиологический механизм объясняет выбранный feature contract, модель Nimbus и confidence policy?»
           </div>
           <p>
-            Ответ не тестируется автоматически — он сохраняется в личный нейронаучный журнал студента,
-            который становится частью финального сертификационного артефакта.
+            Ответ сохраняется в личный нейронаучный журнал студента вместе с pipeline graph,
+            exported code, model metadata и risk log — это становится частью финального сертификата.
           </p>
         </div>
       </section>
@@ -1455,12 +1529,13 @@
         <div class="final-card">
           <p class="eyebrow">Итоговая визитная карточка</p>
           <blockquote>
-            Nimbus Academy — единственные курсы по BCI, где каждый технический навык объяснён через нейрофизиологию, которая за ним стоит.
+            Nimbus Academy — курс по BCI, где каждый технический навык объяснён через нейрофизиологию и сразу превращён в Nimbus-ready pipeline.
           </blockquote>
           <p>
             Вы не просто учитесь фильтровать сигнал. Вы понимаете, почему мозг его генерирует,
-            почему он нестационарен, почему адаптивная модель биологически честнее статичной,
-            и почему неопределённость системы — это не недостаток, а отражение того, как думает нейрон.
+            почему сырой EEG нельзя напрямую отдавать модели, почему feature contract важнее
+            «красивой точности», почему NimbusSTS нужен для neural drift, и почему uncertainty —
+            не недостаток системы, а условие безопасного BCI deployment.
           </p>
         </div>
       </section>
