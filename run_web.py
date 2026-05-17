@@ -3,7 +3,6 @@ import logging
 import os
 from aiohttp import web
 from bot import main as bot_main
-from course_document import COURSE_DOCUMENT_FILENAME, render_course_document
 
 # Configure logging
 logging.basicConfig(
@@ -26,24 +25,6 @@ async def health_check(request):
     """Simple health check endpoint."""
     return web.Response(text="Bot is running!")
 
-async def course_page(request):
-    """Displays the styled course program document."""
-    return web.Response(
-        text=render_course_document(),
-        content_type="text/html",
-        charset="utf-8",
-    )
-
-async def download_course_document(request):
-    """Downloads the course program as a standalone HTML document."""
-    return web.Response(
-        body=render_course_document(download_path="#").encode("utf-8"),
-        content_type="text/html",
-        headers={
-            "Content-Disposition": f'attachment; filename="{COURSE_DOCUMENT_FILENAME}"'
-        },
-    )
-
 async def main_web_service():
     """Main function to run the bot as a web service."""
     # Start the bot in the background
@@ -51,9 +32,6 @@ async def main_web_service():
 
     # Setup a simple web server for health checks (required by Render Web Service)
     app = web.Application()
-    app.router.add_get('/', course_page)
-    app.router.add_get('/course', course_page)
-    app.router.add_get('/course/download', download_course_document)
     app.router.add_get('/health', health_check)
 
     PORT = int(os.getenv("PORT", 8000))
