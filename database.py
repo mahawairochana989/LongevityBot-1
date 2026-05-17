@@ -81,6 +81,18 @@ class LongevityDatabase:
                         FOREIGN KEY (user2_id) REFERENCES {DB_CONFIG['users_table']} (id)
                     )
                 """)
+
+                # Личный нейронаучный журнал Nimbus Academy
+                cursor.execute("""
+                    CREATE TABLE IF NOT EXISTS neuroscience_journal_entries (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        telegram_id INTEGER NOT NULL,
+                        module_id TEXT NOT NULL,
+                        prompt TEXT NOT NULL,
+                        response TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                """)
                 
                 conn.commit()
                 logger.info("База данных инициализирована успешно")
@@ -256,6 +268,51 @@ class LongevityDatabase:
                 
         except Exception as e:
             logger.error(f"Ошибка поиска совпадений: {e}")
+            return []
+
+    def add_journal_entry(self, telegram_id: int, module_id: str, prompt: str, response: str) -> bool:
+        """Сохранение ответа студента в личный нейронаучный журнал."""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+
+                cursor.execute("""
+                    INSERT INTO neuroscience_journal_entries
+                    (telegram_id, module_id, prompt, response)
+                    VALUES (?, ?, ?, ?)
+                """, (telegram_id, module_id, prompt, response))
+
+                conn.commit()
+                logger.info(
+                    "Запись нейронаучного журнала сохранена: user=%s module=%s",
+                    telegram_id,
+                    module_id,
+                )
+                return True
+
+        except Exception as e:
+            logger.error(f"Ошибка сохранения записи нейронаучного журнала: {e}")
+            return False
+
+    def get_journal_entries(self, telegram_id: int) -> List[Dict]:
+        """Получение записей личного нейронаучного журнала студента."""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+
+                cursor.execute("""
+                    SELECT id, module_id, prompt, response, created_at
+                    FROM neuroscience_journal_entries
+                    WHERE telegram_id = ?
+                    ORDER BY created_at DESC
+                """, (telegram_id,))
+
+                rows = cursor.fetchall()
+                columns = [description[0] for description in cursor.description]
+                return [dict(zip(columns, row)) for row in rows]
+
+        except Exception as e:
+            logger.error(f"Ошибка получения нейронаучного журнала: {e}")
             return []
     
     def update_user_activity(self, telegram_id: int):

@@ -13,6 +13,16 @@ from aiogram.fsm.state import State, StatesGroup
 
 from config import BOT_TOKEN, WELCOME_MESSAGE, ADMIN_IDS, ADMIN_USERNAME, SCIENTIFIC_DISCIPLINES, EDUCATION_LEVELS
 from database import LongevityDatabase
+from academy_content import (
+    ACADEMY_INTRO,
+    ACADEMY_INTERFACE,
+    JOURNAL_PROMPT,
+    format_level_overview,
+    format_module,
+    get_levels,
+    get_module,
+    get_modules_by_level,
+)
 
 # Настройка логирования
 logging.basicConfig(
@@ -29,6 +39,10 @@ class RegistrationStates(StatesGroup):
     waiting_for_interests = State()
     waiting_for_education_level = State()
     waiting_for_contact = State()
+
+
+class AcademyStates(StatesGroup):
+    waiting_for_journal_entry = State()
 
 # Инициализация бота
 bot = Bot(token=BOT_TOKEN)
@@ -55,6 +69,7 @@ async def start_command(message: types.Message, state: FSMContext):
             if is_admin(message.from_user.id):
                 # Администратор - полный доступ
                 keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+                    [types.InlineKeyboardButton(text="🧠 Nimbus Academy", callback_data="academy_home")],
                     [types.InlineKeyboardButton(text="🔍 Найти коллег", callback_data="find_colleagues")],
                     [types.InlineKeyboardButton(text="👥 Междисциплинарные команды", callback_data="interdisciplinary_teams")],
                     [types.InlineKeyboardButton(text="📊 Статистика сообщества", callback_data="community_stats")],
@@ -63,6 +78,7 @@ async def start_command(message: types.Message, state: FSMContext):
             else:
                 # Обычный пользователь - ограниченный доступ
                 keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+                    [types.InlineKeyboardButton(text="🧠 Nimbus Academy", callback_data="academy_home")],
                     [types.InlineKeyboardButton(text="📊 Статистика сообщества", callback_data="community_stats")],
                     [types.InlineKeyboardButton(text="📝 Обновить профиль", callback_data="update_profile")]
                 ])
@@ -263,6 +279,7 @@ async def handle_contact_input(message: types.Message, state: FSMContext):
             if is_admin(message.from_user.id):
                 # Администратор - полный доступ
                 keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+                    [types.InlineKeyboardButton(text="🧠 Nimbus Academy", callback_data="academy_home")],
                     [types.InlineKeyboardButton(text="🔍 Найти коллег", callback_data="find_colleagues")],
                     [types.InlineKeyboardButton(text="👥 Междисциплинарные команды", callback_data="interdisciplinary_teams")],
                     [types.InlineKeyboardButton(text="📊 Статистика сообщества", callback_data="community_stats")]
@@ -270,6 +287,7 @@ async def handle_contact_input(message: types.Message, state: FSMContext):
             else:
                 # Обычный пользователь - ограниченный доступ
                 keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+                    [types.InlineKeyboardButton(text="🧠 Nimbus Academy", callback_data="academy_home")],
                     [types.InlineKeyboardButton(text="📊 Статистика сообщества", callback_data="community_stats")],
                     [types.InlineKeyboardButton(text="📝 Обновить профиль", callback_data="update_profile")]
                 ])
@@ -484,6 +502,88 @@ async def stats_command(message: types.Message):
         logger.error(f"Ошибка команды /stats: {e}")
         await message.answer("❌ Произошла ошибка при получении статистики. Попробуйте позже.")
 
+
+@dp.message(Command("academy"))
+async def academy_command(message: types.Message):
+    """Показать раздел Nimbus Academy."""
+    try:
+        await message.answer(
+            ACADEMY_INTRO,
+            reply_markup=create_academy_keyboard(),
+            parse_mode="Markdown"
+        )
+    except Exception as e:
+        logger.error(f"Ошибка команды /academy: {e}")
+        await message.answer("❌ Произошла ошибка при открытии Nimbus Academy.")
+
+
+@dp.message(Command("journal"))
+async def journal_command(message: types.Message):
+    """Показать личный нейронаучный журнал."""
+    try:
+        entries = db.get_journal_entries(message.from_user.id)
+        await message.answer(
+            format_journal_entries(entries),
+            reply_markup=create_journal_keyboard(),
+            parse_mode="Markdown"
+        )
+    except Exception as e:
+        logger.error(f"Ошибка команды /journal: {e}")
+        await message.answer("❌ Произошла ошибка при открытии журнала.")
+
+
+@dp.message(AcademyStates.waiting_for_journal_entry)
+async def handle_journal_entry(message: types.Message, state: FSMContext):
+    """Сохранение ответа на вопрос Brain Behind the Signal."""
+    try:
+        response = message.text.strip()
+
+        if response.lower() in ["отмена", "cancel", "/cancel"]:
+            await state.clear()
+            await message.answer(
+                "Запись в журнал отменена.",
+                reply_markup=create_academy_keyboard()
+            )
+            return
+
+        if len(response) < 10:
+            await message.answer(
+                "Пожалуйста, напишите чуть подробнее: какой именно механизм объясняет практику?"
+            )
+            return
+
+        data = await state.get_data()
+        module_id = data.get("module_id")
+        module = get_module(module_id)
+
+        if not module:
+            await state.clear()
+            await message.answer("❌ Модуль не найден. Откройте /academy и попробуйте снова.")
+            return
+
+        success = db.add_journal_entry(
+            telegram_id=message.from_user.id,
+            module_id=module_id,
+            prompt=JOURNAL_PROMPT,
+            response=response,
+        )
+
+        await state.clear()
+
+        if success:
+            await message.answer(
+                f"✅ Запись сохранена в личный нейронаучный журнал.\n\n"
+                f"Модуль: **{module['code']} — {module['title']}**",
+                reply_markup=create_module_keyboard(module_id),
+                parse_mode="Markdown"
+            )
+        else:
+            await message.answer("❌ Не удалось сохранить запись. Попробуйте позже.")
+
+    except Exception as e:
+        logger.error(f"Ошибка сохранения journal entry: {e}")
+        await message.answer("❌ Произошла ошибка при сохранении записи.")
+
 # Админ-команды
 @dp.message(Command("list"))
 async def list_command(message: types.Message):
@@ -569,6 +669,8 @@ async def help_command(message: types.Message):
 **Основные команды:**
 /start - Начать работу с ботом
 /help - Показать эту справку
+/academy - Открыть Nimbus Academy
+/journal - Показать личный нейронаучный журнал
 /find <ключевые слова> - Поиск участников по интересам
 /match interdisciplinary - Междисциплинарные команды
 /stats - Статистика сообщества
@@ -588,6 +690,87 @@ async def help_command(message: types.Message):
         await message.answer("❌ Произошла ошибка при показе справки.")
 
 # Callback обработчики
+@dp.callback_query(F.data == "academy_home")
+async def academy_home_callback(callback: types.CallbackQuery):
+    """Главный экран Nimbus Academy."""
+    await callback.message.edit_text(
+        ACADEMY_INTRO,
+        reply_markup=create_academy_keyboard(),
+        parse_mode="Markdown"
+    )
+    await callback.answer()
+
+
+@dp.callback_query(F.data == "academy_interface")
+async def academy_interface_callback(callback: types.CallbackQuery):
+    """Описание интерфейсной логики Academy."""
+    await callback.message.edit_text(
+        ACADEMY_INTERFACE,
+        reply_markup=create_academy_keyboard(),
+        parse_mode="Markdown"
+    )
+    await callback.answer()
+
+
+@dp.callback_query(F.data == "academy_journal")
+async def academy_journal_callback(callback: types.CallbackQuery):
+    """Показать личный нейронаучный журнал из inline-навигации."""
+    entries = db.get_journal_entries(callback.from_user.id)
+    await callback.message.edit_text(
+        format_journal_entries(entries),
+        reply_markup=create_journal_keyboard(),
+        parse_mode="Markdown"
+    )
+    await callback.answer()
+
+
+@dp.callback_query(F.data.startswith("academy_level:"))
+async def academy_level_callback(callback: types.CallbackQuery):
+    """Показать модули выбранного уровня Brain Behind the Signal."""
+    level_id = callback.data.split(":", 1)[1]
+    await callback.message.edit_text(
+        format_level_overview(level_id),
+        reply_markup=create_modules_keyboard(level_id),
+        parse_mode="Markdown"
+    )
+    await callback.answer()
+
+
+@dp.callback_query(F.data.startswith("academy_module:"))
+async def academy_module_callback(callback: types.CallbackQuery):
+    """Показать карточку отдельного модуля Brain Behind the Signal."""
+    module_id = callback.data.split(":", 1)[1]
+    await callback.message.edit_text(
+        format_module(module_id),
+        reply_markup=create_module_keyboard(module_id),
+        parse_mode="Markdown"
+    )
+    await callback.answer()
+
+
+@dp.callback_query(F.data.startswith("academy_write_journal:"))
+async def academy_write_journal_callback(callback: types.CallbackQuery, state: FSMContext):
+    """Запустить ввод ответа для личного нейронаучного журнала."""
+    module_id = callback.data.split(":", 1)[1]
+    module = get_module(module_id)
+
+    if not module:
+        await callback.answer("Модуль не найден.")
+        return
+
+    await state.set_state(AcademyStates.waiting_for_journal_entry)
+    await state.update_data(module_id=module_id)
+
+    await callback.message.answer(
+        f"📓 **Личный нейронаучный журнал**\n\n"
+        f"Модуль: **{module['code']} — {module['title']}**\n\n"
+        f"{JOURNAL_PROMPT}\n\n"
+        "Напишите ответ одним сообщением. Для отмены отправьте «отмена».",
+        parse_mode="Markdown"
+    )
+    await callback.answer()
+
+
 @dp.callback_query(F.data == "find_colleagues")
 async def find_colleagues_callback(callback: types.CallbackQuery):
     """Обработка поиска коллег"""
@@ -728,6 +911,118 @@ async def recommendations_callback(callback: types.CallbackQuery):
     await callback.answer()
 
 # Вспомогательные функции
+def create_academy_keyboard() -> types.InlineKeyboardMarkup:
+    """Создание клавиатуры Nimbus Academy."""
+    keyboard = [
+        [types.InlineKeyboardButton(
+            text=level["title"].split(" — ")[0],
+            callback_data=f"academy_level:{level['id']}"
+        )]
+        for level in get_levels()
+    ]
+
+    keyboard.extend([
+        [types.InlineKeyboardButton(text="📓 Личный нейронаучный журнал", callback_data="academy_journal")],
+        [types.InlineKeyboardButton(text="Как это выглядит в Academy", callback_data="academy_interface")],
+    ])
+
+    return types.InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+
+def create_modules_keyboard(level_id: str) -> types.InlineKeyboardMarkup:
+    """Создание клавиатуры модулей выбранного уровня."""
+    keyboard = []
+
+    for module in get_modules_by_level(level_id):
+        title = truncate_button_text(f"{module['code']} — {module['title']}")
+        keyboard.append([
+            types.InlineKeyboardButton(
+                text=title,
+                callback_data=f"academy_module:{module['id']}"
+            )
+        ])
+
+    keyboard.extend([
+        [types.InlineKeyboardButton(text="⬅️ К уровням", callback_data="academy_home")],
+        [types.InlineKeyboardButton(text="📓 Журнал", callback_data="academy_journal")],
+    ])
+
+    return types.InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+
+def create_module_keyboard(module_id: str) -> types.InlineKeyboardMarkup:
+    """Создание клавиатуры карточки модуля."""
+    module = get_module(module_id)
+
+    if not module:
+        return create_academy_keyboard()
+
+    return types.InlineKeyboardMarkup(inline_keyboard=[
+        [types.InlineKeyboardButton(text="📓 Ответить в журнал", callback_data=f"academy_write_journal:{module_id}")],
+        [types.InlineKeyboardButton(text="⬅️ К модулям уровня", callback_data=f"academy_level:{module['level']}")],
+        [types.InlineKeyboardButton(text="🏠 Nimbus Academy", callback_data="academy_home")],
+    ])
+
+
+def create_journal_keyboard() -> types.InlineKeyboardMarkup:
+    """Создание клавиатуры личного нейронаучного журнала."""
+    return types.InlineKeyboardMarkup(inline_keyboard=[
+        [types.InlineKeyboardButton(text="🧠 Выбрать модуль", callback_data="academy_home")],
+    ])
+
+
+def format_journal_entries(entries: list) -> str:
+    """Форматирование последних записей личного нейронаучного журнала."""
+    if not entries:
+        return (
+            "📓 **Личный нейронаучный журнал**\n\n"
+            "Пока нет записей. Откройте /academy, выберите модуль Brain Behind the Signal "
+            "и ответьте на вопрос после практики."
+        )
+
+    lines = ["📓 **Личный нейронаучный журнал**", "", f"Всего записей: {len(entries)}", ""]
+
+    for entry in entries[:5]:
+        module = get_module(entry["module_id"])
+        module_label = (
+            f"{module['code']} — {module['title']}"
+            if module else entry["module_id"]
+        )
+        response = clean_markdown_text(entry["response"])
+        if len(response) > 350:
+            response = response[:347] + "..."
+
+        lines.extend([
+            f"**{module_label}**",
+            f"Дата: {entry['created_at']}",
+            response,
+            "",
+        ])
+
+    if len(entries) > 5:
+        lines.append(f"Показаны последние 5 записей из {len(entries)}.")
+
+    return "\n".join(lines)
+
+
+def truncate_button_text(text: str, limit: int = 48) -> str:
+    """Ограничение подписи кнопки для компактной inline-навигации."""
+    if len(text) <= limit:
+        return text
+    return text[:limit - 1] + "…"
+
+
+def clean_markdown_text(text: str) -> str:
+    """Удаление управляющих Markdown-символов из пользовательского текста."""
+    return (
+        text.replace("*", "")
+        .replace("_", "")
+        .replace("`", "")
+        .replace("[", "(")
+        .replace("]", ")")
+    )
+
+
 def create_disciplines_keyboard() -> types.InlineKeyboardMarkup:
     """Создание клавиатуры с дисциплинами"""
     keyboard = []
