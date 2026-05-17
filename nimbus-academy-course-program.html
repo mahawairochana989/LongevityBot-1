@@ -316,6 +316,49 @@
       margin-bottom: 10px;
     }
 
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .exercise-card {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.07);
+    }
+
+    .exercise-card h3 {
+      margin-bottom: 10px;
+    }
+
+    .exercise-card ul {
+      margin: 10px 0 0;
+      padding-left: 20px;
+      color: #2f3747;
+    }
+
+    .exercise-answer {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 18px;
+      background: #101827;
+      color: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .exercise-answer strong {
+      color: #fff;
+    }
+
+    .exercise-answer code {
+      color: #a7f3d0;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.95em;
+    }
+
     .pipeline-card ul,
     .capstone-card ul {
       margin: 12px 0 0;
@@ -661,6 +704,7 @@
       .stats,
       .section-header,
       .concept-grid,
+      .exercise-grid,
       .pipeline-map,
       .capstone-grid,
       .tool-grid,
@@ -710,6 +754,7 @@
       .level,
       .module,
       .track,
+      .exercise-card,
       .pipeline-card,
       .capstone-card,
       .tool-card,
@@ -996,6 +1041,190 @@
               <li><strong>Capstone review:</strong> защита Studio graph, exported code, model metadata, latency budget, risk log и deployment plan.</li>
             </ol>
             <div class="deliverable"><strong>Итог:</strong> deployable Nimbus pipeline package: Studio spec, code, model, normalization, demo, safety policy.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Учимся через задания</p>
+            <h2>Простые задания по Nimbus-пайплайнам с конкретным результатом и ответом</h2>
+          </div>
+          <p class="lead">
+            Эти упражнения учат думать в терминах Nimbus: сначала выбрать парадигму,
+            затем собрать preprocessing и feature extraction, определить data contract,
+            выбрать Nimbus-модель и только после этого задавать confidence policy или streaming.
+          </p>
+        </div>
+
+        <div class="exercise-grid">
+          <article class="exercise-card">
+            <div class="pipeline-meta">
+              <span class="pill">Задание 1</span>
+              <span class="pill">Motor Imagery</span>
+              <span class="pill">beginner</span>
+            </div>
+            <h3>Собрать первый MI-пайплайн</h3>
+            <p><strong>Условие:</strong> есть EEG 250 Hz, каналы C3, Cz, C4, метки left hand / right hand. Нужно получить декодер для двух классов.</p>
+            <ul>
+              <li>Составьте цепочку узлов Nimbus Studio.</li>
+              <li>Укажите частотный диапазон.</li>
+              <li>Выберите feature type и Nimbus-модель.</li>
+              <li>Назовите конкретный результат, который должен получить студент.</li>
+            </ul>
+            <div class="exercise-answer">
+              <strong>Ответ:</strong>
+              <br>Data source → channel check → average reference → bandpass <code>8-30 Hz</code> → epoch <code>0-4 s</code> after cue → CSP/FBCSP → log-variance features → z-score from train only → <code>NimbusLDA</code> → accuracy/confidence report.
+              <br><br><strong>Результат:</strong> notebook или Studio graph, который выдаёт predicted class, posterior probabilities и confidence для left/right hand.
+            </div>
+          </article>
+
+          <article class="exercise-card">
+            <div class="pipeline-meta">
+              <span class="pill">Задание 2</span>
+              <span class="pill">P300</span>
+              <span class="pill">ERP</span>
+            </div>
+            <h3>Выбрать пайплайн для P300 oddball</h3>
+            <p><strong>Условие:</strong> есть target и non-target стимулы. Нужно построить pipeline для обнаружения target.</p>
+            <ul>
+              <li>Какая фильтрация нужна?</li>
+              <li>Какое окно epoch выбрать?</li>
+              <li>Какие признаки передать в NimbusSDK?</li>
+              <li>Какая Nimbus-модель подходит лучше?</li>
+            </ul>
+            <div class="exercise-answer">
+              <strong>Ответ:</strong>
+              <br>Data source → event markers → bandpass <code>0.5-10 Hz</code> → epoch <code>-0.2..0.8 s</code> → baseline <code>-0.2..0 s</code> → ERP mean amplitude in <code>300-500 ms</code> window → train-only normalization → <code>NimbusQDA</code>.
+              <br><br><strong>Почему:</strong> target/non-target ERP часто перекрываются и могут иметь разные ковариации, поэтому QDA лучше простой LDA.
+              <br><br><strong>Результат:</strong> target probability, confusion matrix, confidence threshold для решения «target / non-target / reject».
+            </div>
+          </article>
+
+          <article class="exercise-card">
+            <div class="pipeline-meta">
+              <span class="pill">Задание 3</span>
+              <span class="pill">SSVEP</span>
+              <span class="pill">frequency</span>
+            </div>
+            <h3>Собрать SSVEP-пайплайн для 4 частот</h3>
+            <p><strong>Условие:</strong> интерфейс мигает на 10, 12, 15 и 20 Hz. Нужно определить, на какую цель смотрит пользователь.</p>
+            <ul>
+              <li>Какой preprocessing сделать?</li>
+              <li>Какие признаки использовать?</li>
+              <li>Какую модель выбрать для 4 классов?</li>
+              <li>Что будет конкретным результатом?</li>
+            </ul>
+            <div class="exercise-answer">
+              <strong>Ответ:</strong>
+              <br>Data source → occipital channel selection → artifact rejection for blinks → windows <code>2-4 s</code> after onset → feature extraction: CCA scores или bandpower around target frequencies ±2 Hz plus harmonics → normalization → <code>NimbusLDA</code> baseline, <code>NimbusQDA</code> if harmonics overlap.
+              <br><br><strong>Результат:</strong> predicted frequency / target id, confidence score и latency estimate.
+            </div>
+          </article>
+
+          <article class="exercise-card">
+            <div class="pipeline-meta">
+              <span class="pill">Задание 4</span>
+              <span class="pill">data contract</span>
+              <span class="pill">normalization</span>
+            </div>
+            <h3>Исправить ошибку нормализации</h3>
+            <p><strong>Условие:</strong> студент отдельно нормализовал train и test features. Accuracy стала высокой, но на новой сессии модель развалилась.</p>
+            <ul>
+              <li>В чём ошибка?</li>
+              <li>Как правильно?</li>
+              <li>Что нужно сохранить рядом с моделью?</li>
+            </ul>
+            <div class="exercise-answer">
+              <strong>Ответ:</strong>
+              <br>Ошибка — scale leakage и несовместимость deployment scale. Правильно: оценить normalization params только на train/calibration data, затем применить те же параметры к validation, test и streaming features.
+              <br><br><strong>Сохранить:</strong> <code>normalization method</code>, mean/std или robust params, feature type, n_features, label mapping, SDK/model version, training session metadata.
+              <br><br><strong>Результат:</strong> файл <code>norm_params.json</code> или pickle/joblib object + проверка, что feature count и scale совпадают при inference.
+            </div>
+          </article>
+
+          <article class="exercise-card">
+            <div class="pipeline-meta">
+              <span class="pill">Задание 5</span>
+              <span class="pill">uncertainty</span>
+              <span class="pill">safety</span>
+            </div>
+            <h3>Задать confidence policy для BCI-команды</h3>
+            <p><strong>Условие:</strong> модель выдаёт posterior probabilities. Команда управляет курсором, поэтому нельзя выполнять сомнительные решения.</p>
+            <ul>
+              <li>Составьте простую policy из трёх зон.</li>
+              <li>Что логировать?</li>
+              <li>Какой результат должен выдать pipeline?</li>
+            </ul>
+            <div class="exercise-answer">
+              <strong>Ответ:</strong>
+              <br><code>confidence ≥ 0.90</code> → execute command; <code>0.70-0.89</code> → request confirmation / repeat trial; <code>&lt; 0.70</code> → reject trial.
+              <br><br><strong>Логировать:</strong> prediction, posterior vector, confidence, entropy, rejected/accepted decision, latency, feature quality warnings.
+              <br><br><strong>Результат:</strong> pipeline возвращает не только class, но и action: <code>execute</code>, <code>confirm</code> или <code>reject</code>.
+            </div>
+          </article>
+
+          <article class="exercise-card">
+            <div class="pipeline-meta">
+              <span class="pill">Задание 6</span>
+              <span class="pill">streaming</span>
+              <span class="pill">deployment</span>
+            </div>
+            <h3>Перевести offline-пайплайн в real-time</h3>
+            <p><strong>Условие:</strong> offline MI classifier уже работает. Нужно описать, как перенести его в streaming без переписывания логики модели.</p>
+            <ul>
+              <li>Какая цепочка нужна?</li>
+              <li>Что должно быть идентично calibration?</li>
+              <li>Какие задержки измерять?</li>
+            </ul>
+            <div class="exercise-answer">
+              <strong>Ответ:</strong>
+              <br>EEG device via LSL/BrainFlow → fixed-size buffer → same filters/reference/CSP as calibration → same normalization params → feature chunks → <code>StreamingSession</code> → chunk predictions → weighted vote/finalize trial → safety policy → UI command.
+              <br><br><strong>Идентично:</strong> channel order, sampling rate, filters, window size, CSP object, feature count, normalization params, label mapping.
+              <br><br><strong>Измерять:</strong> acquisition latency, preprocessing latency, Nimbus inference latency, command latency, rejection rate.
+            </div>
+          </article>
+
+          <article class="exercise-card">
+            <div class="pipeline-meta">
+              <span class="pill">Задание 7</span>
+              <span class="pill">debugging</span>
+              <span class="pill">diagnostics</span>
+            </div>
+            <h3>Найти причину низкой confidence</h3>
+            <p><strong>Условие:</strong> accuracy около chance level, confidence низкая, ошибок кода нет. Нужно составить debugging checklist.</p>
+            <ul>
+              <li>Что проверить в данных?</li>
+              <li>Что проверить в preprocessing?</li>
+              <li>Что проверить в модели?</li>
+            </ul>
+            <div class="exercise-answer">
+              <strong>Ответ:</strong>
+              <br>Проверить: NaN/Inf, constant features, правильный shape, label mapping, class imbalance, raw EEG accidentally passed as features, правильную frequency band для парадигмы, одинаковые normalization params, соответствие n_features модели и данных.
+              <br><br><strong>Результат:</strong> diagnostic report с ошибками, warnings и рекомендацией: исправить feature extraction / normalization / labels до tuning hyperparameters.
+            </div>
+          </article>
+
+          <article class="exercise-card">
+            <div class="pipeline-meta">
+              <span class="pill">Задание 8</span>
+              <span class="pill">capstone</span>
+              <span class="pill">portfolio</span>
+            </div>
+            <h3>Описать итоговый Nimbus-ready пакет</h3>
+            <p><strong>Условие:</strong> студент закончил проект. Нужно перечислить, что должно лежать в финальной папке, чтобы пайплайн можно было воспроизвести.</p>
+            <ul>
+              <li>Какие файлы нужны?</li>
+              <li>Какая metadata обязательна?</li>
+              <li>Какой concrete output показать на защите?</li>
+            </ul>
+            <div class="exercise-answer">
+              <strong>Ответ:</strong>
+              <br>Папка: <code>pipeline_spec.json</code>, preprocessing notebook/code, exported Python code, trained Nimbus model, <code>norm_params</code>, label mapping, model card, metrics report, latency log, confidence policy, risk log, README.
+              <br><br><strong>Metadata:</strong> paradigm, sampling rate, channels, feature type, n_features, training session, SDK version, validation metrics.
+              <br><br><strong>Результат:</strong> replay/demo, где pipeline принимает feature chunks и выдаёт prediction + confidence + action.
+            </div>
           </article>
         </div>
       </section>
