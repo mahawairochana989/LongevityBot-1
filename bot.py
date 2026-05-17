@@ -12,6 +12,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
 from config import BOT_TOKEN, WELCOME_MESSAGE, ADMIN_IDS, ADMIN_USERNAME, SCIENTIFIC_DISCIPLINES, EDUCATION_LEVELS
+from course_document import COURSE_DOCUMENT_FILENAME, render_course_document, render_course_summary
 from database import LongevityDatabase
 
 # Настройка логирования
@@ -55,6 +56,7 @@ async def start_command(message: types.Message, state: FSMContext):
             if is_admin(message.from_user.id):
                 # Администратор - полный доступ
                 keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+                    [types.InlineKeyboardButton(text="📘 Программа курса", callback_data="course_program")],
                     [types.InlineKeyboardButton(text="🔍 Найти коллег", callback_data="find_colleagues")],
                     [types.InlineKeyboardButton(text="👥 Междисциплинарные команды", callback_data="interdisciplinary_teams")],
                     [types.InlineKeyboardButton(text="📊 Статистика сообщества", callback_data="community_stats")],
@@ -63,6 +65,7 @@ async def start_command(message: types.Message, state: FSMContext):
             else:
                 # Обычный пользователь - ограниченный доступ
                 keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+                    [types.InlineKeyboardButton(text="📘 Программа курса", callback_data="course_program")],
                     [types.InlineKeyboardButton(text="📊 Статистика сообщества", callback_data="community_stats")],
                     [types.InlineKeyboardButton(text="📝 Обновить профиль", callback_data="update_profile")]
                 ])
@@ -263,6 +266,7 @@ async def handle_contact_input(message: types.Message, state: FSMContext):
             if is_admin(message.from_user.id):
                 # Администратор - полный доступ
                 keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+                    [types.InlineKeyboardButton(text="📘 Программа курса", callback_data="course_program")],
                     [types.InlineKeyboardButton(text="🔍 Найти коллег", callback_data="find_colleagues")],
                     [types.InlineKeyboardButton(text="👥 Междисциплинарные команды", callback_data="interdisciplinary_teams")],
                     [types.InlineKeyboardButton(text="📊 Статистика сообщества", callback_data="community_stats")]
@@ -270,6 +274,7 @@ async def handle_contact_input(message: types.Message, state: FSMContext):
             else:
                 # Обычный пользователь - ограниченный доступ
                 keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+                    [types.InlineKeyboardButton(text="📘 Программа курса", callback_data="course_program")],
                     [types.InlineKeyboardButton(text="📊 Статистика сообщества", callback_data="community_stats")],
                     [types.InlineKeyboardButton(text="📝 Обновить профиль", callback_data="update_profile")]
                 ])
@@ -558,6 +563,28 @@ async def export_command(message: types.Message):
         logger.error(f"Ошибка команды /export: {e}")
         await message.answer("❌ Произошла ошибка при экспорте данных.")
 
+async def send_course_program_document(message: types.Message):
+    """Send the presentation-ready course program document."""
+    html_document = render_course_document(download_path="#").encode("utf-8")
+    await message.answer_document(
+        document=types.BufferedInputFile(
+            file=html_document,
+            filename=COURSE_DOCUMENT_FILENAME
+        ),
+        caption=render_course_summary(),
+        parse_mode="Markdown"
+    )
+
+# Команда программы курса
+@dp.message(Command("course"))
+async def course_command(message: types.Message):
+    """Отправляет оформленную программу курса."""
+    try:
+        await send_course_program_document(message)
+    except Exception as e:
+        logger.error(f"Ошибка команды /course: {e}")
+        await message.answer("❌ Произошла ошибка при подготовке программы курса.")
+
 # Команда справки
 @dp.message(Command("help"))
 async def help_command(message: types.Message):
@@ -569,6 +596,7 @@ async def help_command(message: types.Message):
 **Основные команды:**
 /start - Начать работу с ботом
 /help - Показать эту справку
+/course - Скачать программу курса
 /find <ключевые слова> - Поиск участников по интересам
 /match interdisciplinary - Междисциплинарные команды
 /stats - Статистика сообщества
@@ -588,6 +616,16 @@ async def help_command(message: types.Message):
         await message.answer("❌ Произошла ошибка при показе справки.")
 
 # Callback обработчики
+@dp.callback_query(F.data == "course_program")
+async def course_program_callback(callback: types.CallbackQuery):
+    """Отправляет оформленную программу курса по кнопке."""
+    try:
+        await send_course_program_document(callback.message)
+        await callback.answer("Программа курса отправлена файлом.")
+    except Exception as e:
+        logger.error(f"Ошибка callback программы курса: {e}")
+        await callback.answer("❌ Не удалось подготовить программу курса.")
+
 @dp.callback_query(F.data == "find_colleagues")
 async def find_colleagues_callback(callback: types.CallbackQuery):
     """Обработка поиска коллег"""
