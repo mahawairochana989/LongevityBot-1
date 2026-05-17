@@ -283,6 +283,143 @@
       font-size: 18px;
     }
 
+    .pipeline-map,
+    .capstone-grid,
+    .tool-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .pipeline-map {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pipeline-card {
+      position: relative;
+      overflow: hidden;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.07);
+    }
+
+    .pipeline-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 6px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan), var(--violet));
+    }
+
+    .pipeline-card h3 {
+      margin-bottom: 10px;
+    }
+
+    .pipeline-card ul,
+    .capstone-card ul {
+      margin: 12px 0 0;
+      padding-left: 20px;
+      color: #2f3747;
+    }
+
+    .pipeline-card li + li,
+    .capstone-card li + li {
+      margin-top: 7px;
+    }
+
+    .pipeline-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 31px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: #1e293b;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+    }
+
+    .pipeline-steps {
+      counter-reset: step;
+      display: grid;
+      gap: 10px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .pipeline-steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 12px 14px 12px 48px;
+      border: 1px solid rgba(20, 24, 36, 0.10);
+      border-radius: 16px;
+      background: #fffdf8;
+    }
+
+    .pipeline-steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 14px;
+      top: 12px;
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 9px;
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .deliverable {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      color: #0f766e;
+      background: rgba(20, 184, 166, 0.10);
+      border: 1px solid rgba(20, 184, 166, 0.18);
+      font-size: 15px;
+    }
+
+    .capstone-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .capstone-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: #fffdf8;
+    }
+
+    .tool-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tool-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.70);
+    }
+
+    .tool-card strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
     .level {
       --level-color: var(--blue);
       padding: clamp(28px, 5vw, 58px);
@@ -524,6 +661,9 @@
       .stats,
       .section-header,
       .concept-grid,
+      .pipeline-map,
+      .capstone-grid,
+      .tool-grid,
       .module-grid {
         grid-template-columns: 1fr;
       }
@@ -570,6 +710,9 @@
       .level,
       .module,
       .track,
+      .pipeline-card,
+      .capstone-card,
+      .tool-card,
       .final-card {
         break-inside: avoid;
       }
@@ -583,8 +726,8 @@
         <div class="kicker">Nimbus Academy • Course Program • Brain Behind the Signal</div>
         <h1>Нейрофизиология как визитная карточка</h1>
         <p class="subtitle">
-          Программа дополнения к BCI Academy: каждый технический навык объясняется через
-          нейрофизиологический механизм, который стоит за сигналом.
+          Полноценная программа BCI-курса: нейрофизиология каждого сигнала, практики
+          составления пайплайнов и сквозной портфолио-проект от сырой ЭЭГ до demo-системы.
         </p>
         <div class="quote">
           «Мы не просто учим работать с сигналом — мы учим понимать мозг, который его создаёт»
@@ -599,15 +742,15 @@
     <section class="stats" aria-label="Ключевые параметры программы">
       <div class="stat"><strong>4</strong><span>уровня программы</span></div>
       <div class="stat"><strong>35+</strong><span>Brain Behind the Signal модулей</span></div>
-      <div class="stat"><strong>15 мин</strong><span>нейрофизиологии перед практикой</span></div>
-      <div class="stat"><strong>4</strong><span>специализации на Level 4</span></div>
+      <div class="stat"><strong>20+</strong><span>практических пайплайнов</span></div>
+      <div class="stat"><strong>1</strong><span>сквозной портфолио-проект</span></div>
     </section>
 
     <article class="document">
       <section class="section">
         <div class="section-header">
           <div>
-            <p class="eyebrow">Концепция дополнения</p>
+            <p class="eyebrow">Концепция курса</p>
             <h2>Большинство BCI-инженеров знают как обработать сигнал. Немногие знают почему мозг его генерирует.</h2>
           </div>
           <p class="lead">
@@ -629,6 +772,279 @@
           <div class="concept-card">
             <strong>Артефакт</strong>
             Ответы студента сохраняются в личный нейронаучный журнал и становятся частью сертификации.
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Полная структура курса</p>
+            <h2>Каждый урок состоит из нейрофизиологии, практики пайплайна и портфолио-артефакта</h2>
+          </div>
+          <p class="lead">
+            Nimbus Academy строится как инженерный курс: студент не только понимает механизм сигнала,
+            но и последовательно собирает воспроизводимые BCI-пайплайны — от загрузки EEG-данных
+            до онлайн-декодера, отчёта качества, исследовательской статьи и продуктового прототипа.
+          </p>
+        </div>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <strong>1. Brain Behind the Signal</strong>
+            15 минут механизма: какие нейроны, сети, ритмы, состояния и ограничения создают сигнал.
+          </div>
+          <div class="concept-card">
+            <strong>2. Pipeline Practice</strong>
+            Практика: студент пишет шаги обработки, запускает код, проверяет качество и фиксирует решения.
+          </div>
+          <div class="concept-card">
+            <strong>3. Pipeline Review</strong>
+            Разбор: что сломалось, какие предположения нарушены, как это связано с нейрофизиологией.
+          </div>
+        </div>
+
+        <div class="tool-grid" style="margin-top: 18px;">
+          <div class="tool-card">
+            <strong>Базовый стек</strong>
+            Python, NumPy, SciPy, pandas, matplotlib, seaborn, Jupyter, Git.
+          </div>
+          <div class="tool-card">
+            <strong>EEG / BCI стек</strong>
+            MNE-Python, PyRiemann, scikit-learn, statsmodels, BIDS, MOABB/OpenNeuro datasets.
+          </div>
+          <div class="tool-card">
+            <strong>Финальный артефакт</strong>
+            Репозиторий с пайплайнами, отчётами качества, notebook-разборами и личным нейронаучным журналом.
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Pipeline Practice</p>
+            <h2>Практика составления пайплайнов: от сырой ЭЭГ до работающей BCI-системы</h2>
+          </div>
+          <p class="lead">
+            Практическая часть курса устроена как серия инженерных лабораторных работ. В каждой
+            работе студент собирает конкретный пайплайн, документирует решения, связывает каждый
+            шаг с нейрофизиологическим механизмом и добавляет результат в портфолио.
+          </p>
+        </div>
+
+        <div class="pipeline-map">
+          <article class="pipeline-card">
+            <h3>Level 1 Practice — EEG Analyst Pipeline</h3>
+            <div class="pipeline-meta">
+              <span class="pill">сырой EEG</span>
+              <span class="pill">preprocessing</span>
+              <span class="pill">quality report</span>
+            </div>
+            <p>
+              Студент учится превращать сырую запись в чистый, проверенный и объяснимый датасет.
+              Главная цель уровня — понять, какие решения обработки меняют физиологический смысл сигнала.
+            </p>
+            <ol class="pipeline-steps">
+              <li><strong>Data intake:</strong> загрузить EDF/FIF/CSV, проверить каналы, частоту дискретизации, события, montage и metadata.</li>
+              <li><strong>Referencing:</strong> сравнить average reference, mastoids и linked ears; объяснить, как референс меняет вид источника.</li>
+              <li><strong>Filtering:</strong> собрать high-pass, low-pass и notch-фильтры; проверить ringing, phase distortion и потерю медленных компонентов.</li>
+              <li><strong>Artifact detection:</strong> разметить EOG, EMG, ECG, bad channels, motion artifacts и slow drifts.</li>
+              <li><strong>ICA cleaning:</strong> обучить ICA, классифицировать компоненты, удалить глазные/мышечные источники и проверить остаточный спектр.</li>
+              <li><strong>Epoching and baseline:</strong> нарезать события, применить baseline correction, сравнить trial-level и subject-level нормализацию.</li>
+              <li><strong>Quality report:</strong> собрать автоматический отчёт: PSD, topomaps, rejected epochs, SNR, impedance notes, до/после очистки.</li>
+            </ol>
+            <div class="deliverable"><strong>Итог:</strong> воспроизводимый preprocessing notebook + HTML/PDF отчёт качества данных.</div>
+          </article>
+
+          <article class="pipeline-card">
+            <h3>Level 2 Practice — BCI Decoder Pipeline</h3>
+            <div class="pipeline-meta">
+              <span class="pill">P300</span>
+              <span class="pill">SSVEP</span>
+              <span class="pill">Motor Imagery</span>
+              <span class="pill">uncertainty</span>
+            </div>
+            <p>
+              Студент строит несколько BCI-декодеров и учится выбирать пайплайн под парадигму,
+              а не под удобную метрику. Уровень связывает признаки, модели и uncertainty с механизмами мозга.
+            </p>
+            <ol class="pipeline-steps">
+              <li><strong>Paradigm selection:</strong> выбрать P300, SSVEP или Motor Imagery и описать нейронный механизм, который делает парадигму возможной.</li>
+              <li><strong>Feature extraction:</strong> реализовать bandpower, ERD/ERS, CSP, Riemannian covariance, ERP amplitude/latency и SSVEP CCA features.</li>
+              <li><strong>Model training:</strong> обучить LDA/QDA, logistic regression, SVM или Riemannian classifier с cross-validation без leakage.</li>
+              <li><strong>Bayesian layer:</strong> добавить posterior probabilities, calibration curve и confidence threshold для отказа от сомнительных решений.</li>
+              <li><strong>Drift handling:</strong> сравнить статичную модель, rolling recalibration, session normalization и adaptive update.</li>
+              <li><strong>Online loop:</strong> собрать имитацию real-time pipeline: buffer → windowing → feature extraction → prediction → feedback.</li>
+              <li><strong>Metrics:</strong> посчитать accuracy, balanced accuracy, ITR, latency, calibration error, confusion matrix и user-level reliability.</li>
+            </ol>
+            <div class="deliverable"><strong>Итог:</strong> работающий BCI decoder notebook + сравнительная таблица парадигм и моделей.</div>
+          </article>
+
+          <article class="pipeline-card">
+            <h3>Level 3 Practice — Research Pipeline</h3>
+            <div class="pipeline-meta">
+              <span class="pill">experiment design</span>
+              <span class="pill">ERP / TF</span>
+              <span class="pill">statistics</span>
+              <span class="pill">paper-ready report</span>
+            </div>
+            <p>
+              Студент превращает пайплайн в исследовательский протокол: формулирует гипотезу,
+              выбирает дизайн, анализирует ERP/time-frequency/connectivity и пишет результат так,
+              чтобы его можно было воспроизвести и защитить перед нейрофизиологом.
+            </p>
+            <ol class="pipeline-steps">
+              <li><strong>Protocol design:</strong> сформулировать гипотезу, выбрать задачу, переменные, population, exclusion criteria и power assumptions.</li>
+              <li><strong>ERP pipeline:</strong> построить preprocessing → epoching → averaging → component window → topography → amplitude/latency statistics.</li>
+              <li><strong>Time-frequency pipeline:</strong> реализовать Morlet/STFT, baseline normalization, ERD/ERS maps и анализ cross-frequency coupling.</li>
+              <li><strong>Connectivity pipeline:</strong> сравнить coherence, phase-locking value, imaginary coherence и graph metrics с контролем volume conduction.</li>
+              <li><strong>Source hypothesis:</strong> оформить source localization как физиологическую гипотезу, указать ограничения head model и depth sensitivity.</li>
+              <li><strong>MVPA pipeline:</strong> построить temporal decoding, cross-condition generalization, permutation test и interpretation checklist.</li>
+              <li><strong>Reproducibility:</strong> упаковать данные в BIDS-like структуру, зафиксировать config, random seeds, environment и analysis log.</li>
+            </ol>
+            <div class="deliverable"><strong>Итог:</strong> mini-paper с Methods, Results, Discussion, limitations и ссылкой на воспроизводимый pipeline repository.</div>
+          </article>
+
+          <article class="pipeline-card">
+            <h3>Level 4 Practice — Specialist Pipeline</h3>
+            <div class="pipeline-meta">
+              <span class="pill">clinical</span>
+              <span class="pill">cognitive</span>
+              <span class="pill">product</span>
+              <span class="pill">computational</span>
+            </div>
+            <p>
+              На последнем уровне студент выбирает специализацию и собирает профессиональный
+              пайплайн под реальный сценарий: клинический протокол, когнитивный маркер,
+              продуктовый BCI-интерфейс или вычислительную модель.
+            </p>
+            <ol class="pipeline-steps">
+              <li><strong>Clinical:</strong> пайплайн для клинического EEG report: паттерны, biomarker rationale, QC, false positives и regulatory notes.</li>
+              <li><strong>Cognitive:</strong> пайплайн когнитивного нейромаркера: задача, компонент/ритм, confounds, validation и interpretation boundary.</li>
+              <li><strong>Product:</strong> пайплайн UX-BCI прототипа: workload monitoring, latency budget, feedback loop, frustration detection и safety guardrails.</li>
+              <li><strong>Computational:</strong> пайплайн модели: биофизическое предположение → симуляция → предсказание → экспериментальная проверка.</li>
+              <li><strong>Capstone review:</strong> защита перед экспертной комиссией: что измеряем, почему это мозг, где ограничения и как пайплайн масштабируется.</li>
+            </ol>
+            <div class="deliverable"><strong>Итог:</strong> capstone pipeline package: код, отчёт, demo, risk log, neurophysiology rationale и roadmap улучшений.</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Практический учебный план</p>
+            <h2>Лабораторные работы по составлению пайплайнов</h2>
+          </div>
+          <p class="lead">
+            Ниже — практические работы, которые дополняют модули Brain Behind the Signal.
+            Каждая лабораторная заканчивается конкретным артефактом: notebook, отчётом,
+            конфигурацией пайплайна, моделью, demo или исследовательским текстом.
+          </p>
+        </div>
+
+        <div class="tracks">
+          <article class="track" style="--track-color: var(--blue);">
+            <div class="track-header"><h3>Level 1 — Analyst Labs</h3><p>Базовые пайплайны для чтения, очистки и контроля качества EEG.</p></div>
+            <table><thead><tr><th>Практика</th><th>Пайплайн</th><th>Что студент сдаёт</th></tr></thead><tbody>
+              <tr><td>L1-P1</td><td>Raw EEG intake pipeline: loading, montage, channel types, events, metadata validation.</td><td>Notebook с проверкой структуры данных и списком рисков.</td></tr>
+              <tr><td>L1-P2</td><td>Referencing + filtering pipeline: average/mastoid reference, notch, band-pass, filter diagnostics.</td><td>Сравнение спектров и объяснение выбранных параметров.</td></tr>
+              <tr><td>L1-P3</td><td>Artifact annotation pipeline: EOG/EMG/ECG detection, bad channels, epoch rejection rules.</td><td>Размеченный датасет и таблица источников артефактов.</td></tr>
+              <tr><td>L1-P4</td><td>ICA cleaning pipeline: fit, inspect, label, remove components, validate before/after.</td><td>ICA report с topomaps, time courses и PSD до/после.</td></tr>
+              <tr><td>L1-P5</td><td>Quality dashboard pipeline: SNR, PSD, rejected epochs, alpha peak, channel variance.</td><td>HTML/PDF dashboard качества записи.</td></tr>
+              <tr><td>L1-P6</td><td>Public dataset replication pipeline: взять внешний датасет и повторить preprocessing end-to-end.</td><td>Воспроизводимый скрипт + README для запуска.</td></tr>
+            </tbody></table>
+          </article>
+
+          <article class="track" style="--track-color: var(--yellow);">
+            <div class="track-header"><h3>Level 2 — Engineer Labs</h3><p>Пайплайны декодирования BCI-парадигм, uncertainty и online-loop.</p></div>
+            <table><thead><tr><th>Практика</th><th>Пайплайн</th><th>Что студент сдаёт</th></tr></thead><tbody>
+              <tr><td>L2-P1</td><td>P300 decoder pipeline: epoching, ERP features, LDA/QDA, calibration, confusion matrix.</td><td>P300 spelling-style decoder + report по ошибкам.</td></tr>
+              <tr><td>L2-P2</td><td>SSVEP pipeline: frequency tagging, CCA features, harmonic analysis, latency estimate.</td><td>SSVEP classifier и объяснение выбора частот.</td></tr>
+              <tr><td>L2-P3</td><td>Motor Imagery pipeline: mu/beta filters, CSP, Riemannian covariance, ERD/ERS visualisation.</td><td>MI classifier + карты источников discriminative features.</td></tr>
+              <tr><td>L2-P4</td><td>Bayesian uncertainty pipeline: posterior, thresholding, abstention, calibration curve.</td><td>Модель, которая умеет говорить «не уверен».</td></tr>
+              <tr><td>L2-P5</td><td>Neural drift pipeline: session split, adaptive normalization, rolling update, drift metrics.</td><td>Сравнение static vs adaptive decoder.</td></tr>
+              <tr><td>L2-P6</td><td>Online BCI simulation: streaming buffer, sliding windows, prediction latency, feedback events.</td><td>Demo real-time loop на записанном датасете.</td></tr>
+              <tr><td>L2-P7</td><td>BCI metrics pipeline: accuracy, ITR, latency, calibration error, user reliability.</td><td>Единый metrics dashboard для сравнения моделей.</td></tr>
+            </tbody></table>
+          </article>
+
+          <article class="track" style="--track-color: var(--orange);">
+            <div class="track-header"><h3>Level 3 — Research Labs</h3><p>Исследовательские пайплайны: эксперимент, статистика, воспроизводимость, статья.</p></div>
+            <table><thead><tr><th>Практика</th><th>Пайплайн</th><th>Что студент сдаёт</th></tr></thead><tbody>
+              <tr><td>L3-P1</td><td>Experiment design pipeline: hypothesis, task, confounds, sample plan, preregistration draft.</td><td>Короткий preregistration document.</td></tr>
+              <tr><td>L3-P2</td><td>ERP analysis pipeline: component windows, grand average, topography, latency/amplitude testing.</td><td>ERP figure set + Methods paragraph.</td></tr>
+              <tr><td>L3-P3</td><td>Time-frequency pipeline: wavelets/STFT, baseline, ERD/ERS, cluster statistics.</td><td>TF maps + interpretation through oscillatory mechanism.</td></tr>
+              <tr><td>L3-P4</td><td>Connectivity pipeline: coherence/PLV/imaginary coherence, network graph, volume conduction checks.</td><td>Connectivity report with anatomical caveats.</td></tr>
+              <tr><td>L3-P5</td><td>Source localization pipeline: forward/inverse assumptions, atlas labels, uncertainty of sources.</td><td>Source hypothesis memo, not overclaimed localization.</td></tr>
+              <tr><td>L3-P6</td><td>MVPA pipeline: temporal decoding, cross-validation, permutation, generalization matrix.</td><td>Decoding analysis + interpretation boundary.</td></tr>
+              <tr><td>L3-P7</td><td>Statistics pipeline: multiple comparisons, cluster permutation, effect size, Bayesian sensitivity.</td><td>Statistical decision log.</td></tr>
+              <tr><td>L3-P8</td><td>Paper pipeline: reproducible figures, Methods, Results, Discussion, limitations.</td><td>Mini-paper на 4-6 страниц.</td></tr>
+            </tbody></table>
+          </article>
+
+          <article class="track" style="--track-color: var(--red);">
+            <div class="track-header"><h3>Level 4 — Specialist Capstones</h3><p>Финальные проекты по выбранной специализации.</p></div>
+            <table><thead><tr><th>Трек</th><th>Capstone pipeline</th><th>Что студент защищает</th></tr></thead><tbody>
+              <tr><td>Clinical</td><td>Clinical EEG biomarker pipeline: паттерн, QC, patient-level report, regulatory rationale.</td><td>Клинический протокол с ограничениями и рисками.</td></tr>
+              <tr><td>Cognitive</td><td>Cognitive marker pipeline: задача, нейромаркер, validation, confounds, interpretability.</td><td>Экспериментальный дизайн и demo анализа.</td></tr>
+              <tr><td>Product</td><td>BCI product pipeline: workload/frustration monitoring, feedback latency, user safety, UX metrics.</td><td>Продуктовый прототип и decision memo.</td></tr>
+              <tr><td>Computational</td><td>Computational neuroscience pipeline: model assumption, simulation, prediction, validation test.</td><td>Модель, предсказание и экспериментальный план проверки.</td></tr>
+            </tbody></table>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Сквозной проект</p>
+            <h2>Итоговый портфолио-пайплайн студента</h2>
+          </div>
+          <p class="lead">
+            На протяжении курса студент ведёт один репозиторий. Каждый уровень добавляет новый слой:
+            очистку данных, декодирование, исследовательскую валидацию и специализацию. Финальный
+            результат можно показать работодателю, лаборатории или инвестору как доказательство навыка.
+          </p>
+        </div>
+
+        <div class="capstone-grid">
+          <div class="capstone-card">
+            <h4>Data Layer</h4>
+            <ul>
+              <li>структура данных</li>
+              <li>preprocessing config</li>
+              <li>quality report</li>
+              <li>artifact log</li>
+            </ul>
+          </div>
+          <div class="capstone-card">
+            <h4>Decoder Layer</h4>
+            <ul>
+              <li>feature pipelines</li>
+              <li>model comparison</li>
+              <li>uncertainty calibration</li>
+              <li>online simulation</li>
+            </ul>
+          </div>
+          <div class="capstone-card">
+            <h4>Research Layer</h4>
+            <ul>
+              <li>hypothesis</li>
+              <li>statistical plan</li>
+              <li>figures</li>
+              <li>mini-paper</li>
+            </ul>
+          </div>
+          <div class="capstone-card">
+            <h4>Specialist Layer</h4>
+            <ul>
+              <li>clinical/product/model track</li>
+              <li>risk log</li>
+              <li>demo</li>
+              <li>defense deck</li>
+            </ul>
           </div>
         </div>
       </section>
