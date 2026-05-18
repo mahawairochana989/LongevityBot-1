@@ -1,0 +1,1483 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nimbus Academy · Урок 1 · L1-P1 — Studio Graph Intake</title>
+  <style>
+    :root {
+      --bg: #080b16;
+      --bg-soft: #11182a;
+      --paper: #f7f4ee;
+      --paper-2: #fffaf0;
+      --ink: #141824;
+      --muted: #657086;
+      --line: rgba(20, 24, 36, 0.12);
+      --blue: #3b82f6;
+      --yellow: #f2b705;
+      --orange: #f97316;
+      --red: #ef4444;
+      --cyan: #22d3ee;
+      --violet: #8b5cf6;
+      --green: #14b8a6;
+      --shadow: 0 28px 90px rgba(2, 6, 23, 0.24);
+      --radius: 28px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 16% 8%, rgba(59, 130, 246, 0.35), transparent 28rem),
+        radial-gradient(circle at 86% 2%, rgba(139, 92, 246, 0.32), transparent 30rem),
+        radial-gradient(circle at 50% 60%, rgba(20, 184, 166, 0.20), transparent 34rem),
+        linear-gradient(135deg, #070a13 0%, #111827 44%, #07111f 100%);
+      line-height: 1.62;
+    }
+    a { color: inherit; }
+    .page {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 34px 0 64px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 560px;
+      display: grid;
+      align-items: end;
+      padding: clamp(32px, 6vw, 78px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 38px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(8, 11, 22, 0.90), rgba(17, 24, 39, 0.74)),
+        radial-gradient(circle at 72% 24%, rgba(34, 211, 238, 0.32), transparent 22rem),
+        radial-gradient(circle at 22% 82%, rgba(242, 183, 5, 0.22), transparent 24rem);
+      box-shadow: var(--shadow);
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      opacity: 0.32;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(circle at 68% 24%, #000, transparent 68%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 940px; }
+
+    .kicker {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 9px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 13px; font-weight: 750;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      backdrop-filter: blur(12px);
+    }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .hero-tag {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 13px; color: rgba(255, 255, 255, 0.86);
+      font-weight: 600;
+    }
+    h1 {
+      margin: 22px 0 18px;
+      font-size: clamp(38px, 6.4vw, 78px);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+    }
+    .subtitle {
+      max-width: 820px; margin: 0;
+      color: rgba(255, 255, 255, 0.80);
+      font-size: clamp(18px, 2.2vw, 24px);
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 30px;
+    }
+    .hero-stat {
+      padding: 18px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(14px);
+    }
+    .hero-stat strong {
+      display: block;
+      font-size: 26px; line-height: 1; letter-spacing: -0.03em;
+      color: #fff;
+    }
+    .hero-stat span {
+      display: block; margin-top: 6px;
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 13px;
+    }
+
+    .document {
+      margin-top: 22px;
+      overflow: hidden;
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, rgba(255, 250, 240, 0.96), rgba(247, 244, 238, 0.98)),
+        var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .section {
+      padding: clamp(28px, 5vw, 58px);
+      border-bottom: 1px solid var(--line);
+    }
+    .section:last-child { border-bottom: 0; }
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(24px, 5vw, 54px);
+      align-items: start;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 880px) {
+      .section-header { grid-template-columns: 1fr; }
+      .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 12px; font-weight: 900;
+      letter-spacing: 0.16em; text-transform: uppercase;
+    }
+    .eyebrow.violet { color: var(--violet); }
+    .eyebrow.orange { color: var(--orange); }
+    .eyebrow.green  { color: var(--green); }
+    .eyebrow.red    { color: var(--red); }
+    h2, h3, h4, h5 { margin: 0; letter-spacing: -0.03em; }
+    h2 { font-size: clamp(28px, 4.4vw, 50px); line-height: 1.05; }
+    h3 { font-size: clamp(22px, 2.8vw, 30px); line-height: 1.12; margin-top: 6px;}
+    h4 { font-size: 20px; line-height: 1.25; }
+    h5 { font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    p, li { font-size: 16.5px; }
+    .lead { margin: 0; color: var(--muted); font-size: 18px; }
+
+    /* TOC */
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    @media (max-width: 720px) { .toc { grid-template-columns: 1fr; } }
+    .toc a {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf8;
+      text-decoration: none;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .toc a:hover { transform: translateY(-2px); border-color: var(--blue); background: #fff; }
+    .toc-num {
+      flex: 0 0 auto;
+      width: 32px; height: 32px; border-radius: 12px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff; font-weight: 900; font-size: 14px;
+    }
+    .toc-text strong { display: block; font-size: 15.5px; color: var(--ink); }
+    .toc-text span { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* Generic blocks */
+    .grid-2 {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px;
+    }
+    .grid-3 {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;
+    }
+    @media (max-width: 880px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+    .card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #fffdf8;
+    }
+    .card.tinted {
+      background: linear-gradient(180deg, #fff, #f6f1e8);
+    }
+    .card h4 { margin-bottom: 8px; }
+    .card .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--blue);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .card .pill.violet { background: rgba(139, 92, 246, 0.14); color: var(--violet); }
+    .card .pill.orange { background: rgba(249, 115, 22, 0.14); color: var(--orange); }
+    .card .pill.green  { background: rgba(20, 184, 166, 0.14); color: var(--green); }
+    .card .pill.red    { background: rgba(239, 68, 68, 0.14); color: var(--red); }
+
+    .callout {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 16px;
+      padding: 20px 22px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.10), rgba(34, 211, 238, 0.10));
+      margin: 16px 0;
+    }
+    .callout .icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff; font-weight: 900; font-size: 22px;
+    }
+    .callout.warn { background: linear-gradient(135deg, rgba(249, 115, 22, 0.10), rgba(239, 68, 68, 0.10)); }
+    .callout.warn .icon { background: linear-gradient(135deg, var(--orange), var(--red)); }
+    .callout.green { background: linear-gradient(135deg, rgba(20, 184, 166, 0.10), rgba(59, 130, 246, 0.10)); }
+    .callout.green .icon { background: linear-gradient(135deg, var(--green), var(--blue)); }
+    .callout p { margin: 0; }
+    .callout strong { display: block; margin-bottom: 4px; }
+
+    /* Pipeline node diagram */
+    .nodes {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin: 16px 0 8px;
+    }
+    @media (max-width: 880px) { .nodes { grid-template-columns: repeat(2, 1fr); } }
+    .node {
+      position: relative;
+      padding: 16px 14px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+      text-align: center;
+      font-weight: 700;
+      font-size: 13.5px;
+      box-shadow: 0 4px 16px rgba(8, 11, 22, 0.06);
+    }
+    .node small {
+      display: block; margin-top: 4px;
+      color: var(--muted); font-weight: 500; font-size: 11.5px;
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .node.b1 { border-top: 4px solid var(--blue); }
+    .node.b2 { border-top: 4px solid var(--cyan); }
+    .node.b3 { border-top: 4px solid var(--violet); }
+    .node.b4 { border-top: 4px solid var(--orange); }
+    .node.b5 { border-top: 4px solid var(--green); }
+    .node.b6 { border-top: 4px solid var(--red); }
+
+    /* Code blocks */
+    pre.code {
+      margin: 14px 0;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: #0b1020;
+      color: #e6edf3;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 13.5px;
+      line-height: 1.55;
+      overflow-x: auto;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.35);
+    }
+    pre.code .c { color: #7d8fa9; }
+    pre.code .k { color: #79c0ff; }
+    pre.code .s { color: #a5d6ff; }
+    pre.code .n { color: #ffa657; }
+    pre.code .t { color: #d2a8ff; }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; border-radius: 18px; border: 1px solid var(--line); }
+    table {
+      width: 100%; border-collapse: collapse; background: #fffdf8;
+      font-size: 14.5px;
+    }
+    th, td {
+      padding: 12px 14px; text-align: left;
+      border-bottom: 1px solid var(--line); vertical-align: top;
+    }
+    th { background: #faf3e3; font-weight: 800; font-size: 13px;
+         text-transform: uppercase; letter-spacing: 0.06em; color: #383f55; }
+    tr:last-child td { border-bottom: 0; }
+    .mono { font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
+
+    /* Step list */
+    .steps { counter-reset: stepc; list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+    .steps > li {
+      counter-increment: stepc;
+      position: relative;
+      padding: 22px 22px 22px 80px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #fffdf8;
+    }
+    .steps > li::before {
+      content: counter(stepc);
+      position: absolute; left: 22px; top: 22px;
+      width: 44px; height: 44px; border-radius: 14px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff; font-weight: 900; font-size: 17px;
+    }
+    .steps h4 { margin-bottom: 6px; }
+    .step-meta {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin: 8px 0 12px;
+      font-size: 12.5px;
+    }
+    .step-meta span {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.10);
+      color: var(--blue);
+      font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+
+    /* Q&A */
+    .qa {
+      display: grid; gap: 12px; margin-top: 14px;
+    }
+    .qa details {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fffdf8;
+    }
+    .qa summary {
+      cursor: pointer;
+      font-weight: 800;
+      list-style: none;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .qa summary::-webkit-details-marker { display: none; }
+    .qa summary::before {
+      content: "Q"; flex: 0 0 auto;
+      width: 28px; height: 28px; border-radius: 10px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--orange), var(--red));
+      color: #fff; font-size: 13px;
+    }
+    .qa details[open] summary::before { content: "A"; background: linear-gradient(135deg, var(--green), var(--blue)); }
+    .qa details p { margin: 12px 0 0 40px; color: #2a3145; }
+
+    /* Footer / sign-off */
+    .signoff {
+      padding: clamp(28px, 5vw, 50px);
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(8, 11, 22, 0.92), rgba(17, 24, 39, 0.84)),
+        radial-gradient(circle at 30% 30%, rgba(34, 211, 238, 0.24), transparent 24rem);
+      border-radius: 32px;
+      margin-top: 22px;
+      box-shadow: var(--shadow);
+    }
+    .signoff h2 { font-size: clamp(26px, 3.6vw, 38px); margin-bottom: 12px; }
+    .signoff p { color: rgba(255, 255, 255, 0.78); }
+    .badges {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;
+    }
+    .badge {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 13px; font-weight: 700;
+    }
+
+    /* Checklist */
+    .check {
+      list-style: none; padding: 0; margin: 0;
+      display: grid; gap: 10px;
+    }
+    .check li {
+      display: grid; grid-template-columns: 28px 1fr; gap: 12px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fffdf8;
+    }
+    .check li::before {
+      content: "✓"; width: 28px; height: 28px;
+      border-radius: 9px; background: rgba(20, 184, 166, 0.14);
+      color: var(--green); font-weight: 900;
+      display: grid; place-items: center;
+    }
+
+    /* Inline code */
+    code.i {
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: #f0e7d3;
+      color: #2a3145;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 13.5px;
+    }
+
+    .anchor { display: block; height: 0; visibility: hidden; }
+
+    .brain-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+    @media (max-width: 880px) { .brain-grid { grid-template-columns: 1fr; } }
+    .brain-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #fffdf8, #fbf6ec);
+    }
+    .brain-card h4 { color: var(--ink); }
+    .brain-card .label {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(139, 92, 246, 0.14);
+      color: var(--violet);
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .brain-card p, .brain-card li { font-size: 15.5px; }
+    .brain-card ul { padding-left: 18px; margin: 8px 0 0; }
+
+    .bridge {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-left: 4px solid var(--violet);
+      border-radius: 12px;
+      background: rgba(139, 92, 246, 0.08);
+      color: #2a3145;
+      font-size: 15px;
+    }
+    .bridge strong { color: var(--violet); }
+
+    .contract {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 12px 0;
+    }
+    @media (max-width: 720px) { .contract { grid-template-columns: 1fr; } }
+    .contract-cell {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px dashed var(--line);
+      background: #fffdf8;
+    }
+    .contract-cell h5 {
+      margin: 0 0 6px;
+      color: var(--blue);
+      font-size: 12px;
+    }
+
+    .risk-table th { background: #faecec; color: #5a1f1f; }
+    .risk-table td.severity-h { color: var(--red); font-weight: 800; }
+    .risk-table td.severity-m { color: var(--orange); font-weight: 800; }
+    .risk-table td.severity-l { color: var(--green); font-weight: 800; }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-content">
+        <span class="kicker">Nimbus Academy · Level 1 · Lesson 1</span>
+        <h1>Урок&nbsp;1 — Что мы измеряем</h1>
+        <p class="subtitle">
+          BBs-1.1 «Как рождается ЭЭГ-волна» + L1-P1 «Studio graph intake».
+          Полноценная связка нейрофизиологии, теории построения пайплайнов и
+          практики приёма сырого EEG в Nimbus-совместимый формат.
+        </p>
+        <div class="hero-tags">
+          <span class="hero-tag">Brain Behind the Signal · BBs-1.1</span>
+          <span class="hero-tag">Pipeline Practice · L1-P1</span>
+          <span class="hero-tag">Studio graph intake</span>
+          <span class="hero-tag">Data contract · v0</span>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><strong>15 мин</strong><span>Нейрофизиология</span></div>
+          <div class="hero-stat"><strong>20 мин</strong><span>Теория пайплайна</span></div>
+          <div class="hero-stat"><strong>60 мин</strong><span>Практика L1-P1</span></div>
+          <div class="hero-stat"><strong>1 артефакт</strong><span>Intake notebook + risk log</span></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- DOCUMENT -->
+    <main class="document">
+
+      <!-- LESSON NAVIGATION -->
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Карта урока</p>
+            <h2>Структура занятия</h2>
+          </div>
+          <p class="lead">
+            Один урок Nimbus Academy — это три фазы: 15 минут механизма,
+            практика построения пайплайна и короткая рефлексия. Каждая часть
+            формирует один кирпич финального портфолио: визуальный граф,
+            preprocessing notebook, feature contract и quality report.
+          </p>
+        </div>
+
+        <nav class="toc">
+          <a href="#bbs"><span class="toc-num">1</span>
+            <span class="toc-text"><strong>Brain Behind the Signal · BBs-1.1</strong>
+            <span>Откуда вообще берётся то, что мы видим в EDF/FIF файле</span></span></a>
+          <a href="#theory"><span class="toc-num">2</span>
+            <span class="toc-text"><strong>Теория построения пайплайнов</strong>
+            <span>Nimbus data contract, узлы, валидация, экспорт</span></span></a>
+          <a href="#practice"><span class="toc-num">3</span>
+            <span class="toc-text"><strong>Практика · L1-P1 Studio graph intake</strong>
+            <span>8 шагов: от загрузки EDF до risk register</span></span></a>
+          <a href="#review"><span class="toc-num">4</span>
+            <span class="toc-text"><strong>Pipeline Review · рефлексия</strong>
+            <span>Связка нейрофизиологии и pipeline-решений</span></span></a>
+          <a href="#deliverable"><span class="toc-num">5</span>
+            <span class="toc-text"><strong>Артефакт урока</strong>
+            <span>Что студент сдаёт в личный нейронаучный журнал</span></span></a>
+          <a href="#glossary"><span class="toc-num">6</span>
+            <span class="toc-text"><strong>Глоссарий и источники</strong>
+            <span>Ключевые термины и литература для углубления</span></span></a>
+        </nav>
+
+        <div class="callout green" style="margin-top: 22px;">
+          <div class="icon">▶</div>
+          <div>
+            <strong>Цель урока</strong>
+            <p>К концу занятия студент умеет:
+              <em>(1)</em> объяснить, какие нейроны и какая геометрия создают ЭЭГ-сигнал;
+              <em>(2)</em> построить визуальный граф intake-узлов в стиле Nimbus Studio;
+              <em>(3)</em> валидировать структуру датасета (каналы, частота, события, монтаж, метаданные)
+              и зафиксировать риски в виде чек-листа, который перейдёт во все последующие лабораторные.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 1 — BRAIN BEHIND THE SIGNAL -->
+      <span id="bbs" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow violet">Brain Behind the Signal · BBs-1.1</p>
+            <h2>Как рождается ЭЭГ-волна</h2>
+            <h3 style="color: var(--muted); font-weight: 600;">«Откуда берётся то, что я вижу»</h3>
+          </div>
+          <p class="lead">
+            ЭЭГ — это не «активность мозга», а очень специфический физический
+            артефакт, который доходит до скальпа только при выполнении нескольких
+            биологических условий. Понимание этих условий — фундамент любого
+            инженерного решения в пайплайне: от выбора reference до фильтра ICA.
+          </p>
+        </div>
+
+        <div class="brain-grid">
+          <article class="brain-card">
+            <span class="label">§1 · Источник</span>
+            <h4>Пирамидные нейроны коры — единственный реальный источник ЭЭГ</h4>
+            <p>
+              Кора больших полушарий содержит ~16 миллиардов нейронов, но видимый
+              на скальпе сигнал создают почти исключительно <strong>пирамидные клетки слоёв III и V</strong>.
+              Причина — их особая геометрия и тип постсинаптического потенциала.
+            </p>
+            <ul>
+              <li>Постсинаптические потенциалы (EPSP/IPSP) длятся 10–250&nbsp;мс — это и есть «медленный» масштаб ЭЭГ.</li>
+              <li>Потенциалы действия (1–2&nbsp;мс) почти не вносят вклад: их вклад взаимно гасится из-за короткой длительности и асинхронности.</li>
+              <li>Поэтому ЭЭГ — это <strong>интеграл синаптической активности</strong>, а не «спайков».</li>
+              <li>Интернейроны и звёздчатые клетки тоже работают, но их геометрия не суммируется в дальнее поле.</li>
+            </ul>
+            <div class="bridge">
+              <strong>Связка с пайплайном →</strong> когда вы выбираете полосу пропускания 0.5–45 Гц,
+              вы режете не «шум», а отсекаете несвязанные с PSP-механизмом события (артефакты движения снизу, мышцы и сетевая помеха сверху).
+            </div>
+          </article>
+
+          <article class="brain-card">
+            <span class="label">§2 · Геометрия</span>
+            <h4>Апикальные дендриты как антенны</h4>
+            <p>
+              Пирамидный нейрон ориентирован перпендикулярно поверхности коры:
+              сома сидит глубоко, апикальный дендрит длиной 1–2&nbsp;мм тянется к поверхности.
+              Когда синапсы на дистальных дендритах активируются, в нейроне возникает
+              разделение зарядов — <strong>электрический диполь</strong>.
+            </p>
+            <ul>
+              <li>Один нейрон — диполь ~10⁻¹² A·м. Один нейрон не виден ничему вне самого нейрона.</li>
+              <li>Один см² коры синхронно работающих ~10⁸ пирамидных клеток — это уже 10–100&nbsp;µV на скальпе.</li>
+              <li>Геометрия диполя задаёт <em>знак</em> сигнала: радиальный диполь даёт пик прямо над источником, тангенциальный — два полюса по сторонам.</li>
+              <li>Поэтому одни и те же нейроны в гирусе и сулькусе выглядят на ЭЭГ совершенно по-разному.</li>
+            </ul>
+            <div class="bridge">
+              <strong>Связка с пайплайном →</strong> когда вы интерпретируете topomap (узел &laquo;diagnostics&raquo;), вы видите не «активность области»,
+              а <em>проекцию диполей на скальп</em>. Без этого знания топография легко превращается в красивую картинку без смысла.
+            </div>
+          </article>
+
+          <article class="brain-card">
+            <span class="label">§3 · Конфигурация поля</span>
+            <h4>Open field vs closed field — почему гиппокамп почти не виден</h4>
+            <p>
+              Чтобы диполи нейронов суммировались в дальнее поле (на скальпе),
+              они должны быть параллельны и одинаково ориентированы. Это
+              условие выполнено только в <strong>open-field</strong>-структурах.
+            </p>
+            <ul>
+              <li><strong>Open field:</strong> новая кора, мозжечок — нейроны выстроены столбиками, диполи складываются.</li>
+              <li><strong>Closed field:</strong> гиппокамп, ядра таламуса — нейроны направлены &laquo;звездой&raquo;, диполи гасят друг друга.</li>
+              <li>Поэтому MEG и intracranial EEG видят гиппокамп, а скальповая ЭЭГ — практически нет.</li>
+              <li>Та же логика объясняет, почему амигдала, базальные ганглии, ствол практически невидимы.</li>
+            </ul>
+            <div class="bridge">
+              <strong>Связка с пайплайном →</strong> когда коллега говорит &laquo;давай по ЭЭГ определим состояние гиппокампа&raquo;, инженер с
+              правильной нейроанатомией знает, что речь может идти только о <em>косвенных корковых маркерах</em>, а не о прямом источнике.
+            </div>
+          </article>
+
+          <article class="brain-card">
+            <span class="label">§4 · Синхронизация</span>
+            <h4>Синхронизация тысяч нейронов: без неё сигнал тонет в шуме</h4>
+            <p>
+              Сам по себе один диполь невидим. Видимым становится только
+              <strong>фазово-синхронная активность популяции</strong>. Это значит,
+              что ЭЭГ показывает не &laquo;что делают нейроны&raquo;, а
+              &laquo;насколько согласованно&raquo;.
+            </p>
+            <ul>
+              <li>Десинхронизация (alpha-блок при открытии глаз) выглядит как падение амплитуды — но это не «выключение», а рассогласование.</li>
+              <li>Гипер-синхронизация (эпилептический разряд) — это патологически плотная фазовая блокировка.</li>
+              <li>ERP — это не «новый сигнал», а сдвиг фазы текущих осцилляций под стимул (phase reset hypothesis).</li>
+              <li>Поэтому амплитуда ЭЭГ — это <em>не</em> мера &laquo;силы мысли&raquo;, а мера согласованности популяции.</li>
+            </ul>
+            <div class="bridge">
+              <strong>Связка с пайплайном →</strong> baseline correction и normalization работают именно потому, что
+              синхронизация колеблется на медленных масштабах — это не &laquo;дрейф железа&raquo;, это физиология.
+            </div>
+          </article>
+
+          <article class="brain-card">
+            <span class="label">§5 · Дирижёр</span>
+            <h4>Роль таламуса: почему мозг ритмичен в принципе</h4>
+            <p>
+              Кора сама по себе синхронизируется плохо. Главный
+              &laquo;дирижёр&raquo; корковых ритмов — <strong>таламо-кортикальные петли</strong>:
+              релейные ядра таламуса посылают синхронизирующие залпы в кору и получают
+              обратную связь, формируя замкнутый осциллятор.
+            </p>
+            <ul>
+              <li>Альфа-ритм (8–13 Гц) — классический продукт таламо-кортикальной петли (модель Лопеса да Силвы).</li>
+              <li>Сон-веретёна 12–14 Гц — TRN (reticular nucleus) + релейные ядра.</li>
+              <li>Дельта во сне — медленные кортикальные деполяризации с участием таламуса.</li>
+              <li>Без таламо-кортикальной петли осцилляции теряют когерентность: это то, что наблюдают при коме (см. модули Level 4A).</li>
+            </ul>
+            <div class="bridge">
+              <strong>Связка с пайплайном →</strong> выбирая band-pass 8–30 Гц для motor imagery, вы
+              работаете не с &laquo;числами&raquo;, а с конкретным таламо-кортикальным осциллятором; смена ритма у пациента после инсульта — это не «плохие данные», а биология.
+            </div>
+          </article>
+
+          <article class="brain-card">
+            <span class="label">§6 · Цепь сигнала</span>
+            <h4>От синапса до электрода: что доходит до скальпа</h4>
+            <p>
+              На пути от пирамидного нейрона до Ag/AgCl-электрода сигнал проходит
+              5 слоёв ткани и теряет 80–95% амплитуды. Это не недостаток —
+              это <em>физика</em>.
+            </p>
+            <ul>
+              <li>Кора → ликвор: проводимость падает, но почти без частотной фильтрации.</li>
+              <li>Череп: проводимость в ~80 раз ниже мозга, действует как пространственный low-pass — отсюда <strong>spatial smearing</strong>.</li>
+              <li>Скальп + кожа + волосы: дополнительная фильтрация и источник артефактов.</li>
+              <li>Электрод-гель-кожа: импеданс 5–20 кΩ — основной источник 1/f-шума, если плохо подготовлен.</li>
+              <li>Итог: один корковый источник «размазан» на 5–8 электродов. <em>Это не баг датасета — это анатомия.</em></li>
+            </ul>
+            <div class="bridge">
+              <strong>Связка с пайплайном →</strong> когда в шаге <code class="i">data intake</code> вы проверяете список каналов,
+              вы фактически проверяете, насколько <em>пространственно представлен</em> исходный диполь — отсюда требование к минимальному покрытию (например, 32+ для CSP).
+            </div>
+          </article>
+        </div>
+
+        <h3 style="margin-top: 28px;">Микро-проверка по нейрофизиологии</h3>
+        <p class="lead" style="margin-top: 8px;">
+          Перед тем как открыть Studio и грузить данные, ответьте на 5 вопросов в личный нейронаучный журнал.
+          Эти же вопросы появятся в финальной защите портфолио.
+        </p>
+        <div class="qa">
+          <details>
+            <summary>Почему ЭЭГ — это &laquo;PSP-сигнал&raquo;, а не &laquo;спайковый&raquo;?</summary>
+            <p>
+              Спайки длятся 1–2&nbsp;мс и почти не суммируются на дальнем расстоянии: волны разных нейронов гасят друг друга.
+              PSP длятся 10–250&nbsp;мс, перекрываются по времени и пространству, поэтому именно они формируют видимый дальний потенциал на скальпе.
+            </p>
+          </details>
+          <details>
+            <summary>Что в нейроне физически создаёт &laquo;диполь&raquo;?</summary>
+            <p>
+              Активация синапсов на дистальных апикальных дендритах создаёт ток внутрь клетки (sink),
+              а соответствующий обратный ток выходит ближе к соме (source). Разделение зарядов вдоль длинной оси
+              пирамидного нейрона и есть электрический диполь, видимый волуметрически.
+            </p>
+          </details>
+          <details>
+            <summary>Почему гиппокамп почти не виден на скальповой ЭЭГ?</summary>
+            <p>
+              Гиппокамп имеет closed-field геометрию: нейроны направлены как лучи звезды,
+              их диполи в дальнем поле взаимно гасятся. Видимыми становятся лишь его косвенные корковые маркеры
+              (например, фронто-медиальный тета при memory load).
+            </p>
+          </details>
+          <details>
+            <summary>Что физически означает &laquo;alpha-блок&raquo; при открытии глаз?</summary>
+            <p>
+              Не выключение нейронов, а потеря фазовой согласованности популяции в окципитальной коре.
+              Амплитуда падает потому, что диполи перестают складываться синфазно, а не потому, что нейроны «замолкают».
+            </p>
+          </details>
+          <details>
+            <summary>Зачем вообще таламус, если ЭЭГ — это &laquo;кора&raquo;?</summary>
+            <p>
+              Таламо-кортикальные петли задают частотный каркас и фазовую синхронизацию. Без таламуса
+              кора может генерировать локальную активность, но регулярные ритмы (alpha, sleep spindles, дельта во сне) исчезают.
+              Это объясняет, почему фармакология таламуса и поражения ствола радикально меняют ЭЭГ.
+            </p>
+          </details>
+        </div>
+
+        <div class="callout warn" style="margin-top: 22px;">
+          <div class="icon">!</div>
+          <div>
+            <strong>Главный вывод BBs-1.1</strong>
+            <p>Мы всегда измеряем <em>разность потенциалов</em> между двумя точками скальпа,
+            где каждая точка — это уже сильно отфильтрованная и пространственно размазанная проекция
+            корковых диполей. Поэтому без правильно выбранного <code class="i">reference</code> и валидной
+            <code class="i">montage</code> любые feature-extraction позже просто не имеют физиологического смысла.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 — PIPELINE THEORY -->
+      <span id="theory" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Pipeline Theory</p>
+            <h2>Что такое BCI-пайплайн в логике Nimbus</h2>
+          </div>
+          <p class="lead">
+            Nimbus Studio формирует строгое разделение труда: всё, что относится к
+            физиологии и подготовке данных, происходит <em>до</em> SDK. NimbusSDK
+            получает не сырой EEG, а <strong>контракт признаков</strong> с фиксированной формой,
+            нормализацией и метаданными. Эта секция — теория, на которую вы будете опираться
+            в каждой следующей лабораторной работы.
+          </p>
+        </div>
+
+        <h3>Шесть узлов любого Level 1 пайплайна</h3>
+        <div class="nodes">
+          <div class="node b1">Data source<small>EDF · FIF · CSV · MOABB · LSL</small></div>
+          <div class="node b2">Preprocessing<small>reference · filter · notch</small></div>
+          <div class="node b3">Artifact handling<small>EOG · EMG · ICA · bad ch</small></div>
+          <div class="node b4">Epoching<small>events · windows</small></div>
+          <div class="node b5">Features<small>CSP · bandpower · ERP</small></div>
+          <div class="node b6">Diagnostics<small>SNR · PSD · QC report</small></div>
+        </div>
+
+        <p style="margin-top: 8px;">
+          На уровне Level 1 студент <strong>проектирует все шесть узлов</strong>, но в первом уроке
+          (L1-P1) реализует только узел <em>Data source</em> и базовую часть <em>Diagnostics</em>.
+          Остальные узлы появятся в L1-P2 … L1-P6, но их <em>места в графе</em> и
+          <em>интерфейсы данных</em> определяются уже сейчас.
+        </p>
+
+        <h3 style="margin-top: 26px;">Nimbus data contract — три железных правила</h3>
+        <div class="grid-3">
+          <div class="card">
+            <span class="pill violet">Правило 1</span>
+            <h4>raw EEG ≠ model input</h4>
+            <p>В NimbusSDK никогда не передаётся &laquo;сигнал&raquo;. Передаются только признаки фиксированной
+            формы. Это защищает модель от leakage, артефактов и нестационарности на этапе inference.</p>
+          </div>
+          <div class="card">
+            <span class="pill orange">Правило 2</span>
+            <h4>features first</h4>
+            <p>Сначала фиксируется feature schema (тип, кол-во, окно, единицы, нормализация). И только потом обучается
+            модель. Это значит, что pipeline-инженер делает первый и главный архитектурный выбор, ещё не запустив ML.</p>
+          </div>
+          <div class="card">
+            <span class="pill green">Правило 3</span>
+            <h4>metadata required</h4>
+            <p>Любой артефакт — датасет, модель, demo — несёт версионированные метаданные:
+            <code class="i">subject_id</code>, <code class="i">session_id</code>, <code class="i">montage</code>,
+            <code class="i">sfreq</code>, <code class="i">labels</code>, <code class="i">paradigm</code>,
+            <code class="i">sdk_version</code>. Без метаданных артефакт невоспроизводим.</p>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 26px;">Зачем именно Studio-граф, а не просто скрипт</h3>
+        <div class="grid-2">
+          <div class="card tinted">
+            <h4>Граф = инженерная декомпозиция</h4>
+            <p>Каждый узел — это <em>имя</em>, <em>порт входа</em>, <em>порт выхода</em>,
+            <em>конфигурация</em>. Узел можно заменить, сравнить две конфигурации, отметить как «недоверенный»,
+            не переписывая всё остальное. Это базовый язык всех команд BCI-индустрии,
+            от Brainflow Studio до OpenViBE и OpenBCI Lab.</p>
+            <ul>
+              <li>Узлы — <strong>модули с детерминированной семантикой</strong> (одни и те же входы → одни и те же выходы).</li>
+              <li>Связи между узлами — это <strong>контракты данных</strong>, а не «массивы».</li>
+              <li>Граф можно <strong>экспортировать в Python</strong>, и обратно &laquo;импортировать&raquo; код в Studio.</li>
+            </ul>
+          </div>
+          <div class="card tinted">
+            <h4>Скрипт = удобный, но опасный inline</h4>
+            <p>Скрипт &laquo;всё в одном Jupyter ноутбуке&raquo; работает быстро, но не масштабируется:
+              он не разделяет препроцессинг и обучение, теряет нормализацию, легко leak'ает
+              calibration-данные в test, и не выдерживает деплоймент в real-time.</p>
+            <ul>
+              <li>Скрипт хорош для прототипирования внутри одного узла.</li>
+              <li>Граф хорош для архитектуры пайплайна целиком.</li>
+              <li>В Nimbus Academy мы делаем сначала граф, потом скрипт, и обязательно — экспорт обратно в код.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 26px;">Что такое intake-узел в Studio</h3>
+        <p>
+          Узел <strong>Data Source / Intake</strong> — это самый первый узел любого графа.
+          Его задача не &laquo;прочитать файл&raquo;, а вернуть <em>валидный объект данных</em> с гарантированной
+          схемой: каналы помечены типами, монтаж приведён к стандарту (10-20/10-10), события приведены к
+          числовому коду, частота дискретизации зафиксирована, метаданные субъекта и сессии прикреплены.
+          Все последующие узлы доверяют выходу intake-узла и больше никогда не задают вопрос «а это вообще EEG-канал или EMG?».
+        </p>
+
+        <div class="contract">
+          <div class="contract-cell">
+            <h5>Вход узла intake</h5>
+            <p class="mono">path: str&nbsp;&nbsp;|&nbsp;&nbsp;dataset: MoabbHandle&nbsp;&nbsp;|&nbsp;&nbsp;stream: LSLInlet</p>
+          </div>
+          <div class="contract-cell">
+            <h5>Выход узла intake</h5>
+            <p class="mono">RawIntake { raw: mne.io.Raw, montage, channel_types, sfreq, events, metadata, risks }</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="icon">i</div>
+          <div>
+            <strong>Принцип «fail fast at intake»</strong>
+            <p>Все валидации, которые можно сделать на этапе intake — должны быть сделаны
+            именно здесь. Чем дальше по пайплайну обнаружится несоответствие (например,
+            канал EOG, спутанный с EEG), тем дороже стоит ошибка. В худшем случае она доезжает до
+            обучения модели и попадает в production-веса.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3 — PRACTICE -->
+      <span id="practice" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow orange">Pipeline Practice</p>
+            <h2>L1-P1 · Studio graph intake</h2>
+          </div>
+          <p class="lead">
+            Практика собрана как мини-лаборатория. Студент строит intake-узел двумя способами:
+            визуально (диаграмма графа в стиле Nimbus Studio) и программно (Python + MNE).
+            На выходе — Jupyter notebook, RawIntake-объект, JSON-метаданные и таблица рисков,
+            которые будут переиспользованы во всех практиках уровня.
+          </p>
+        </div>
+
+        <h3>Зависимости и подготовка окружения</h3>
+        <pre class="code"><span class="c"># Минимальный стек для всех Level 1 практик</span>
+<span class="k">pip</span> install <span class="s">"mne>=1.6"</span> <span class="s">"numpy>=1.26"</span> <span class="s">"scipy>=1.11"</span> \
+            <span class="s">"pandas>=2.2"</span> <span class="s">"matplotlib>=3.8"</span> <span class="s">"jupyter"</span> \
+            <span class="s">"moabb>=1.0"</span> <span class="s">"pyriemann>=0.6"</span> <span class="s">"scikit-learn>=1.4"</span>
+</pre>
+
+        <h3>Studio graph для L1-P1</h3>
+        <div class="nodes">
+          <div class="node b1">data_source<small>EDF / FIF / MOABB</small></div>
+          <div class="node b1">channel_inventory<small>types · names</small></div>
+          <div class="node b2">montage_setter<small>standard_1020</small></div>
+          <div class="node b2">sfreq_validator<small>nyquist · band</small></div>
+          <div class="node b3">events_loader<small>annotations → codes</small></div>
+          <div class="node b6">intake_report<small>html · json · risks</small></div>
+        </div>
+        <p style="margin-top: 6px; color: var(--muted); font-size: 14.5px;">
+          Все шесть узлов — это один &laquo;subgraph&raquo; в Studio. Snapshot этого
+          subgraph&apos;а в виде PNG/SVG прикладывается к сданной работе.
+        </p>
+
+        <h3 style="margin-top: 24px;">8 шагов практики</h3>
+        <ol class="steps">
+
+          <li>
+            <h4>Описать Studio-граф и зафиксировать ожидаемые контракты</h4>
+            <div class="step-meta"><span>Studio</span><span>~5 мин</span><span>Артефакт: PNG/SVG graph</span></div>
+            <p>
+              Не пишите код первой строкой. Сначала откройте Nimbus Studio (или нарисуйте от руки в Excalidraw)
+              шесть intake-узлов выше. Для каждого узла укажите ожидаемые вход и выход в виде
+              <em>имя поля → тип</em>. Это и есть data contract этого урока.
+            </p>
+            <pre class="code"><span class="c"># expected contracts (записать в notebook как docstring)</span>
+data_source         -> <span class="t">RawArray</span>(<span class="n">n_channels</span>, <span class="n">n_samples</span>)
+channel_inventory   -> <span class="t">Dict</span>[<span class="s">"eeg"</span>: List[str], <span class="s">"eog"</span>: List[str], <span class="s">"emg"</span>: List[str], <span class="s">"misc"</span>: List[str]]
+montage_setter      -> <span class="t">DigMontage</span> aligned to channel_inventory.eeg
+sfreq_validator     -> <span class="t">Dict</span> { <span class="s">"sfreq"</span>: float, <span class="s">"nyquist"</span>: float, <span class="s">"ok"</span>: bool }
+events_loader       -> <span class="t">ndarray</span>(<span class="n">n_events</span>, 3), event_id: Dict[str, int]
+intake_report       -> <span class="t">IntakeReport</span> { html, json, risks }
+</pre>
+          </li>
+
+          <li>
+            <h4>Загрузить датасет (EDF / FIF / CSV / MOABB)</h4>
+            <div class="step-meta"><span>MNE-Python</span><span>~7 мин</span><span>Артефакт: <code class="i">raw</code> объект</span></div>
+            <p>
+              Для урока берём публичный датасет <em>BNCI 2014-001 Motor Imagery</em> через MOABB.
+              Это позволяет всем студентам работать на одинаковых данных и сравнивать risk-логи между собой.
+            </p>
+            <pre class="code"><span class="k">import</span> mne
+<span class="k">from</span> moabb.datasets <span class="k">import</span> BNCI2014_001
+
+ds = BNCI2014_001()
+sessions = ds.get_data(subjects=[<span class="n">1</span>])
+raw = sessions[<span class="n">1</span>][<span class="s">"0train"</span>][<span class="s">"0"</span>]  <span class="c"># mne.io.Raw</span>
+print(raw)
+print(raw.info)
+</pre>
+            <div class="callout">
+              <div class="icon">i</div>
+              <div>
+                <strong>Почему именно MOABB</strong>
+                <p>MOABB приводит десятки публичных датасетов к единому MNE-интерфейсу.
+                Это значит, что узел <code class="i">data_source</code> можно <em>переиспользовать</em> в L1-P7
+                (public dataset replication) и в Level 2 без переписывания.</p>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <h4>Инвентаризация каналов и присвоение типов</h4>
+            <div class="step-meta"><span>MNE</span><span>~10 мин</span><span>Артефакт: channel_inventory.json</span></div>
+            <p>
+              Самая частая ошибка Level 1 — оставлять EOG и EMG помеченными как EEG.
+              Тогда они попадают в bandpass-фильтр и ICA вместе с реальным EEG, и интерпретация компонент становится хаотичной.
+              На этом шаге мы явно проходим по каждому каналу и определяем его тип.
+            </p>
+            <pre class="code"><span class="k">import</span> json
+
+<span class="c"># 1. посмотреть все имена каналов и текущие типы</span>
+ch_types = raw.get_channel_types()
+ch_names = raw.ch_names
+inventory = {<span class="s">"eeg"</span>: [], <span class="s">"eog"</span>: [], <span class="s">"emg"</span>: [],
+             <span class="s">"ecg"</span>: [], <span class="s">"misc"</span>: [], <span class="s">"stim"</span>: []}
+
+<span class="c"># 2. вручную пометить нон-EEG каналы (имена зависят от датасета)</span>
+overrides = {<span class="s">"EOG1"</span>: <span class="s">"eog"</span>, <span class="s">"EOG2"</span>: <span class="s">"eog"</span>, <span class="s">"EOG3"</span>: <span class="s">"eog"</span>}
+raw.set_channel_types(overrides)
+
+<span class="c"># 3. собрать инвентарь</span>
+<span class="k">for</span> name, typ <span class="k">in</span> zip(raw.ch_names, raw.get_channel_types()):
+    inventory.setdefault(typ, []).append(name)
+
+<span class="k">with</span> open(<span class="s">"channel_inventory.json"</span>, <span class="s">"w"</span>) <span class="k">as</span> f:
+    json.dump(inventory, f, indent=<span class="n">2</span>)
+print(inventory)
+</pre>
+            <div class="callout warn">
+              <div class="icon">!</div>
+              <div>
+                <strong>Риск-сигнал к фиксации</strong>
+                <p>Если канал называется <code class="i">EOG*</code> или <code class="i">EMG*</code> и при этом MNE считает его
+                <code class="i">eeg</code> — добавляем строку в risk register с severity = HIGH.
+                Эта строка пойдёт в L1-P3 (artifact annotation) и L1-P4 (ICA cleaning).</p>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <h4>Установить montage и проверить геометрию</h4>
+            <div class="step-meta"><span>MNE</span><span>~7 мин</span><span>Артефакт: топография каналов (PNG)</span></div>
+            <p>
+              Montage — это карта 3D-координат электродов. Без него невозможны
+              topomap-анализы, source localization, ICA с топографиями и любые методы
+              на пространственной структуре сигнала.
+            </p>
+            <pre class="code">montage = mne.channels.make_standard_montage(<span class="s">"standard_1020"</span>)
+raw.set_montage(montage, match_case=<span class="k">False</span>, on_missing=<span class="s">"warn"</span>)
+
+<span class="c"># визуальная проверка</span>
+fig = raw.plot_sensors(show_names=<span class="k">True</span>, ch_type=<span class="s">"eeg"</span>)
+fig.savefig(<span class="s">"figures/sensors_topomap.png"</span>, dpi=<span class="n">160</span>)
+</pre>
+            <div class="bridge" style="border-left-color: var(--blue); background: rgba(59,130,246,0.08);">
+              <strong>Связка с BBs-1.1 →</strong> поскольку ЭЭГ — это проекция диполей на 3D-поверхность скальпа,
+              без правильного montage любые spatial-фичи (CSP, source models) превращаются в шум.
+              Геометрия — не косметика, а часть физической модели.
+            </div>
+          </li>
+
+          <li>
+            <h4>Валидация частоты дискретизации</h4>
+            <div class="step-meta"><span>NumPy</span><span>~5 мин</span><span>Артефакт: sfreq_report.json</span></div>
+            <p>
+              Sampling rate определяет верхнюю границу полезных частот (Nyquist) и
+              совместимость с тем, что в L1-P2 будет использовано в bandpass.
+              Особенно важно при работе с MOABB-датасетами, где разные источники
+              могут иметь 128, 160, 250, 256, 500, 512 Гц.
+            </p>
+            <pre class="code">sfreq = raw.info[<span class="s">"sfreq"</span>]
+nyquist = sfreq / <span class="n">2</span>
+
+<span class="c"># допустимый рабочий диапазон для Level 1</span>
+required_low, required_high = <span class="n">0.5</span>, <span class="n">45.0</span>
+assert nyquist > required_high * <span class="n">1.5</span>, <span class="s">"Nyquist слишком близко к рабочей полосе"</span>
+
+report = {
+    <span class="s">"sfreq"</span>: sfreq,
+    <span class="s">"nyquist"</span>: nyquist,
+    <span class="s">"required_band"</span>: [required_low, required_high],
+    <span class="s">"ok"</span>: nyquist > required_high * <span class="n">1.5</span>,
+}
+json.dump(report, open(<span class="s">"sfreq_report.json"</span>, <span class="s">"w"</span>), indent=<span class="n">2</span>)
+</pre>
+          </li>
+
+          <li>
+            <h4>События и аннотации: привести к числовому коду</h4>
+            <div class="step-meta"><span>MNE</span><span>~10 мин</span><span>Артефакт: events.npy + event_id.json</span></div>
+            <p>
+              События — это &laquo;якоря времени&raquo; для эпохирования. На уровне intake
+              задача — гарантировать, что каждое событие имеет
+              <em>читаемое имя</em>, <em>числовой код</em>, и
+              <em>привязано к корректному sample-index</em>.
+            </p>
+            <pre class="code">events, event_id = mne.events_from_annotations(raw)
+print(<span class="s">"event_id mapping:"</span>, event_id)
+print(<span class="s">"первые 5 событий:"</span>, events[:<span class="n">5</span>])
+
+<span class="c"># sanity-check</span>
+assert events.shape[<span class="n">1</span>] == <span class="n">3</span>, <span class="s">"events должен быть Nx3"</span>
+assert (events[:, <span class="n">0</span>] >= <span class="n">0</span>).all(), <span class="s">"sample-индексы &lt; 0"</span>
+assert (events[:, <span class="n">0</span>] < raw.n_times).all(), <span class="s">"sample-индексы вне записи"</span>
+
+np.save(<span class="s">"events.npy"</span>, events)
+json.dump(event_id, open(<span class="s">"event_id.json"</span>, <span class="s">"w"</span>), indent=<span class="n">2</span>)
+</pre>
+            <div class="callout">
+              <div class="icon">i</div>
+              <div>
+                <strong>Паттерн для motor imagery</strong>
+                <p>В BNCI2014_001 события <em>left_hand</em>, <em>right_hand</em>, <em>feet</em>, <em>tongue</em>
+                — это 4 класса. На уровне intake мы не выбираем классы и не делаем split: только сохраняем все
+                и явно перечисляем в <code class="i">event_id.json</code>. Выбор классов произойдёт в L2.</p>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <h4>Метаданные субъекта, сессии и парадигмы</h4>
+            <div class="step-meta"><span>JSON</span><span>~5 мин</span><span>Артефакт: metadata.json</span></div>
+            <p>
+              Метаданные обязательны: без них артефакт невоспроизводим. Минимальный набор —
+              ниже. По мере прохождения курса схема расширяется (model card, sdk version, normalization params).
+            </p>
+            <pre class="code">metadata = {
+    <span class="s">"dataset"</span>:    <span class="s">"BNCI2014_001"</span>,
+    <span class="s">"subject_id"</span>: <span class="s">"S01"</span>,
+    <span class="s">"session_id"</span>: <span class="s">"0train"</span>,
+    <span class="s">"run_id"</span>:     <span class="s">"0"</span>,
+    <span class="s">"paradigm"</span>:   <span class="s">"motor_imagery"</span>,
+    <span class="s">"task_classes"</span>: list(event_id.keys()),
+    <span class="s">"sfreq"</span>:      sfreq,
+    <span class="s">"n_channels"</span>: len(inventory[<span class="s">"eeg"</span>]),
+    <span class="s">"channel_types"</span>: inventory,
+    <span class="s">"montage"</span>:    <span class="s">"standard_1020"</span>,
+    <span class="s">"recording_duration_s"</span>: raw.times[<span class="n">-1</span>],
+    <span class="s">"capture_date"</span>: raw.info[<span class="s">"meas_date"</span>].isoformat() <span class="k">if</span> raw.info[<span class="s">"meas_date"</span>] <span class="k">else</span> <span class="k">None</span>,
+    <span class="s">"sdk_version"</span>: <span class="s">"nimbus-sdk 0.x (intake-only, no inference yet)"</span>,
+    <span class="s">"notes"</span>:      <span class="s">"L1-P1 intake; no preprocessing applied"</span>,
+}
+json.dump(metadata, open(<span class="s">"metadata.json"</span>, <span class="s">"w"</span>), indent=<span class="n">2</span>)
+</pre>
+          </li>
+
+          <li>
+            <h4>Risk register: перечислить всё, что может сломать пайплайн позже</h4>
+            <div class="step-meta"><span>Markdown</span><span>~10 мин</span><span>Артефакт: risk_log.md</span></div>
+            <p>
+              Самый недооценённый артефакт начинающего BCI-инженера. Risk register —
+              это таблица, где каждая строка фиксирует <em>наблюдение</em>, <em>биологический или инженерный источник</em>,
+              <em>влияние на пайплайн</em>, <em>severity</em> и <em>план реакции</em>.
+              В Level 2–4 он становится частью защиты модели.
+            </p>
+            <div class="table-wrap">
+              <table class="risk-table">
+                <thead>
+                  <tr><th>#</th><th>Наблюдение</th><th>Физиологический / инженерный источник</th><th>Влияние</th><th>Severity</th><th>План</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>R1</td><td>3 EOG-канала помечены как EEG</td><td>Электроокулограмма, диполь роговицы</td><td>попадут в ICA / bandpower как EEG</td><td class="severity-h">HIGH</td><td>пометить как EOG в intake, использовать как regressor в L1-P3/P4</td></tr>
+                  <tr><td>R2</td><td>sfreq = 250 Гц</td><td>аппаратное ограничение записи</td><td>Nyquist = 125 Гц, ограничивает high-gamma анализ</td><td class="severity-l">LOW</td><td>зафиксировать допустимую полосу 0.5–45 Гц</td></tr>
+                  <tr><td>R3</td><td>2 канала с импедансом &gt; 50 кΩ (из логов)</td><td>плохой контакт, кожа как фильтр (BBs-1.6)</td><td>повышенный 1/f-шум, риск ложных топографий</td><td class="severity-m">MED</td><td>отметить как bad_channels, исключить или интерполировать в L1-P3</td></tr>
+                  <tr><td>R4</td><td>4 класса событий (MI: L/R/feet/tongue)</td><td>дизайн парадигмы</td><td>baseline NimbusLDA = 4-class; ITR ниже бинарного</td><td class="severity-l">LOW</td><td>в L2 решить: бинарная задача vs мульти</td></tr>
+                  <tr><td>R5</td><td>meas_date отсутствует или anonymized</td><td>анонимизация датасета</td><td>невозможно отслеживать circadian-эффекты (BBs-1.4)</td><td class="severity-l">LOW</td><td>отметить в metadata.notes, не блокирует обучение</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="margin-top: 10px;">
+              Шаблон <code class="i">risk_log.md</code> переносится во все следующие практики уровня:
+              в L1-P2 в него добавляются строки про reference, в L1-P3 — про EOG/EMG,
+              в L1-P5 — про feature contract, в L1-P6 — про SNR. К концу Level 1 это
+              готовый <em>defense doc</em> качества данных.
+            </p>
+          </li>
+        </ol>
+
+        <h3 style="margin-top: 24px;">Соберём всё в один объект RawIntake</h3>
+        <p>
+          В Nimbus-стиле узел intake возвращает <em>один структурированный объект</em>,
+          а не &laquo;кучу переменных&raquo;. Это критично для переиспользования в L1-P2…P7.
+        </p>
+        <pre class="code"><span class="k">from</span> dataclasses <span class="k">import</span> dataclass, field
+<span class="k">from</span> typing <span class="k">import</span> Any
+
+<span class="t">@dataclass</span>
+<span class="k">class</span> RawIntake:
+    raw: <span class="t">mne.io.BaseRaw</span>
+    inventory: <span class="t">dict</span>
+    montage: <span class="t">str</span>
+    sfreq: <span class="t">float</span>
+    events: <span class="t">Any</span>
+    event_id: <span class="t">dict</span>
+    metadata: <span class="t">dict</span>
+    risks: <span class="t">list</span> = field(default_factory=list)
+
+intake = RawIntake(
+    raw=raw,
+    inventory=inventory,
+    montage=<span class="s">"standard_1020"</span>,
+    sfreq=sfreq,
+    events=events,
+    event_id=event_id,
+    metadata=metadata,
+    risks=[<span class="s">"R1"</span>, <span class="s">"R2"</span>, <span class="s">"R3"</span>, <span class="s">"R4"</span>, <span class="s">"R5"</span>],
+)
+</pre>
+
+        <h3>Diagnostics & quality intake report</h3>
+        <p>
+          Финальный шаг практики — собрать короткий HTML/PNG-отчёт. В Level 1 это будет
+          именно <em>intake-уровневый</em> отчёт: ещё нет PSD после фильтра, нет ICA,
+          нет SNR. Зато есть полная декларация структуры данных.
+        </p>
+        <pre class="code"><span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+fig, ax = plt.subplots(figsize=(<span class="n">10</span>, <span class="n">3</span>))
+ax.eventplot([events[:, <span class="n">0</span>] / sfreq], colors=[<span class="s">"#3b82f6"</span>])
+ax.set_xlabel(<span class="s">"время, с"</span>); ax.set_ylabel(<span class="s">"события"</span>)
+ax.set_title(<span class="s">"Распределение событий по времени"</span>)
+fig.tight_layout(); fig.savefig(<span class="s">"figures/events_timeline.png"</span>, dpi=<span class="n">160</span>)
+
+raw.plot_psd(fmax=<span class="n">60</span>, average=<span class="k">False</span>, show=<span class="k">False</span>).savefig(
+    <span class="s">"figures/raw_psd.png"</span>, dpi=<span class="n">160</span>)
+</pre>
+
+        <div class="callout green">
+          <div class="icon">✓</div>
+          <div>
+            <strong>Что должно лежать в папке практики после L1-P1</strong>
+            <p><code class="i">notebook_L1P1.ipynb</code> · <code class="i">channel_inventory.json</code> ·
+            <code class="i">sfreq_report.json</code> · <code class="i">events.npy</code> ·
+            <code class="i">event_id.json</code> · <code class="i">metadata.json</code> ·
+            <code class="i">risk_log.md</code> · <code class="i">figures/sensors_topomap.png</code> ·
+            <code class="i">figures/events_timeline.png</code> · <code class="i">figures/raw_psd.png</code> ·
+            <code class="i">studio_graph.png</code></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 — REVIEW -->
+      <span id="review" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow violet">Pipeline Review</p>
+            <h2>Связка нейрофизиологии и pipeline-решений</h2>
+          </div>
+          <p class="lead">
+            После практики студент отвечает на 7 вопросов, связывающих каждое
+            техническое решение L1-P1 с физиологическим механизмом из BBs-1.1.
+            Ответы сохраняются в личный нейронаучный журнал и становятся частью
+            финального сертификата.
+          </p>
+        </div>
+
+        <div class="qa">
+          <details>
+            <summary>Почему мы вообще задаём montage, а не оставляем каналы &laquo;по именам&raquo;?</summary>
+            <p>
+              Потому что ЭЭГ — это проекция корковых диполей на скальп (BBs-1.1 §2, §6). Без 3D-координат
+              электродов нет ни topomap, ни spatial filter'ов (CSP), ни source localization.
+              Имена каналов сами по себе — это бирки, а не геометрия.
+            </p>
+          </details>
+          <details>
+            <summary>Почему мы тратим время на инвентаризацию каналов, если ML потом всё равно &laquo;разберётся&raquo;?</summary>
+            <p>
+              ML &laquo;разберётся&raquo; неправильно: EOG (амплитуда сотни µV, BBs-1.3 §1) полностью
+              перекроет реальный корковый сигнал, и модель будет классифицировать &laquo;куда смотрит глаз&raquo;,
+              а не &laquo;что делает кора&raquo;. Это классическая ловушка leakage через артефакт.
+            </p>
+          </details>
+          <details>
+            <summary>Зачем фиксировать sfreq отдельным узлом, ведь MNE сам её знает?</summary>
+            <p>
+              Потому что Nyquist задаёт верхнюю границу полезных частот, а Level 2 будет работать
+              с high-gamma (70–150 Гц) — для этого нужно ≥ 250 Гц, а лучше ≥ 500 Гц. Если intake не зафиксирует sfreq явно,
+              ошибка обнаружится только в L2 при выборе диапазона фильтра.
+            </p>
+          </details>
+          <details>
+            <summary>Что мы реально измеряем, когда читаем сигнал с электрода Cz?</summary>
+            <p>
+              Разность потенциалов между Cz и reference-электродом, причём этот потенциал — суммарная проекция
+              синаптической активности (PSP) сотен миллионов пирамидных нейронов в радиусе ~5–8 см от Cz,
+              сильно ослабленная черепом (BBs-1.1 §6). Это <em>не</em> «активность нейрона под Cz».
+            </p>
+          </details>
+          <details>
+            <summary>Почему intake-узел требует metadata.json, а не просто файл сигнала?</summary>
+            <p>
+              Потому что Nimbus contract правило №3: артефакт без метаданных невоспроизводим (поэтому он не может попасть в Nimbus pipeline).
+              Без subject_id/session_id нельзя проверять cross-session generalization (Level 2 STS),
+              без paradigm — нельзя выбрать модель по карте Nimbus, без sdk_version — нельзя ответить на вопрос &laquo;почему модель стала хуже после обновления&raquo;.
+            </p>
+          </details>
+          <details>
+            <summary>Если данные уже из MOABB и &laquo;чистые&raquo; — зачем risk register?</summary>
+            <p>
+              Потому что &laquo;чистые&raquo; данные в публичном датасете означают только то, что они прошли санитарную проверку источника.
+              Они всё равно несут биологическую вариабельность (BBs-1.7), индивидуальные артефакты, импедансные особенности.
+              Risk register — это инженерный честный учёт того, что эта запись несёт <em>именно сейчас</em>.
+            </p>
+          </details>
+          <details>
+            <summary>Почему в L1-P1 мы ещё не делаем фильтрацию и ICA?</summary>
+            <p>
+              Принцип архитектуры Nimbus: каждый узел делает одну вещь и проверяет одну вещь.
+              Intake отвечает <em>только</em> за валидную структуру. Filtering, ICA, epoching, features — это
+              отдельные узлы со своими валидациями и своими рисками. Смешивать их в одном шаге — путь к скриптовой каше.
+            </p>
+          </details>
+        </div>
+
+        <h3 style="margin-top: 26px;">Главный вопрос рефлексии</h3>
+        <div class="callout">
+          <div class="icon">?</div>
+          <div>
+            <strong>Какой нейрофизиологический механизм объясняет выбранный feature contract, модель Nimbus и confidence policy?</strong>
+            <p>
+              Для L1-P1 короткий ответ: <em>контракт пока пустой</em> (features не извлекаются),
+              но он уже несёт следы физиологии — типы каналов (EEG vs EOG vs EMG отражают разные биологические источники
+              из BBs-1.3), монтаж (геометрия диполей из BBs-1.1 §2–3), и набор классов событий
+              (которые в Level 2 определят, какая таламо-кортикальная сеть активируется).
+              Сохраните ответ в журнал — он будет дополняться в каждом следующем уроке.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 — DELIVERABLES -->
+      <span id="deliverable" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow green">Артефакт урока</p>
+            <h2>Что студент сдаёт</h2>
+          </div>
+          <p class="lead">
+            Артефакт первого урока — это первый кирпич сквозного портфолио курса.
+            Он будет использован в каждой следующей практике уровня, а к финальной защите
+            войдёт в Data Layer проекта.
+          </p>
+        </div>
+
+        <h3>Чек-лист сдачи L1-P1</h3>
+        <ul class="check">
+          <li><strong>Studio graph (PNG/SVG)</strong> — визуальный граф из шести intake-узлов с подписанными контрактами портов.</li>
+          <li><strong>notebook_L1P1.ipynb</strong> — исполняемый и переисполняемый Jupyter notebook, проходит без ошибок &laquo;Restart &amp; Run All&raquo;.</li>
+          <li><strong>RawIntake-объект</strong> — единственная точка входа для последующих практик уровня.</li>
+          <li><strong>channel_inventory.json</strong> — типизация всех каналов с явным разделением EEG/EOG/EMG/ECG/misc/stim.</li>
+          <li><strong>sfreq_report.json</strong> — валидация Nyquist и допустимой рабочей полосы.</li>
+          <li><strong>events.npy + event_id.json</strong> — события приведены к Nx3 формату и читаемым именам.</li>
+          <li><strong>metadata.json</strong> — минимально-необходимая метадата (см. шаг 7).</li>
+          <li><strong>risk_log.md</strong> — таблица рисков с severity и планом реакции (минимум 5 строк).</li>
+          <li><strong>figures/*</strong> — sensors topomap, events timeline, raw PSD.</li>
+          <li><strong>Ответ на главный вопрос рефлексии</strong> в личном нейронаучном журнале.</li>
+        </ul>
+
+        <h3 style="margin-top: 24px;">Куда это попадёт в портфолио</h3>
+        <div class="grid-3">
+          <div class="card">
+            <span class="pill">Data Layer</span>
+            <h4>Studio graph + RawIntake</h4>
+            <p>Войдёт в самый первый слой портфолио. Его же увидит работодатель / научный руководитель / клиент.</p>
+          </div>
+          <div class="card">
+            <span class="pill violet">Defense Doc</span>
+            <h4>risk_log.md</h4>
+            <p>Базовый риск-документ, на который будут ссылаться все последующие модели Level 2–4.</p>
+          </div>
+          <div class="card">
+            <span class="pill green">Reproducibility</span>
+            <h4>metadata.json</h4>
+            <p>Минимально-необходимый паспорт записи. Без него ни один Nimbus-артефакт нельзя считать готовым.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 6 — GLOSSARY -->
+      <span id="glossary" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow red">Глоссарий и источники</p>
+            <h2>Что должно осесть после первого урока</h2>
+          </div>
+          <p class="lead">
+            Глоссарий не заменяет учебник, но фиксирует тот минимум, который
+            используется во всех 35+ модулях курса. Терминология Nimbus-курса сознательно
+            едина: одно понятие — одно слово.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h4>Нейрофизиологические термины</h4>
+            <ul>
+              <li><strong>PSP (Post-Synaptic Potential)</strong> — медленный (10–250 мс) потенциал, единственный реальный источник скальпового EEG.</li>
+              <li><strong>Диполь нейрона</strong> — разделение зарядов вдоль апикального дендрита пирамидной клетки.</li>
+              <li><strong>Open / closed field</strong> — конфигурация ансамбля нейронов, определяющая видимость источника в дальнем поле.</li>
+              <li><strong>Volume conduction</strong> — распространение тока в объёмных тканях головы (мозг, ликвор, череп, скальп).</li>
+              <li><strong>Spatial smearing</strong> — пространственное размазывание одного коркового источника на 5–8 электродов из-за черепа.</li>
+              <li><strong>Таламо-кортикальная петля</strong> — основной осциллятор корковых ритмов.</li>
+              <li><strong>Synchronization / desynchronization</strong> — фазовая согласованность ансамбля, мера которой и есть амплитуда EEG.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h4>Pipeline-термины</h4>
+            <ul>
+              <li><strong>Nimbus data contract</strong> — три правила: raw≠input, features first, metadata required.</li>
+              <li><strong>Intake node</strong> — первый узел графа, отвечает за валидность структуры данных.</li>
+              <li><strong>Montage</strong> — карта 3D-координат электродов на скальпе.</li>
+              <li><strong>Sampling rate / Nyquist</strong> — частота дискретизации и верхняя граница частотного анализа (sfreq/2).</li>
+              <li><strong>Channel inventory</strong> — типизированный список каналов (EEG/EOG/EMG/ECG/misc/stim).</li>
+              <li><strong>Risk register</strong> — таблица наблюдаемых рисков с severity и планом реакции.</li>
+              <li><strong>RawIntake</strong> — структурированный объект, который intake-узел отдаёт всем последующим узлам.</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 26px;">Литература и материалы для углубления</h3>
+        <div class="grid-2">
+          <div class="card tinted">
+            <h4>Нейрофизиология ЭЭГ</h4>
+            <ul>
+              <li>Buzsáki G. <em>Rhythms of the Brain</em>, Oxford University Press — фундамент для всех BBs-модулей.</li>
+              <li>Nunez P., Srinivasan R. <em>Electric Fields of the Brain</em>, 2nd ed. — биофизика дальнего поля.</li>
+              <li>Lopes da Silva F. <em>Neural mechanisms underlying brain waves</em>, EEG &amp; CN 1991 — оригинальная модель альфа.</li>
+              <li>Cohen M.X. <em>Analyzing Neural Time Series Data</em> — мост между биофизикой и pipeline-практикой.</li>
+            </ul>
+          </div>
+          <div class="card tinted">
+            <h4>Pipeline / инструменты</h4>
+            <ul>
+              <li>MNE-Python tutorials — <span class="mono">https://mne.tools</span></li>
+              <li>MOABB benchmarks — <span class="mono">https://moabb.neurotechx.com</span></li>
+              <li>BIDS-EEG specification — стандарт метаданных и структуры записи.</li>
+              <li>OpenNeuro EEG datasets — публичные данные для replication-пайплайнов (понадобится в L1-P7).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 7 — NEXT LESSON -->
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Следующий шаг</p>
+            <h2>Куда мы идём дальше</h2>
+          </div>
+          <p class="lead">
+            На уроке 2 (BBs-1.2 «Почему мозг ритмичен» + L1-P2 «Referencing + filtering»)
+            мы возьмём готовый RawIntake-объект и впервые применим к нему физически
+            обоснованные фильтры. Каждый параметр band-pass станет ответом на конкретный
+            биологический вопрос: <em>какой осциллятор мы хотим видеть и какой не хотим</em>.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <span class="pill violet">BBs-1.2</span>
+            <h4>Почему мозг ритмичен</h4>
+            <p>Таламо-кортикальные генераторы, дельта, тета, альфа, бета, гамма — биология каждого ритма.</p>
+          </div>
+          <div class="card">
+            <span class="pill orange">L1-P2</span>
+            <h4>Referencing + filtering</h4>
+            <p>Average / mastoid reference, notch, paradigm-specific bandpass — как Nimbus preprocessing config.</p>
+          </div>
+          <div class="card">
+            <span class="pill green">Артефакт</span>
+            <h4>Spectrum comparison report</h4>
+            <p>Сравнение PSD до/после, объяснение каждого параметра фильтра в физиологических терминах.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- SIGN-OFF -->
+    <section class="signoff">
+      <h2>Brain Behind the Signal · Pipeline Practice · Pipeline Review</h2>
+      <p>
+        Это полный шаблон одного урока Nimbus Academy. Каждый последующий урок Level 1
+        повторяет ту же тройную структуру: 15 минут механизма из BBs, мини-лаборатория
+        в стиле Nimbus Studio, и короткая рефлексия, связывающая инженерное решение с биологией.
+        К концу уровня студент имеет полный feature-space dataset, готовый к передаче в NimbusSDK.
+      </p>
+      <div class="badges">
+        <span class="badge">Lesson 1 of 7 · Level 1</span>
+        <span class="badge">BBs-1.1 + L1-P1</span>
+        <span class="badge">Studio graph intake</span>
+        <span class="badge">Data contract v0</span>
+        <span class="badge">Artifact → portfolio Data Layer</span>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
