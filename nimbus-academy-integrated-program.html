@@ -1,0 +1,2633 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nimbus Academy · Интегрированная программа: нейрофизиология → пайплайн</title>
+  <style>
+    :root {
+      --bg: #080b16; --paper: #f7f4ee; --paper-2: #fffaf0;
+      --ink: #141824; --muted: #657086;
+      --line: rgba(20, 24, 36, 0.12);
+      --blue: #3b82f6; --yellow: #f2b705; --orange: #f97316;
+      --red: #ef4444; --cyan: #22d3ee; --violet: #8b5cf6;
+      --green: #14b8a6;
+      --shadow: 0 28px 90px rgba(2, 6, 23, 0.24);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 16% 8%, rgba(59, 130, 246, 0.35), transparent 28rem),
+        radial-gradient(circle at 86% 2%, rgba(139, 92, 246, 0.32), transparent 30rem),
+        radial-gradient(circle at 50% 60%, rgba(20, 184, 166, 0.20), transparent 34rem),
+        linear-gradient(135deg, #070a13 0%, #111827 44%, #07111f 100%);
+      line-height: 1.6;
+    }
+    a { color: inherit; }
+    .page { width: min(1240px, calc(100% - 36px)); margin: 0 auto; padding: 34px 0 64px; }
+
+    /* HERO */
+    .hero {
+      position: relative; overflow: hidden;
+      min-height: 540px;
+      display: grid; align-items: end;
+      padding: clamp(32px, 6vw, 78px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 38px;
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(8, 11, 22, 0.90), rgba(17, 24, 39, 0.74)),
+        radial-gradient(circle at 72% 24%, rgba(34, 211, 238, 0.32), transparent 22rem),
+        radial-gradient(circle at 22% 82%, rgba(242, 183, 5, 0.22), transparent 24rem);
+      box-shadow: var(--shadow);
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; opacity: 0.30;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(circle at 68% 24%, #000, transparent 68%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 980px; }
+    .kicker {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 9px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 13px; font-weight: 750;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      backdrop-filter: blur(12px);
+    }
+    h1 { margin: 22px 0 18px; font-size: clamp(38px, 6.4vw, 76px);
+         line-height: 0.98; letter-spacing: -0.06em; }
+    .subtitle { max-width: 880px; margin: 0;
+                color: rgba(255, 255, 255, 0.82);
+                font-size: clamp(18px, 2.2vw, 24px); }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .hero-tag {
+      padding: 8px 14px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 13px; color: rgba(255, 255, 255, 0.86); font-weight: 600;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px; margin-top: 30px;
+    }
+    .hero-stat {
+      padding: 18px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(14px);
+    }
+    .hero-stat strong { display: block; font-size: 26px; line-height: 1;
+                        letter-spacing: -0.03em; color: #fff; }
+    .hero-stat span { display: block; margin-top: 6px;
+                      color: rgba(255, 255, 255, 0.66); font-size: 13px; }
+    @media (max-width: 720px) { .hero-stats { grid-template-columns: repeat(2,1fr); } }
+
+    /* DOCUMENT */
+    .document {
+      margin-top: 22px; overflow: hidden;
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, rgba(255, 250, 240, 0.96), rgba(247, 244, 238, 0.98)),
+        var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .section {
+      padding: clamp(28px, 5vw, 58px);
+      border-bottom: 1px solid var(--line);
+    }
+    .section:last-child { border-bottom: 0; }
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(24px, 5vw, 54px);
+      align-items: start; margin-bottom: 28px;
+    }
+    @media (max-width: 880px) { .section-header { grid-template-columns: 1fr; } }
+    .eyebrow { margin: 0 0 10px; color: var(--blue); font-size: 12px;
+               font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
+    .eyebrow.violet { color: var(--violet); }
+    .eyebrow.orange { color: var(--orange); }
+    .eyebrow.green { color: var(--green); }
+    .eyebrow.red { color: var(--red); }
+    .eyebrow.yellow { color: #b07a05; }
+    h2 { margin: 0; font-size: clamp(28px, 4.4vw, 50px); line-height: 1.05;
+         letter-spacing: -0.03em; }
+    h3 { margin: 0; font-size: clamp(22px, 2.8vw, 30px); line-height: 1.12;
+         letter-spacing: -0.03em; }
+    h4 { margin: 0; font-size: 19px; line-height: 1.22;
+         letter-spacing: -0.02em; }
+    h5 { margin: 0; font-size: 13px; text-transform: uppercase;
+         letter-spacing: 0.12em; color: var(--muted); }
+    p, li { font-size: 16px; }
+    .lead { margin: 0; color: var(--muted); font-size: 18px; }
+
+    /* CALLOUT */
+    .callout {
+      display: grid; grid-template-columns: 48px 1fr; gap: 16px;
+      padding: 20px 22px; border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.10), rgba(34, 211, 238, 0.10));
+      margin: 16px 0;
+    }
+    .callout .icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff; font-weight: 900; font-size: 22px;
+    }
+    .callout p { margin: 0; }
+    .callout strong { display: block; margin-bottom: 4px; }
+    .callout.green { background: linear-gradient(135deg, rgba(20, 184, 166, 0.10), rgba(59, 130, 246, 0.10)); }
+    .callout.green .icon { background: linear-gradient(135deg, var(--green), var(--blue)); }
+    .callout.warn { background: linear-gradient(135deg, rgba(249, 115, 22, 0.10), rgba(239, 68, 68, 0.10)); }
+    .callout.warn .icon { background: linear-gradient(135deg, var(--orange), var(--red)); }
+    .callout.violet { background: linear-gradient(135deg, rgba(139, 92, 246, 0.10), rgba(34, 211, 238, 0.10)); }
+    .callout.violet .icon { background: linear-gradient(135deg, var(--violet), var(--cyan)); }
+
+    /* LESSON CARD — the key visual unit */
+    .lesson {
+      margin: 22px 0;
+      border-radius: 28px;
+      background: #fffdf8;
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 28px rgba(2, 6, 23, 0.06);
+      overflow: hidden;
+    }
+    .lesson-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px; align-items: end;
+      padding: 22px 26px 18px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.06));
+      border-bottom: 1px solid var(--line);
+    }
+    .lesson-head .code-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+    .lesson-code {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 10px; border-radius: 8px;
+      background: rgba(59, 130, 246, 0.14);
+      color: var(--blue); font-weight: 800; font-size: 12px;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .lesson-code.bbs   { background: rgba(139, 92, 246, 0.14); color: var(--violet); }
+    .lesson-code.lab   { background: rgba(249, 115, 22, 0.14); color: var(--orange); }
+    .lesson-code.green { background: rgba(20, 184, 166, 0.14); color: var(--green); }
+    .lesson-code.red   { background: rgba(239, 68, 68, 0.14); color: var(--red); }
+    .lesson-head h3 { font-size: 24px; line-height: 1.18; margin: 4px 0 0; }
+    .lesson-head .lesson-meta {
+      color: var(--muted); font-size: 13px; font-weight: 600;
+      text-align: right; white-space: nowrap;
+    }
+    @media (max-width: 720px) {
+      .lesson-head { grid-template-columns: 1fr; }
+      .lesson-head .lesson-meta { text-align: left; }
+    }
+    .lesson-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0;
+    }
+    @media (max-width: 880px) {
+      .lesson-body { grid-template-columns: 1fr; }
+    }
+    .lesson-half {
+      padding: 22px 26px 26px;
+    }
+    .lesson-half + .lesson-half {
+      border-left: 1px solid var(--line);
+    }
+    @media (max-width: 880px) {
+      .lesson-half + .lesson-half { border-left: 0; border-top: 1px solid var(--line); }
+    }
+    .lesson-half h5 { margin-bottom: 8px; }
+    .lesson-half h4 { margin-bottom: 12px; font-size: 18px; }
+    .brain h5 { color: var(--violet); }
+    .pipe  h5 { color: var(--orange); }
+    .lesson-half ul { margin: 0 0 12px; padding-left: 18px; }
+    .lesson-half li { margin-bottom: 6px; font-size: 15px; }
+    .lesson-half .tools {
+      margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .lesson-half .tools span {
+      padding: 3px 9px; border-radius: 999px;
+      background: #f1ecde; color: #3a3727;
+      font-size: 11.5px; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .deliv {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-left: 4px solid var(--green);
+      border-radius: 10px;
+      background: rgba(20, 184, 166, 0.08);
+      font-size: 14.5px;
+    }
+    .deliv strong { color: var(--green); }
+    .bridge {
+      margin: 14px 26px 22px;
+      padding: 12px 16px;
+      border-left: 4px solid var(--blue);
+      border-radius: 10px;
+      background: rgba(59, 130, 246, 0.07);
+      font-size: 14.5px;
+      color: #2a3145;
+    }
+    .bridge strong { color: var(--blue); }
+
+    /* LEVEL HEAD */
+    .level-banner {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 22px; align-items: center;
+      padding: 22px 26px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(139, 92, 246, 0.08));
+      border: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+    .level-banner.lvl2 { background: linear-gradient(135deg, rgba(242, 183, 5, 0.16), rgba(249, 115, 22, 0.08)); }
+    .level-banner.lvl3 { background: linear-gradient(135deg, rgba(249, 115, 22, 0.18), rgba(239, 68, 68, 0.10)); }
+    .level-banner.lvl4 { background: linear-gradient(135deg, rgba(239, 68, 68, 0.16), rgba(139, 92, 246, 0.12)); }
+    .level-num {
+      width: 110px; height: 110px;
+      border-radius: 26px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff;
+      display: grid; place-items: center;
+      font-size: 56px; font-weight: 900; letter-spacing: -0.04em;
+      box-shadow: 0 12px 30px rgba(2,6,23,0.18);
+    }
+    .level-banner.lvl2 .level-num { background: linear-gradient(135deg, var(--yellow), var(--orange)); }
+    .level-banner.lvl3 .level-num { background: linear-gradient(135deg, var(--orange), var(--red)); }
+    .level-banner.lvl4 .level-num { background: linear-gradient(135deg, var(--red), var(--violet)); }
+    .level-banner h3 { font-size: 22px; }
+    .level-banner h2 { font-size: clamp(22px, 3.2vw, 36px); }
+    .level-banner p { margin: 6px 0 0; color: var(--muted); font-size: 15.5px; }
+    @media (max-width: 560px) {
+      .level-banner { grid-template-columns: 1fr; }
+      .level-num { width: 80px; height: 80px; font-size: 40px; border-radius: 20px; }
+    }
+
+    /* TOC */
+    .toc {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px; margin-top: 14px;
+    }
+    @media (max-width: 720px) { .toc { grid-template-columns: 1fr; } }
+    .toc a {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fffdf8;
+      text-decoration: none;
+      transition: transform .12s ease, border-color .12s ease;
+    }
+    .toc a:hover { transform: translateY(-2px); border-color: var(--blue); }
+    .toc-pill {
+      flex: 0 0 auto;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff; font-weight: 900; font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+    .toc-pill.lvl2 { background: linear-gradient(135deg, var(--yellow), var(--orange)); }
+    .toc-pill.lvl3 { background: linear-gradient(135deg, var(--orange), var(--red)); }
+    .toc-pill.lvl4 { background: linear-gradient(135deg, var(--red), var(--violet)); }
+    .toc strong { display: block; font-size: 14.5px; color: var(--ink); }
+    .toc span.note { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+    /* TRACK GRID (Level 4) */
+    .track-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px; margin: 16px 0;
+    }
+    @media (max-width: 880px) { .track-strip { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .track-strip { grid-template-columns: 1fr; } }
+    .track-chip {
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+    }
+    .track-chip strong { display: block; font-size: 13px; letter-spacing: 0.10em;
+                         text-transform: uppercase; margin-bottom: 4px; }
+    .track-chip.clinical strong   { color: var(--red); }
+    .track-chip.cognitive strong  { color: var(--blue); }
+    .track-chip.product strong    { color: var(--orange); }
+    .track-chip.computational strong { color: var(--violet); }
+    .track-chip p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    /* SIGN-OFF */
+    .signoff {
+      padding: clamp(28px, 5vw, 50px);
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(8, 11, 22, 0.92), rgba(17, 24, 39, 0.84)),
+        radial-gradient(circle at 30% 30%, rgba(34, 211, 238, 0.24), transparent 24rem);
+      border-radius: 32px;
+      margin-top: 22px;
+      box-shadow: var(--shadow);
+    }
+    .signoff h2 { font-size: clamp(26px, 3.6vw, 38px); margin-bottom: 12px; }
+    .signoff p { color: rgba(255, 255, 255, 0.80); }
+    .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .badge { padding: 8px 14px; border-radius: 999px;
+             background: rgba(255, 255, 255, 0.10);
+             border: 1px solid rgba(255, 255, 255, 0.18);
+             font-size: 13px; font-weight: 700; }
+
+    code.i {
+      padding: 1px 6px; border-radius: 6px;
+      background: #f0e7d3; color: #2a3145;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 13.5px;
+    }
+
+    .principles {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px; margin-top: 14px;
+    }
+    @media (max-width: 880px) { .principles { grid-template-columns: 1fr; } }
+    .principle {
+      padding: 18px 20px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+    }
+    .principle strong { display: block; font-size: 14px; color: var(--blue);
+                        letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+    .principle h4 { margin-bottom: 6px; }
+    .anchor { display: block; height: 0; visibility: hidden; }
+
+    .capstone-card {
+      margin: 18px 0;
+      padding: 22px 26px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.10), rgba(139, 92, 246, 0.10));
+      border: 1px solid var(--line);
+    }
+    .capstone-card h4 { margin-bottom: 6px; }
+    .capstone-card .meta {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+    }
+    .capstone-card .meta span {
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(239, 68, 68, 0.12); color: var(--red);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-content">
+        <span class="kicker">Nimbus Academy · Integrated Program</span>
+        <h1>Полная программа курса в формате урок-за-уроком</h1>
+        <p class="subtitle">
+          Один документ, в котором для каждого занятия сначала идёт
+          нейрофизиология за пайплайном и мозговыми сигналами, и сразу следом —
+          руководство, как этот пайплайн собрать. 4 уровня, 62 урока, 4 трека специализации,
+          одна сквозная нить от пирамидного нейрона до deployable BCI-системы.
+        </p>
+        <div class="hero-tags">
+          <span class="hero-tag">Brain Behind the Signal · 35+ модулей</span>
+          <span class="hero-tag">Pipeline Practice · 30+ лабораторных</span>
+          <span class="hero-tag">Studio + SDK workflow</span>
+          <span class="hero-tag">Capstone × 4 трека</span>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><strong>4</strong><span>уровня программы</span></div>
+          <div class="hero-stat"><strong>62</strong><span>урока (BBs + Practice)</span></div>
+          <div class="hero-stat"><strong>4</strong><span>трека специализации</span></div>
+          <div class="hero-stat"><strong>1</strong><span>сквозное портфолио</span></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- DOCUMENT -->
+    <main class="document">
+
+      <!-- INTRO -->
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Принцип документа</p>
+            <h2>Нейрофизиология первой, пайплайн второй — в одной строке</h2>
+          </div>
+          <p class="lead">
+            В предыдущей программе разделы Brain Behind the Signal и Pipeline Practice
+            жили на отдельных страницах. Здесь они склеены в одну атомарную единицу — урок.
+            Сначала студент проходит 15 минут механизма, который рождает сигнал,
+            и сразу же открывает руководство, как этот сигнал превратить в Nimbus-ready пайплайн.
+            Каждое инженерное решение получает физиологическое обоснование, а не остаётся «правилом из туториала».
+          </p>
+        </div>
+
+        <div class="principles">
+          <div class="principle">
+            <strong>Принцип 1</strong>
+            <h4>Один урок = механизм + сборка</h4>
+            <p>В каждом уроке нейрофизиологический раздел и pipeline-практика — два соседних блока одного экрана, а не разные главы курса.</p>
+          </div>
+          <div class="principle">
+            <strong>Принцип 2</strong>
+            <h4>Сначала «почему», потом «как»</h4>
+            <p>Никакая фильтрация, ICA, CSP или confidence policy не появляется без предварительного объяснения биологического механизма, который она обслуживает.</p>
+          </div>
+          <div class="principle">
+            <strong>Принцип 3</strong>
+            <h4>Каждое решение — это <em>контракт</em>, не код</h4>
+            <p>На выходе каждого урока — артефакт с метаданными: визуальный граф, exported code, model card, risk log. Они складываются в сквозное портфолио.</p>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top: 22px;">
+          <div class="icon">▶</div>
+          <div>
+            <strong>Как читать каждый урок</strong>
+            <p><strong>Левая колонка</strong> карточки — нейрофизиология (BBs-блок): ключевые механизмы, объясняющие, что именно генерирует сигнал и почему он выглядит так.
+            <strong>Правая колонка</strong> — конкретные шаги сборки пайплайна и инструменты Nimbus Studio / NimbusSDK.
+            <strong>Голубая полоса снизу</strong> явно связывает биологию с инженерным решением.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TOC -->
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Навигация</p>
+            <h2>Содержание программы</h2>
+          </div>
+          <p class="lead">
+            Каждый уровень — это связная история о мозге и инженерии. На уровне 1 вы учитесь читать сигнал,
+            на уровне 2 — декодировать парадигмы, на уровне 3 — проводить исследования, на уровне 4 — деплоить специализированные системы.
+          </p>
+        </div>
+
+        <nav class="toc">
+          <a href="#level1"><span class="toc-pill">L1</span><span><strong>Level 1 · Analyst</strong><span class="note">«Откуда берётся то, что я вижу» · 7 уроков</span></span></a>
+          <a href="#level2"><span class="toc-pill lvl2">L2</span><span><strong>Level 2 · Engineer</strong><span class="note">«Почему парадигма работает» · 9 уроков</span></span></a>
+          <a href="#level3"><span class="toc-pill lvl3">L3</span><span><strong>Level 3 · Researcher</strong><span class="note">«Механизм за результатом» · 10 уроков</span></span></a>
+          <a href="#level4"><span class="toc-pill lvl4">L4</span><span><strong>Level 4 · Specialist</strong><span class="note">Clinical · Cognitive · Product · Computational</span></span></a>
+        </nav>
+      </section>
+
+      <!-- ===================== LEVEL 1 ===================== -->
+      <span id="level1" class="anchor"></span>
+      <section class="section">
+        <div class="level-banner">
+          <div class="level-num">1</div>
+          <div>
+            <p class="eyebrow">Level 1 · Analyst</p>
+            <h2>EEG Analyst Pipeline</h2>
+            <p>Студент учится превращать сырую запись в чистый, проверенный и объяснимый датасет.
+            Главная цель уровня — понять, какие решения обработки меняют физиологический смысл сигнала.
+            Финальный артефакт уровня: <strong>Nimbus-ready feature dataset + preprocessing notebook + HTML quality report</strong>.</p>
+          </div>
+        </div>
+
+        <!-- LESSON 1.1 -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L1.1</span>
+                <span class="lesson-code bbs">BBs-1.1</span>
+                <span class="lesson-code lab">L1-P1</span>
+              </div>
+              <h3>Что мы измеряем · Studio graph intake</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 60 мин практика<br>артефакт: Studio graph + intake notebook</div>
+          </div>
+
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Как рождается ЭЭГ-волна</h4>
+              <ul>
+                <li><strong>Пирамидные нейроны слоёв III/V</strong> — единственный реальный источник скальпового EEG: их PSP длятся 10–250 мс и складываются в дальнем поле.</li>
+                <li><strong>Апикальные дендриты как антенны</strong>: разделение зарядов вдоль длинной оси нейрона создаёт диполь, видимый снаружи.</li>
+                <li><strong>Open field vs closed field</strong>: новая кора суммируется, гиппокамп — гасится; поэтому глубокие структуры почти невидимы на скальпе.</li>
+                <li><strong>Синхронизация ансамбля</strong> — амплитуда ЭЭГ есть мера согласованности популяции, а не «силы мысли».</li>
+                <li><strong>Таламо-кортикальные петли</strong> — главный «дирижёр» корковых ритмов, без него осцилляции теряют структуру.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Studio graph intake</h4>
+              <ul>
+                <li>Спроектировать граф: <code class="i">data_source → channel_inventory → montage_setter → sfreq_validator → events_loader → intake_report</code>.</li>
+                <li>Загрузить датасет (EDF / FIF / CSV / MOABB) через MNE-Python.</li>
+                <li>Типизировать каналы (EEG/EOG/EMG/ECG/misc/stim), установить montage <code class="i">standard_1020</code>.</li>
+                <li>Валидировать sampling rate / Nyquist под рабочую полосу 0.5–45 Гц.</li>
+                <li>Привести события и аннотации к Nx3-формату с читаемым <code class="i">event_id</code>.</li>
+                <li>Зафиксировать <code class="i">metadata.json</code> и risk register с severity-уровнями.</li>
+              </ul>
+              <div class="tools"><span>MNE-Python</span><span>MOABB</span><span>Studio</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> Studio graph (PNG) + intake notebook + RawIntake-объект + risk_log.md + figures/.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> поскольку ЭЭГ — это <em>разность потенциалов</em> между двумя точками скальпа, валидный montage и явная типизация каналов критичны: без них любая последующая фильтрация и feature-extraction теряют физиологический смысл.</div>
+        </article>
+
+        <!-- LESSON 1.2 -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L1.2</span>
+                <span class="lesson-code bbs">BBs-1.2</span>
+                <span class="lesson-code lab">L1-P2</span>
+              </div>
+              <h3>Почему мозг ритмичен · Referencing + filtering</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 60 мин практика<br>артефакт: preprocessing config + спектры до/после</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Анатомия ритмов корковой сети</h4>
+              <ul>
+                <li><strong>Таламо-кортикальная петля</strong> Лопеса да Силвы — генератор альфа (8–13 Гц).</li>
+                <li><strong>Дельта</strong> (0.5–4 Гц) — медленные деполяризации, доминируют во сне и при нарушении сознания.</li>
+                <li><strong>Тета</strong> гиппокампа (4–8 Гц) — навигация, рабочая память, когнитивная нагрузка.</li>
+                <li><strong>Бета</strong> (13–30 Гц) — статус-кво моторной коры; падает при движении, отскакивает после (rebound).</li>
+                <li><strong>Гамма</strong> (30–80 Гц) — локальная обработка, связывание признаков, требует pyramidal-interneuron сети.</li>
+                <li><strong>GABA-ергическое торможение</strong> — физический механизм, который и создаёт сами осцилляции.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Reference + filter chain</h4>
+              <ul>
+                <li>Выбрать reference: average vs mastoid vs REST — и объяснить физиологический эффект каждого выбора.</li>
+                <li>Поставить notch (50 / 60 Гц) против сетевой помехи; объяснить, почему это <em>не</em> биология, а железо.</li>
+                <li>Поставить bandpass под парадигму: 0.5–45 Гц для общего анализа, 8–30 Гц для MI, 0.5–10 Гц для P300.</li>
+                <li>Сравнить PSD до и после; визуально проверить, что альфа-пик не «съеден» фильтром.</li>
+                <li>Сохранить параметры как <code class="i">preprocessing_config.json</code> — основа для L1-P5 feature contract.</li>
+              </ul>
+              <div class="tools"><span>MNE filter</span><span>scipy</span><span>Studio</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> spectrum report PNG + preprocessing_config.json + объяснение каждого параметра в физиологических терминах.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> выбор полосы 8–30 Гц для motor imagery — это не «магическое число», а адрес конкретного таламо-кортикального осциллятора, который участвует в ERD/ERS.</div>
+        </article>
+
+        <!-- LESSON 1.3 -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L1.3</span>
+                <span class="lesson-code bbs">BBs-1.3</span>
+                <span class="lesson-code lab">L1-P3</span>
+              </div>
+              <h3>Тело против мозга · Artifact annotation pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 60 мин практика<br>артефакт: размеченный датасет + таблица артефактов</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Конкуренция электрических источников</h4>
+              <ul>
+                <li><strong>ЭМГ</strong>: моторная единица генерирует амплитуду на порядки выше коркового PSP. Особенно опасны мышцы лица и шеи.</li>
+                <li><strong>Электроокулограмма</strong>: роговица как диполь батарейки — фронтальные электроды видят моргания и саккады как огромные отклонения.</li>
+                <li><strong>ЭКГ</strong>: проводимость тканей головы делает QRS видимым на темени, особенно на референсе T8/A2.</li>
+                <li><strong>Кожно-гальваническая реакция</strong>: потовые железы создают медленные дрейфы &lt; 0.5 Гц.</li>
+                <li><strong>Близость = беда</strong>: мышцы лица — главный артефакт ровно потому, что расстояние до электрода исчезающе мало.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Artifact annotation</h4>
+              <ul>
+                <li>Автоматическая разметка EOG / EMG / ECG через корреляцию каналов и пороговые правила MNE.</li>
+                <li>Детекция bad channels: variance threshold, flatness, корреляция с соседями.</li>
+                <li>Правила отбраковки эпох: peak-to-peak amplitude, муscle frequency band power.</li>
+                <li>Сохранить аннотации обратно в <code class="i">raw.annotations</code> и в отдельный JSON.</li>
+                <li>Обновить risk log: для каждого детектированного типа артефакта — план реакции.</li>
+              </ul>
+              <div class="tools"><span>MNE annotations</span><span>autoreject</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> аннотированный датасет + artifact_table.csv + обновлённый risk_log.md.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> студент не «удаляет шум», а отделяет один физиологический источник от другого. Каждый артефакт — это сигнал другой системы тела.</div>
+        </article>
+
+        <!-- LESSON 1.4 -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L1.4</span>
+                <span class="lesson-code bbs">BBs-1.4</span>
+                <span class="lesson-code lab">L1-P4</span>
+              </div>
+              <h3>Нестационарность сигнала · ICA cleaning pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 75 мин практика<br>артефакт: ICA report до/после</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Почему сигнал не стоит на месте</h4>
+              <ul>
+                <li><strong>Мозговые состояния</strong>: бодрствование → сонливость → стресс меняют весь спектр одновременно.</li>
+                <li><strong>Нейромодуляторы</strong>: ацетилхолин десинхронизирует ЭЭГ, норадреналин усиливает бета.</li>
+                <li><strong>Habituation</strong>: один и тот же стимул через N повторений вызывает меньший ответ — это адаптация нейрона, а не «плохие данные».</li>
+                <li><strong>Циркадные ритмы</strong>: утро и вечер дают разные альфа-пики.</li>
+                <li><strong>Индивидуальные различия</strong>: два мозга не дают одну и ту же ЭЭГ — это норма, а не баг.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>ICA cleaning</h4>
+              <ul>
+                <li>High-pass 1 Гц перед ICA — обязательное условие сходимости.</li>
+                <li>Запустить ICA (Picard / Infomax) с числом компонент ≈ rank(data).</li>
+                <li>Инспекция компонент: topomap, time course, PSD; авто-разметка EOG/ECG через <code class="i">find_bads_eog</code>, <code class="i">find_bads_ecg</code>.</li>
+                <li>Удалить помеченные компоненты, восстановить сигнал; сохранить unmixing matrix.</li>
+                <li>Сравнить PSD до/после; если альфа исчезла — компонент мозговой, верните.</li>
+              </ul>
+              <div class="tools"><span>MNE ICA</span><span>Picard</span><span>ICLabel</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> ICA report PNG (topomaps + time courses + before/after PSD) + сохранённая unmixing matrix.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> ICA работает, потому что мозговые и не-мозговые источники <em>статистически независимы</em>. Нестационарность сигнала — биологическая, а не «случайная»: каждый артефакт имеет свою физиологию.</div>
+        </article>
+
+        <!-- LESSON 1.5 -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L1.5</span>
+                <span class="lesson-code bbs">BBs-1.5</span>
+                <span class="lesson-code lab">L1-P5</span>
+              </div>
+              <h3>Независимые источники · Nimbus feature contract</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: feature dataset + metadata JSON</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Корковые источники как набор независимых процессов</h4>
+              <ul>
+                <li><strong>Функциональная сегрегация</strong>: разные области коры решают разные задачи — основание гипотезы независимости.</li>
+                <li><strong>Default Mode Network</strong> работает в покое — «тишина» не означает отсутствие сети.</li>
+                <li><strong>Дипольная природа</strong> корковых источников — физическое основание для spatial-фильтрации (CSP, beamformer).</li>
+                <li><strong>Когда независимость нарушена</strong>: связанные когнитивные процессы (внимание + рабочая память) дают коррелированные источники.</li>
+                <li>ICA, CSP и source localization — это разные углы одной и той же гипотезы независимых источников.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Feature contract</h4>
+              <ul>
+                <li>Зафиксировать тип признаков под парадигму: CSP (MI), bandpower (SSVEP), ERP amplitude (P300).</li>
+                <li>Определить feature_count, time_window, units, label mapping, expected shape.</li>
+                <li>Извлечь признаки <strong>только на train fold</strong>, нормализацию оценить только там.</li>
+                <li>Сохранить как <code class="i">features.npz</code> + <code class="i">feature_metadata.json</code>.</li>
+                <li>Валидационный checklist: no NaN/Inf, constant columns, dtype, shape match metadata.</li>
+              </ul>
+              <div class="tools"><span>scikit-learn</span><span>pyRiemann</span><span>NimbusSDK contract</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> feature dataset + feature_metadata.json + validation_checklist.md.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> CSP-фильтр находит пространственные паттерны, которые максимально разделяют классы — это инженерная реализация той же гипотезы независимых корковых источников.</div>
+        </article>
+
+        <!-- LESSON 1.6 -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L1.6</span>
+                <span class="lesson-code bbs">BBs-1.6</span>
+                <span class="lesson-code lab">L1-P6</span>
+              </div>
+              <h3>Качество записи · Quality dashboard pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 60 мин практика<br>артефакт: HTML/PDF quality dashboard</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Что физически значит «хорошая запись»</h4>
+              <ul>
+                <li><strong>Импеданс электродов</strong>: ионный контакт кожа–гель–металл; 5–20 кΩ — норма, выше 50 кΩ — катастрофа для SNR.</li>
+                <li><strong>Кожа как фильтр</strong>: роговой слой добавляет частотную характеристику в цепь измерения.</li>
+                <li><strong>Состояние испытуемого</strong>: тревога → мышечное напряжение → бесконечные ЭМГ-артефакты.</li>
+                <li><strong>Усталость</strong>: последние блоки записи систематически хуже первых — десинхронизация и blink rate растут.</li>
+                <li>Температура и влажность изменяют проводимость кожи и геля.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Quality dashboard</h4>
+              <ul>
+                <li>Метрики: SNR на канал, PSD по полосам, alpha peak frequency, channel variance, % rejected epochs, finite-value rate.</li>
+                <li>Topomap покрытия каналов: визуальная проверка распределения качества.</li>
+                <li>Auto-flag bad channels с подсказкой «interpolate» или «drop».</li>
+                <li>Сборка в один HTML/PDF отчёт (jinja2 + matplotlib) с разделом «physiological caveats».</li>
+                <li>Зафиксировать quality gates: thresholds, при которых запись попадает / не попадает в Nimbus dataset.</li>
+              </ul>
+              <div class="tools"><span>jinja2</span><span>matplotlib</span><span>pdfkit</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> quality_dashboard.html + diagnose_preprocessing-style notes.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> impedance и SNR — это не «техника железа», а физиология цепи измерения: студент учится отделять плохую запись от плохого мозга.</div>
+        </article>
+
+        <!-- LESSON 1.7 -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L1.7</span>
+                <span class="lesson-code bbs">BBs-1.7</span>
+                <span class="lesson-code lab">L1-P7</span>
+              </div>
+              <h3>Биологическая вариабельность · Public dataset replication</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: воспроизводимый скрипт + README</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Почему ЭЭГ разных лабораторий разная</h4>
+              <ul>
+                <li>Возраст, пол, опыт медитации меняют спектр.</li>
+                <li>Частота альфа-пика — это <em>распределение</em> 8–13 Гц, а не точка.</li>
+                <li>Генетика ЭЭГ: наследуемость отдельных ритмов до 80% (twin studies Berger / Vogel).</li>
+                <li>Тренировочные эффекты: BCI-наивный vs опытный пользователь декодируется разными моделями.</li>
+                <li>Межкультурные различия в когнитивных стратегиях задач (Stroop, N-back).</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Replication pipeline</h4>
+              <ul>
+                <li>Взять датасет из MOABB / OpenNeuro и применить весь intake→features pipeline.</li>
+                <li>Сравнить распределение feature-значений между публичным и собственным датасетом.</li>
+                <li>Отдельно посчитать subject-level variance и session-level variance.</li>
+                <li>Описать transfer learning gap: что переносится, что — нет.</li>
+                <li>Собрать <code class="i">README.md</code> с инструкцией к одной команде запуска и Studio reconstruction.</li>
+              </ul>
+              <div class="tools"><span>MOABB</span><span>OpenNeuro</span><span>BIDS-EEG</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> replication_script.py + README + cross-dataset comparison report.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> transfer learning сложен потому, что биологическая вариабельность реальна. Это не недостаток модели — это физиологический факт.</div>
+        </article>
+      </section>
+
+      <!-- ===================== LEVEL 2 ===================== -->
+      <span id="level2" class="anchor"></span>
+      <section class="section">
+        <div class="level-banner lvl2">
+          <div class="level-num">2</div>
+          <div>
+            <p class="eyebrow yellow">Level 2 · Engineer</p>
+            <h2>BCI Decoder Pipeline</h2>
+            <p>Студент строит несколько BCI-декодеров и учится выбирать пайплайн под парадигму, а не под удобную метрику.
+            Каждый урок начинается с того, какой нейронный механизм делает парадигму возможной,
+            и заканчивается работающим декодером с confidence-policy.
+            Финальный артефакт уровня: <strong>Nimbus decoder package + streaming demo</strong>.</p>
+          </div>
+        </div>
+
+        <!-- LESSON 2.1 P300 -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L2.1</span>
+                <span class="lesson-code bbs">BBs-2.1·a</span>
+                <span class="lesson-code lab">L2-P1</span>
+              </div>
+              <h3>Парадигма P300 · NimbusQDA pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: P300 spelling-style decoder</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Механизм P300 и системы внимания</h4>
+              <ul>
+                <li><strong>Locus coeruleus</strong> и норадреналиновая система — ответ на редкий значимый стимул.</li>
+                <li><strong>Context updating</strong> (Donchin) vs <strong>inhibition</strong> (Verleger) — две живые гипотезы природы P300.</li>
+                <li>Генератор P300: париетальная кора (P3b) + фронтальный новизновый компонент (P3a).</li>
+                <li>Латентность 300–500 мс зависит от сложности задачи, возраста и фармакологии.</li>
+                <li>Почему P300 — самая надёжная BCI-парадигма для пациентов с ALS: ответ автоматический, не требует обучения.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>P300 NimbusQDA</h4>
+              <ul>
+                <li>Bandpass 0.5–10 Гц, downsample до 64–128 Гц.</li>
+                <li>Эпохинг −0.2 … +0.8 с от стимула, baseline correction на pre-stimulus.</li>
+                <li>Признаки: средняя амплитуда в нескольких окнах 250–500 мс (xDAWN или раздельно по каналам).</li>
+                <li>Обучить <strong>NimbusQDA</strong> (разные ковариации target / non-target).</li>
+                <li>Анализ posterior probabilities, confusion matrix, ITR.</li>
+              </ul>
+              <div class="tools"><span>MNE epochs</span><span>pyRiemann xDAWN</span><span>NimbusQDA</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> trained NimbusQDA + ERP figure set + report по ошибкам и confidence.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> NimbusQDA выбран не «потому что точнее», а потому что распределения target / non-target физически имеют <em>разные ковариации</em> — равные ковариации (LDA) — это допущение, которое в P300 нарушено.</div>
+        </article>
+
+        <!-- LESSON 2.2 SSVEP -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L2.2</span>
+                <span class="lesson-code bbs">BBs-2.1·b</span>
+                <span class="lesson-code lab">L2-P2</span>
+              </div>
+              <h3>Парадигма SSVEP · NimbusLDA/QDA pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 75 мин практика<br>артефакт: SSVEP classifier</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Нейронный резонанс зрительной коры</h4>
+              <ul>
+                <li>SSVEP — синхронный отклик первичной зрительной коры (V1) на периодическую стимуляцию.</li>
+                <li>Топография: затылочные электроды Oz / O1 / O2 / PO7 / PO8 — отсюда требование к минимальному покрытию.</li>
+                <li>Гармоники (2f, 3f) несут реальную информацию: их игнор приводит к потере SNR.</li>
+                <li>Частотный диапазон 6–30 Гц: ниже — слишком утомительно, выше — теряется отклик.</li>
+                <li>Почему SSVEP — самый быстрый BCI: латентность отклика 100–200 мс, не нужна тренировка.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>SSVEP decoder</h4>
+              <ul>
+                <li>Bandpass вокруг целевых частот ±2 Гц с захватом 1–3 гармоник.</li>
+                <li>Признаки: CCA (canonical correlation analysis) или bandpower на target / гармониках.</li>
+                <li>Эпохинг 1–4 с в зависимости от требуемой latency vs accuracy.</li>
+                <li>Обучить NimbusLDA или NimbusQDA в зависимости от числа целей и перекрытия частот.</li>
+                <li>Оценить latency / ITR / accuracy / drop-rate в зависимости от длины окна.</li>
+              </ul>
+              <div class="tools"><span>scipy.signal</span><span>CCA</span><span>NimbusLDA</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> SSVEP classifier + объяснение выбора модели под число целей.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> CCA-признаки работают физически потому, что V1-нейроны действительно входят в фазовую блокировку с частотой стимула. Это не «корреляция», это <em>биологический резонанс</em>.</div>
+        </article>
+
+        <!-- LESSON 2.3 MI -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L2.3</span>
+                <span class="lesson-code bbs">BBs-2.1·c</span>
+                <span class="lesson-code lab">L2-P3</span>
+              </div>
+              <h3>Парадигма Motor Imagery · NimbusLDA + CSP</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: MI classifier + CSP topomaps</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>ERD/ERS и внутренняя симуляция движения</h4>
+              <ul>
+                <li>Зеркальные нейроны премоторной коры активируются и при движении, и при его воображении.</li>
+                <li><strong>ERD</strong> (event-related desynchronization) в mu/beta — дезингибиция таламо-кортикальной петли при подготовке к движению.</li>
+                <li><strong>ERS</strong> (event-related synchronization) — post-movement rebound, маркер завершения действия.</li>
+                <li>Топография: C3 / C4 / Cz контралатерально воображаемой конечности.</li>
+                <li>BCI non-responders: 10–30% людей не дают чистый ERD/ERS — это анатомическая особенность, не «плохой студент».</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>MI CSP + NimbusLDA</h4>
+              <ul>
+                <li>Bandpass 8–30 Гц (или FBCSP в нескольких поддиапазонах).</li>
+                <li>Эпохинг 0.5–2.5 с от cue, baseline pre-cue.</li>
+                <li>Обучить CSP-фильтр на train fold, взять log-variance первых k компонент.</li>
+                <li>Обучить NimbusLDA — shared covariance подходит CSP-пространству.</li>
+                <li>Визуализировать CSP-паттерны как топографии — каждая должна биологически читаться (sensorimotor).</li>
+              </ul>
+              <div class="tools"><span>MNE CSP</span><span>FBCSP</span><span>NimbusLDA</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> MI classifier + карты discriminative CSP-фильтров.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> CSP-топография должна совпадать с сенсомоторной корой — если максимум разделимости лежит над лбом, это артефакт, а не MI.</div>
+        </article>
+
+        <!-- LESSON 2.4 FEATURE ENGINEERING -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L2.4</span>
+                <span class="lesson-code bbs">BBs-2.2</span>
+                <span class="lesson-code lab">L2-P4</span>
+              </div>
+              <h3>Полосы как состояния мозга · Feature normalization</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 60 мин практика<br>артефакт: saved norm params + leakage demo</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Что частотная полоса говорит о коре</h4>
+              <ul>
+                <li><strong>Альфа</strong> = торможение нерелевантных областей («pulsed inhibition» Klimesch).</li>
+                <li><strong>Тета</strong> = гиппокампо-фронтальная связь при рабочей памяти.</li>
+                <li><strong>Бета rebound</strong> = маркер завершения действия (post-movement sync).</li>
+                <li><strong>High-gamma</strong> (70–150 Гц) = прокси спайковой активности, требует ≥ 500 Гц sfreq.</li>
+                <li><strong>CSP физически</strong> ищет источники ERD/ERS — это spatial filter, который «настроен» биологией.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Feature normalization done right</h4>
+              <ul>
+                <li>Параметры z-score / robust — <strong>только train fold</strong>; никогда не «по всему датасету».</li>
+                <li>Сохранить mean/std/median/MAD как <code class="i">norm_params.json</code>.</li>
+                <li>Переиспользовать те же параметры на test и streaming — это часть Nimbus model card.</li>
+                <li>Показать leakage demo: одна и та же модель с «плохой» и «правильной» нормализацией.</li>
+                <li>Calibration set ≠ test set: разделение по времени, не по случайному split.</li>
+              </ul>
+              <div class="tools"><span>scikit-learn Pipeline</span><span>NimbusSDK</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> norm_params.json + leakage_demo notebook с конкретной разницей в accuracy.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> нормализация хранит <em>биологический baseline</em> сессии. Если переоценить её на test — модель «подсмотрит» нестационарность и даст ложную точность.</div>
+        </article>
+
+        <!-- LESSON 2.5 BAYESIAN + UNCERTAINTY -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L2.5</span>
+                <span class="lesson-code bbs">BBs-2.3 + BBs-2.4</span>
+                <span class="lesson-code lab">L2-P5</span>
+              </div>
+              <h3>Мозг как байесовская машина · Bayesian uncertainty pipeline</h3>
+            </div>
+            <div class="lesson-meta">20 мин теория · 90 мин практика<br>артефакт: модель с abstention + calibration curve</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Predictive coding и нейронная неопределённость</h4>
+              <ul>
+                <li><strong>Predictive coding</strong>: кора непрерывно генерирует предсказания и обновляет их по prediction error.</li>
+                <li><strong>Precision weighting</strong>: чем надёжнее источник, тем больше его вес — буквальный аналог posterior.</li>
+                <li><strong>Anterior cingulate</strong> кодирует конфликт и неопределённость.</li>
+                <li><strong>Population coding</strong>: мозг хранит распределение, а не точечную оценку.</li>
+                <li><strong>Pupil dilation</strong> — наблюдаемый маркер uncertainty через LC-NE систему.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Bayesian uncertainty</h4>
+              <ul>
+                <li>Получить posterior из NimbusLDA/QDA/Softmax, посчитать predictive entropy.</li>
+                <li>Задать threshold по entropy / max-posterior: execute / confirm / reject.</li>
+                <li>Построить calibration curve (reliability diagram), оценить ECE.</li>
+                <li>Реализовать abstention-policy: модель «отказывается» от низко-уверенных trials.</li>
+                <li>Подключить policy к safety gate (см. L2-P5 контракт).</li>
+              </ul>
+              <div class="tools"><span>NimbusSDK posterior</span><span>scikit-learn calibration</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> модель с safety policy + calibration_report.png + abstention_metrics.json.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> uncertainty в Nimbus — это не «слабость модели», а буквальная имитация того, как мозг сам декодирует мир: распределением, не точкой.</div>
+        </article>
+
+        <!-- LESSON 2.6 DRIFT -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L2.6</span>
+                <span class="lesson-code bbs">BBs-2.5</span>
+                <span class="lesson-code lab">L2-P6</span>
+              </div>
+              <h3>Нейронный дрейф · NimbusSTS adaptive pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 75 мин практика<br>артефакт: static vs adaptive comparison</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Почему мозг никогда не одинаков дважды</h4>
+              <ul>
+                <li><strong>LTP / LTD</strong> меняют веса синапсов в реальном времени.</li>
+                <li><strong>Гомеостатическая пластичность</strong> нормализует общую активность.</li>
+                <li><strong>Дофамин / ацетилхолин</strong> модулируют gain корковых сетей.</li>
+                <li><strong>Сон</strong> консолидирует — поэтому между-сессионный дрейф особенно велик.</li>
+                <li><strong>BCI-обучение</strong>: после 10 сессий пользователь лучше, потому что мозг физически изменился.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>STS drift pipeline</h4>
+              <ul>
+                <li>Разделить датасет по времени (session-wise), не случайно.</li>
+                <li>Обучить static LDA/QDA на session 1, оценить деградацию на session N.</li>
+                <li>Запустить <strong>NimbusSTS</strong> с latent state и adaptive update.</li>
+                <li>Сравнить accuracy, calibration error, rejection rate во времени.</li>
+                <li>Зафиксировать metrics в model card как «drift coverage».</li>
+              </ul>
+              <div class="tools"><span>NimbusSTS</span><span>session-wise CV</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> static_vs_adaptive_report.html с graph деградации во времени.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> адаптивная модель биологически честнее статичной — мозг сам адаптируется, и любая static-модель отстаёт по определению.</div>
+        </article>
+
+        <!-- LESSON 2.7 ONLINE / HARDWARE -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L2.7</span>
+                <span class="lesson-code bbs">BBs-2.6 + BBs-2.7</span>
+                <span class="lesson-code lab">L2-P7</span>
+              </div>
+              <h3>От нейрона до электрода · Online BCI simulation</h3>
+            </div>
+            <div class="lesson-meta">20 мин теория · 90 мин практика<br>артефакт: real-time loop demo</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Цепь сигнала и реальное время в нервной системе</h4>
+              <ul>
+                <li>PSP → суммация → volume conduction → череп → скальп → электрод.</li>
+                <li>Череп как пространственный low-pass: один источник на 5–8 каналов.</li>
+                <li>Скорость нервной проводимости и latency сенсорных путей 50–100 мс.</li>
+                <li>Время реакции 150–200 мс — нижняя граница «осознанного» ответа.</li>
+                <li>Efference copy: мозг знает о движении до сенсорной обратной связи — отсюда требование к latency BCI.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Online loop simulation</h4>
+              <ul>
+                <li>Имитация acquisition через LSL / BrainFlow на записанном датасете.</li>
+                <li>Feature chunks с фиксированным окном и hop; передача в <strong>StreamingSession</strong>.</li>
+                <li>Weighted vote / sliding posterior для уменьшения шума.</li>
+                <li>Замер end-to-end latency: acquisition → preprocessing → features → SDK → command.</li>
+                <li>Latency budget: каждый узел получает свой budget в миллисекундах.</li>
+              </ul>
+              <div class="tools"><span>LSL</span><span>BrainFlow</span><span>NimbusSDK StreamingSession</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> demo video / replay + latency_budget.json.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> допустимая latency BCI — это не «инженерное удобство», а биология: если задержка превышает temporal binding window (~150 мс), пользователь перестаёт чувствовать систему как продолжение себя.</div>
+        </article>
+
+        <!-- LESSON 2.8 METRICS -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L2.8</span>
+                <span class="lesson-code bbs">BBs-2.8</span>
+                <span class="lesson-code lab">L2-P8</span>
+              </div>
+              <h3>Информация в нервной системе · BCI metrics dashboard</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 60 мин практика<br>артефакт: metrics dashboard</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Шеннон встречает нейрон</h4>
+              <ul>
+                <li>Capacity нейронного канала ограничена шумом и спайковой статистикой.</li>
+                <li>Temporal coding vs rate coding — два языка нейронов.</li>
+                <li>Bottleneck BCI: где именно теряется информация — на электроде, в фильтре, в признаках или в модели.</li>
+                <li>ITR (information transfer rate) как мост между Шенноном и BCI.</li>
+                <li>70% точность в P300 уже даёт полезную систему — это вопрос ITR, а не «точности per se».</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Единый dashboard метрик</h4>
+              <ul>
+                <li>Метрики: accuracy, balanced accuracy, ITR, latency, calibration error, rejection rate, user reliability.</li>
+                <li>Сравнить Nimbus-модели на одной axis (LDA / QDA / Softmax / STS).</li>
+                <li>Confidence reliability — отдельный график (reliability diagram).</li>
+                <li>Сохранить как HTML с фильтрами по subject / session.</li>
+                <li>Включить в model card каждую цифру с источником и формулой.</li>
+              </ul>
+              <div class="tools"><span>matplotlib</span><span>plotly</span><span>jinja2</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> metrics_dashboard.html для сравнения Nimbus-моделей.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> ITR — это не формула, а мера того, насколько BCI приближается к собственной полосе пропускания нервной системы.</div>
+        </article>
+
+        <!-- LESSON 2.9 ETHICS -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L2.9</span>
+                <span class="lesson-code bbs">BBs-2.9</span>
+                <span class="lesson-code green">Reflection</span>
+              </div>
+              <h3>Этика BCI · Защита Level 2 портфолио</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 45 мин разбор<br>артефакт: ethics statement</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Нейроданные как особый тип личной информации</h4>
+              <ul>
+                <li>Что реально декодируется из ЭЭГ: факты и мифы.</li>
+                <li>Эмоции, намерения, убеждения — что доступно, что нет, что скоро будет.</li>
+                <li>Индивидуальный нейронный «отпечаток» — ЭЭГ как биометрика.</li>
+                <li>Нейроправа: ООН, чилийская конституция, обсуждения в EU AI Act.</li>
+                <li>Когнитивное усиление через BCI и проблема доступа.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Защита и упаковка Level 2</h4>
+              <ul>
+                <li>Собрать Nimbus decoder package: model + norm params + metadata + confidence policy + streaming demo.</li>
+                <li>Написать короткий ethics statement (1 страница) для каждой парадигмы из L2-P1…P3.</li>
+                <li>Зафиксировать data retention и consent в metadata.json.</li>
+                <li>Defense rehearsal: 3 вопроса от ревьюера-инженера + 2 от ревьюера-этика.</li>
+                <li>Перевести risk log в защитные thresholds для streaming.</li>
+              </ul>
+              <div class="tools"><span>Markdown</span><span>NimbusSDK</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> Level 2 portfolio package + ethics_statement.md.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> регуляторика BCI развивается быстрее, чем в других медтех-областях, потому что нейроданные физически уникальны и интимны. Этот урок — обязательное завершение Level 2.</div>
+        </article>
+      </section>
+
+      <!-- ===================== LEVEL 3 ===================== -->
+      <span id="level3" class="anchor"></span>
+      <section class="section">
+        <div class="level-banner lvl3">
+          <div class="level-num">3</div>
+          <div>
+            <p class="eyebrow orange">Level 3 · Researcher</p>
+            <h2>Research Pipeline</h2>
+            <p>Студент превращает пайплайн в исследовательский протокол: гипотеза → дизайн → анализ → защита.
+            Каждый урок добавляет один методологический слой и одну ветвь нейрофизиологического обоснования.
+            Финал уровня: <strong>mini-paper + reproducible Nimbus pipeline spec</strong>.</p>
+          </div>
+        </div>
+
+        <!-- LESSON 3.1 EXP DESIGN -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.1</span>
+                <span class="lesson-code bbs">BBs-3.1</span>
+                <span class="lesson-code lab">L3-P1</span>
+              </div>
+              <h3>Дизайн эксперимента · Experiment design pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: preregistration draft</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Нейронные основы парадигм</h4>
+              <ul>
+                <li>Oddball / MMN — автоматический детектор девиантов.</li>
+                <li>Flanker / Stroop / Go-NoGo — anterior cingulate, dorsolateral PFC.</li>
+                <li>N-back — рабочая память: поддержание vs манипуляция.</li>
+                <li>Between-subjects дизайн требует больше N из-за биологической вариабельности.</li>
+                <li>Arousal и его контроль: скучная задача → плохая наука.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Design + preregistration</h4>
+              <ul>
+                <li>Сформулировать hypothesis, парадигму, expected effect, planned analysis.</li>
+                <li>Decide feature contract до сбора данных.</li>
+                <li>Validation split и stopping rules.</li>
+                <li>Preregistration draft (OSF-style 1–2 страницы).</li>
+                <li>Указать ожидаемую Nimbus-модель из карты моделей курса.</li>
+              </ul>
+              <div class="tools"><span>OSF preregistration</span><span>PsychoPy</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> preregistration document + pipeline spec.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> дизайн без знания нейронного субстрата измеряет что-то другое, чем заявлено.</div>
+        </article>
+
+        <!-- LESSON 3.2 ERP -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.2</span>
+                <span class="lesson-code bbs">BBs-3.2</span>
+                <span class="lesson-code lab">L3-P2</span>
+              </div>
+              <h3>ERP углублённо · ERP-to-Nimbus pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: ERP figure set + Methods paragraph</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Архитектура ERP-компонентов</h4>
+              <ul>
+                <li>N100 — первичная слуховая кора, ориентировочный рефлекс.</li>
+                <li>P200 — таламическая фильтрация, сенсорное стробирование.</li>
+                <li>N200 — anterior cingulate, конфликт-мониторинг.</li>
+                <li>P300 — locus coeruleus, context updating, теменная кора.</li>
+                <li>N400 — левая височная кора, семантическая интеграция.</li>
+                <li>P600 — синтаксическая переработка, левая лобная.</li>
+                <li>CNV — готовность к действию, SMA + PFC.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>ERP analysis</h4>
+              <ul>
+                <li>Component windows из анатомии генератора, не «удобства».</li>
+                <li>Усреднение по trial и по subject; CIs или bootstrap.</li>
+                <li>Передать ERP-признаки в NimbusQDA, проанализировать posterior.</li>
+                <li>Compare two analytical pipelines (e.g., mean amplitude vs peak).</li>
+                <li>Methods paragraph через data contract, не через «мы использовали MNE».</li>
+              </ul>
+              <div class="tools"><span>MNE evoked</span><span>NimbusQDA</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> ERP figure set + ERP→model interpretation.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> временное окно ERP-компонента — это адрес анатомического генератора, а не «настройка».</div>
+        </article>
+
+        <!-- LESSON 3.3 TF -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.3</span>
+                <span class="lesson-code bbs">BBs-3.3</span>
+                <span class="lesson-code lab">L3-P3</span>
+              </div>
+              <h3>Time-frequency · TF feature pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: TF maps + feature table</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Осцилляторная динамика как язык мозга</h4>
+              <ul>
+                <li>PING-модель гамма (pyramidal-interneuron γ).</li>
+                <li>Theta-gamma coupling: упаковка воспоминаний в гиппокампе.</li>
+                <li>Альфа как pulsed inhibition.</li>
+                <li>Бета и «статус-кво».</li>
+                <li>Cross-frequency coupling — иерархическая коммуникация.</li>
+                <li>Phase precession — нейронные часы.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>TF feature extraction</h4>
+              <ul>
+                <li>Morlet wavelets vs STFT — обоснование выбора через trade-off time/frequency.</li>
+                <li>ERD/ERS как ratio относительно baseline.</li>
+                <li>Извлечь TF-признаки на сетке (band × window × channel).</li>
+                <li>Сравнить модели NimbusLDA/QDA/Softmax на TF-фичах.</li>
+                <li>Зафиксировать TF feature contract.</li>
+              </ul>
+              <div class="tools"><span>MNE tfr</span><span>pywt</span><span>NimbusSDK</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> TF maps + Nimbus feature table + interpretation.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> TF-анализ должен строиться вокруг биологически значимых полос — не вокруг «логарифмической сетки».</div>
+        </article>
+
+        <!-- LESSON 3.4 CONNECTIVITY -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.4</span>
+                <span class="lesson-code bbs">BBs-3.4</span>
+                <span class="lesson-code lab">L3-P4</span>
+              </div>
+              <h3>Connectivity · Coherence/PLV pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: connectivity report</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Как области мозга разговаривают</h4>
+              <ul>
+                <li>Default Mode Network — самореференция, MPFC + PCC.</li>
+                <li>Salience Network — insula + ACC.</li>
+                <li>Executive Control Network — DLPFC + parietal.</li>
+                <li>Структурный subtract: тракты белого вещества.</li>
+                <li>Dynamic FC: связность меняется каждые секунды.</li>
+                <li>Axonal conduction delays — физическая основа фазового лага.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Connectivity features</h4>
+              <ul>
+                <li>Coherence, PLV, wPLI — выбор метрики под вопрос (мощность vs фаза, volume conduction control).</li>
+                <li>Graph metrics: degree, clustering, path length.</li>
+                <li>Leakage control: source-space connectivity vs sensor-space.</li>
+                <li>Передать connectivity features в Nimbus model.</li>
+                <li>Доклад с anatomical caveats: что мы реально измеряем.</li>
+              </ul>
+              <div class="tools"><span>MNE connectivity</span><span>networkx</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> connectivity report + caveats.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> connectivity без знания анатомических путей — это числа без смысла.</div>
+        </article>
+
+        <!-- LESSON 3.5 SOURCE LOCALIZATION -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.5</span>
+                <span class="lesson-code bbs">BBs-3.5</span>
+                <span class="lesson-code lab">Source mini-lab</span>
+              </div>
+              <h3>Source localization · Анатомия генераторов</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 75 мин практика<br>артефакт: source estimates + dipole fit</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Где сидят источники</h4>
+              <ul>
+                <li>Цитоархитектоника Бродмана: BA7 vs BA40 дают разные сигналы.</li>
+                <li>Гиры и борозды задают направление диполя.</li>
+                <li>Амигдала, гиппокамп — глубокие источники, трудно локализовать.</li>
+                <li>Субкортикальный вклад в ЭЭГ — миф или реальность.</li>
+                <li>Атласы: Desikan-Killiany, Schaefer, AAL.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Source localization mini-lab</h4>
+              <ul>
+                <li>Forward model: BEM или fsaverage template.</li>
+                <li>Inverse: dSPM / sLORETA / MNE.</li>
+                <li>Dipole fit для конкретных ERP-компонентов.</li>
+                <li>Сравнить sensor-space vs source-space фичи в Nimbus pipeline.</li>
+                <li>Зафиксировать ограничения: spatial smearing, неидентифицируемость.</li>
+              </ul>
+              <div class="tools"><span>MNE forward/inverse</span><span>fsaverage</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> source estimate volume + dipole fit table.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> source localization — это гипотеза о физиологии, а не «математика»; результат зависит от модели головы и атласа.</div>
+        </article>
+
+        <!-- LESSON 3.6 MVPA -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.6</span>
+                <span class="lesson-code bbs">BBs-3.6</span>
+                <span class="lesson-code lab">L3-P6</span>
+              </div>
+              <h3>Нейронные представления · MVPA/Nimbus pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: temporal decoding + RSA</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Что декодирует MVPA</h4>
+              <ul>
+                <li>Population codes — распределённые vs локальные представления.</li>
+                <li>Manifold hypothesis — низкоразмерные многообразия в нейронной активности.</li>
+                <li>Temporal dynamics: когда категория «появляется» в нейронном коде.</li>
+                <li>Generalization — тест на абстракцию.</li>
+                <li>RSA — сравнение нейронного кода с когнитивной теорией.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>MVPA in Nimbus</h4>
+              <ul>
+                <li>Temporal generalization decoding: train @ t, test @ t'.</li>
+                <li>Cross-validation с правильным split (subject / session / time).</li>
+                <li>Permutation test для significance.</li>
+                <li>RSA: посчитать dissimilarity matrix и сравнить с моделью.</li>
+                <li>Анализ posterior confidence во времени.</li>
+              </ul>
+              <div class="tools"><span>MNE decoding</span><span>scikit-learn</span><span>rsatoolbox</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> decoding analysis + interpretation boundary.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> что MVPA «находит», определяется нейронаукой представлений, а не accuracy сама по себе.</div>
+        </article>
+
+        <!-- LESSON 3.7 STATISTICS -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.7</span>
+                <span class="lesson-code bbs">BBs-3.7</span>
+                <span class="lesson-code lab">L3-P5</span>
+              </div>
+              <h3>Статистика и кластеры · Configuration sweep pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 90 мин практика<br>артефакт: benchmark matrix</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Множественные сравнения и физиология сигнала</h4>
+              <ul>
+                <li>EEG автокоррелирован во времени — это не «нарушение», а физиология.</li>
+                <li>Cluster-based permutation: смежные эффекты биологически правдоподобны.</li>
+                <li>Spatial clustering — следствие нейронной синхронизации.</li>
+                <li>Bayesian статистика с физиологическими priors.</li>
+                <li>Effect size vs клиническая значимость.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Sweep + cluster stats</h4>
+              <ul>
+                <li>Sweep: bands × windows × normalizations × models.</li>
+                <li>Benchmark matrix с LDA/QDA/Softmax сравнением.</li>
+                <li>Cluster-based permutation для time-window selection.</li>
+                <li>Выбрать Studio graph variant и зафиксировать в spec.</li>
+                <li>Стат-обоснование выбора, не «лучшая accuracy».</li>
+              </ul>
+              <div class="tools"><span>MNE stats</span><span>NimbusSDK sweep</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> benchmark matrix + chosen Studio graph variant.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> правильный тест отражает структуру сигнала, а не «по умолчанию из туториала».</div>
+        </article>
+
+        <!-- LESSON 3.8 REPRODUCIBILITY -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.8</span>
+                <span class="lesson-code bbs">BBs-3.8</span>
+                <span class="lesson-code lab">L3-P7</span>
+              </div>
+              <h3>Воспроизводимость · Reproducibility pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 75 мин практика<br>артефакт: reproducibility bundle</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Почему результаты не воспроизводятся</h4>
+              <ul>
+                <li>Биологическая вариабельность — норма, не баг.</li>
+                <li>State-dependency — состояние мозга меняет результат.</li>
+                <li>Ceiling effects у здоровых студентов.</li>
+                <li>Demand characteristics — испытуемый знает, чего ждут.</li>
+                <li>Between-lab differences — оборудование, акустика, освещение.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Reproducibility bundle</h4>
+              <ul>
+                <li>BIDS-like структура датасета.</li>
+                <li>Exported code из Studio + README + Conda env.</li>
+                <li>SDK version, model metadata, random seeds зафиксированы.</li>
+                <li>Audit log: кто, когда, какую версию запускал.</li>
+                <li>Docker / containerization для критичных пайплайнов.</li>
+              </ul>
+              <div class="tools"><span>BIDS-EEG</span><span>conda-lock</span><span>Docker</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> reproducibility bundle + audit log.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> BIDS — это попытка контролировать биологическую вариабельность методологически.</div>
+        </article>
+
+        <!-- LESSON 3.9 PAPER -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.9</span>
+                <span class="lesson-code bbs">BBs-3.9</span>
+                <span class="lesson-code lab">L3-P8</span>
+              </div>
+              <h3>Нейрофизиология в Methods · Mini-paper pipeline</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 120 мин практика<br>артефакт: mini-paper 4–6 страниц</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Как описать механизм в тексте</h4>
+              <ul>
+                <li>Обосновать выбор preprocessing-параметров через генератор сигнала.</li>
+                <li>Полосы фильтрации — через литературу о биологических осцилляторах.</li>
+                <li>Латентность ERP — через анатомический генератор.</li>
+                <li>Discussion: интерпретация через механизм, а не только коррелят.</li>
+                <li>Limitations: volume conduction, depth sensitivity, nonstationarity.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Paper-style reporting</h4>
+              <ul>
+                <li>Воспроизводимые figures через скрипт.</li>
+                <li>Methods через data contract.</li>
+                <li>Results с CIs и effect sizes.</li>
+                <li>Discussion через нейрофизиологический механизм.</li>
+                <li>Nimbus model card на 1 странице.</li>
+              </ul>
+              <div class="tools"><span>quarto / LaTeX</span><span>matplotlib</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> mini-paper 4–6 страниц + Nimbus model card.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> рецензент-нейрофизиолог оценит обоснование через механизм, а не только статистику.</div>
+        </article>
+
+        <!-- LESSON 3.10 NEUROFEEDBACK -->
+        <article class="lesson">
+          <div class="lesson-head">
+            <div>
+              <div class="code-row">
+                <span class="lesson-code">Lesson L3.10</span>
+                <span class="lesson-code bbs">BBs-3.10</span>
+                <span class="lesson-code lab">Neurofeedback mini-lab</span>
+              </div>
+              <h3>Пластичность · Neurofeedback protocol</h3>
+            </div>
+            <div class="lesson-meta">15 мин теория · 75 мин практика<br>артефакт: neurofeedback protocol draft</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain">
+              <h5>🧠 Нейрофизиология за сигналом</h5>
+              <h4>Механизм пластичности</h4>
+              <ul>
+                <li>Operant conditioning на нейронном уровне — дофамин.</li>
+                <li>Hebbian learning — «fire together, wire together».</li>
+                <li>LTP требует повторений → почему NF работает медленно.</li>
+                <li>SMR-ритм и моторный контроль.</li>
+                <li>Maladaptive plasticity: неправильный NF может навредить.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe">
+              <h5>🛠 Сборка пайплайна</h5>
+              <h4>Neurofeedback protocol</h4>
+              <ul>
+                <li>Target marker (e.g., SMR / alpha) и его online estimator.</li>
+                <li>Reward delivery: visual / auditory, schedule.</li>
+                <li>Safety thresholds — когда сессию остановить.</li>
+                <li>Outcome measure: behavioral + EEG.</li>
+                <li>Pre/post сравнение как Nimbus comparison report.</li>
+              </ul>
+              <div class="tools"><span>LSL</span><span>NimbusSDK streaming</span></div>
+              <div class="deliv"><strong>Артефакт →</strong> NF protocol draft.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> NF-протокол должен опираться на механизм пластичности, иначе эффект случаен и неспецифичен.</div>
+        </article>
+      </section>
+
+      <!-- ===================== LEVEL 4 ===================== -->
+      <span id="level4" class="anchor"></span>
+      <section class="section">
+        <div class="level-banner lvl4">
+          <div class="level-num">4</div>
+          <div>
+            <p class="eyebrow red">Level 4 · Specialist</p>
+            <h2>Specialist Pipeline — 4 трека</h2>
+            <p>На последнем уровне студент выбирает специализацию и собирает профессиональный пайплайн под реальный сценарий.
+            Каждый трек содержит 8 нейрофизиологических уроков, каждый из которых сразу превращается в шаг capstone-пайплайна.
+            Финал уровня — защищаемый <strong>deployable Nimbus pipeline package</strong>.</p>
+          </div>
+        </div>
+
+        <div class="track-strip">
+          <div class="track-chip clinical"><strong>Track A · Clinical</strong><p>Патофизиология за клиническим сигналом</p></div>
+          <div class="track-chip cognitive"><strong>Track B · Cognitive</strong><p>Нейронные механизмы когнитивных функций</p></div>
+          <div class="track-chip product"><strong>Track C · Product</strong><p>Нейрофизиология как продуктовое ограничение</p></div>
+          <div class="track-chip computational"><strong>Track D · Computational</strong><p>Нейрофизиология как источник теорий</p></div>
+        </div>
+
+        <!-- TRACK A CLINICAL -->
+        <h3 style="margin-top: 22px;">Трек A · Clinical</h3>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code red">L4A.1</span><span class="lesson-code bbs">4A.1</span><span class="lesson-code lab">Capstone step 1</span></div>
+              <h3>Патологические осцилляции · QC pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>QC gate для эпилепт. записей</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Механизм эпилептического разряда: GABAergic failure.</li>
+                <li>Иктальный vs интериктальный паттерн.</li>
+                <li>Patho-osc и их спектральные подписи.</li>
+                <li>Антиэпилептики и их ЭЭГ-маркеры.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>QC gate: rejection rules под клинические данные.</li>
+                <li>Pattern detection: spike-wave templates.</li>
+                <li>Risk gating перед попаданием в Nimbus model.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> Clinical QC notebook.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> патологический паттерн нельзя «отфильтровать» как артефакт — это и есть сигнал интереса.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code red">L4A.2</span><span class="lesson-code bbs">4A.2</span><span class="lesson-code lab">Capstone step 2</span></div>
+              <h3>Нейронный субстрат seizure · Onset detection</h3></div>
+            <div class="lesson-meta">15 + 75 мин<br>seizure onset detection prototype</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Spreading depolarization.</li>
+                <li>Seizure onset zones.</li>
+                <li>Фокальная vs генерализованная.</li>
+                <li>Sentinel HFO-маркеры.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Sliding-window detector.</li>
+                <li>Confidence-policy с very low FP.</li>
+                <li>Latency budget для онлайн-уведомления.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> seizure detector report.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> в клинике false positives дорогие — confidence threshold выводится из последствий ошибки.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code red">L4A.3</span><span class="lesson-code bbs">4A.3</span><span class="lesson-code lab">Capstone step 3</span></div>
+              <h3>Сознание и его нарушения · Coma scoring pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>coma stage indicators</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Global Neuronal Workspace.</li>
+                <li>Thalamocortical disconnection при коме.</li>
+                <li>Minimally conscious state.</li>
+                <li>Perturbational complexity index.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Spectral features под coma stage.</li>
+                <li>Complexity metrics (LZ, PCI).</li>
+                <li>NimbusQDA для сравнения групп.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> coma stage scoring notebook.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> сложность ЭЭГ — мера того, насколько работает таламо-кортикальная сеть.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code red">L4A.4</span><span class="lesson-code bbs">4A.4</span><span class="lesson-code lab">Capstone step 4</span></div>
+              <h3>Нейропластичность после инсульта · Recovery markers</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>recovery marker pipeline</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Periinfarct plasticity.</li>
+                <li>Диасхиз — удалённые эффекты.</li>
+                <li>Cortical remapping в реабилитации.</li>
+                <li>Inter-hemispheric inhibition.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Inter-hemispheric coherence как маркер.</li>
+                <li>Longitudinal pipeline с session split.</li>
+                <li>NimbusSTS для трекинга восстановления.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> recovery report.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> восстановление — это не «улучшение метрики», а конкретный анатомический процесс ремаппинга.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code red">L4A.5</span><span class="lesson-code bbs">4A.5</span><span class="lesson-code lab">Capstone step 5</span></div>
+              <h3>Нейробиология сна · Sleep staging pipeline</h3></div>
+            <div class="lesson-meta">15 + 75 мин<br>sleep stage classifier</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>NREM/REM генераторы.</li>
+                <li>Sleep spindles — TRN + thalamic relay.</li>
+                <li>Slow oscillations и консолидация памяти.</li>
+                <li>K-complexes как cortical down-states.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>30-секундные эпохи, спектральные признаки.</li>
+                <li>Spindle / K-complex detection.</li>
+                <li>NimbusSoftmax 5-класс.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> sleep stager.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> AASM-стадии — это договор о физиологии, а не «классы данных».</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code red">L4A.6</span><span class="lesson-code bbs">4A.6</span><span class="lesson-code lab">Capstone step 6</span></div>
+              <h3>Нейроразвитие · Pediatric pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>age-adjusted features</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Миелинизация и её ЭЭГ-маркеры.</li>
+                <li>Созревание альфа: 4 → 8 → 10 Гц от младенца к юности.</li>
+                <li>Sensitive periods.</li>
+                <li>Возрастная нормализация.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Age-adjusted feature scaling.</li>
+                <li>Норм-кривые на популяции.</li>
+                <li>Deviation score как Nimbus output.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> pediatric pipeline.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> «нормальная» ЭЭГ зависит от возраста; модель должна это учитывать в самом контракте.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code red">L4A.7</span><span class="lesson-code bbs">4A.7</span><span class="lesson-code lab">Capstone step 7</span></div>
+              <h3>Биомаркеры для регуляторики · Validation pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>biomarker validation pack</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>FDA biomarker qualification.</li>
+                <li>Construct / criterion / predictive validity.</li>
+                <li>Биологическая правдоподобность.</li>
+                <li>Surrogate vs true endpoint.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Validation protocol под clinical-grade evidence.</li>
+                <li>Confidence thresholds под клинический риск.</li>
+                <li>Regulatory rationale в model card.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> validation pack.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> биомаркер обязан иметь биологическое обоснование, иначе он не пройдёт регуляторно.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code red">L4A.8</span><span class="lesson-code bbs">4A.8</span><span class="lesson-code lab">Capstone defense</span></div>
+              <h3>Интеграция · Clinical capstone defense</h3></div>
+            <div class="lesson-meta">15 + 90 мин<br>защита клинического протокола</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Связное patho-обоснование на 1 страницу.</li>
+                <li>Дифференциальный диагноз через ЭЭГ-механизм.</li>
+                <li>Failure modes в физиологических терминах.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Studio graph + exported code + model + norm params.</li>
+                <li>Risk log с rejection policy.</li>
+                <li>Deployment plan с регуляторным rationale.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> Clinical capstone package.</div>
+            </div>
+          </div>
+        </article>
+
+        <div class="capstone-card">
+          <h4>Track A capstone · Clinical EEG biomarker pipeline</h4>
+          <p>QC gates · patient-level report · confidence thresholds · regulatory rationale. Защищается перед клиническим ревьюером.</p>
+          <div class="meta"><span>QC gates</span><span>Risk log</span><span>FDA rationale</span><span>Confidence policy</span></div>
+        </div>
+
+        <!-- TRACK B COGNITIVE -->
+        <h3 style="margin-top: 28px;">Трек B · Cognitive</h3>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4B.1</span><span class="lesson-code bbs">4B.1</span><span class="lesson-code lab">Capstone step 1</span></div>
+              <h3>Системы внимания · Attention pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>attention marker pipeline</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Dorsal vs ventral attention network.</li>
+                <li>Top-down vs bottom-up.</li>
+                <li>TMS-доказательства причинности.</li>
+                <li>Alpha lateralization как маркер внимания.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Alpha-lateralization features.</li>
+                <li>Cued-attention paradigm.</li>
+                <li>NimbusLDA на TF-фичах.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> attention marker notebook.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> alpha lateralization — анатомически осмысленный маркер, не просто «частотный bin».</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4B.2</span><span class="lesson-code bbs">4B.2</span><span class="lesson-code lab">Capstone step 2</span></div>
+              <h3>Рабочая память · Working memory pipeline</h3></div>
+            <div class="lesson-meta">15 + 75 мин<br>WM load classifier</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Persistent firing в PFC.</li>
+                <li>Gamma-burst модель.</li>
+                <li>Capacity через интерференцию.</li>
+                <li>Frontal theta при load.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>N-back данные.</li>
+                <li>Frontal theta + parietal alpha features.</li>
+                <li>NimbusSoftmax для load level.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> WM classifier.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> frontal theta — не «удачный признак», а прямой коррелят PFC persistent firing.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4B.3</span><span class="lesson-code bbs">4B.3</span><span class="lesson-code lab">Capstone step 3</span></div>
+              <h3>Нейроэкономика · Decision pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>reward processing pipeline</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>DLPFC и weighing reward.</li>
+                <li>Anterior insula и риск.</li>
+                <li>Dopamine prediction error.</li>
+                <li>FRN (feedback-related negativity).</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>FRN ERP extraction.</li>
+                <li>Reward-coded epochs.</li>
+                <li>NimbusQDA для prediction error decoding.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> reward processing report.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> FRN — конкретный коррелят dopaminergic prediction error, не «магия лба».</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4B.4</span><span class="lesson-code bbs">4B.4</span><span class="lesson-code lab">Capstone step 4</span></div>
+              <h3>Язык в мозге · Language pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>N400/P600 analysis</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Dual-stream: dorsal vs ventral.</li>
+                <li>Broca переосмыслен.</li>
+                <li>N400 — семантика.</li>
+                <li>P600 — синтаксис.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Semantic / syntactic violation paradigm.</li>
+                <li>ERP windows под N400 / P600.</li>
+                <li>NimbusQDA сравнение.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> language ERP set.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> разные окна ERP — разные анатомические сети.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4B.5</span><span class="lesson-code bbs">4B.5</span><span class="lesson-code lab">Capstone step 5</span></div>
+              <h3>Аффективная нейронаука · Emotion pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>emotion classifier</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Frontal asymmetry — valence.</li>
+                <li>Amygdala-ACC — arousal.</li>
+                <li>Embodied emotion.</li>
+                <li>Limits ЭЭГ для эмоций.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Frontal alpha asymmetry feature.</li>
+                <li>HEP (heartbeat evoked potential) как embodied proxy.</li>
+                <li>Honest model card с ограничениями.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> emotion pipeline (honest version).</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> ЭЭГ детектирует arousal лучше, чем дискретные эмоции — это честное ограничение, не недостаток.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4B.6</span><span class="lesson-code bbs">4B.6</span><span class="lesson-code lab">Capstone step 6</span></div>
+              <h3>Нейронное предсказание · Predictive pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>prediction error decoder</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Hierarchical predictive coding (Friston).</li>
+                <li>Precision = attention.</li>
+                <li>MMN как prediction error.</li>
+                <li>Predictive layers в кортексе.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>MMN-paradigm pipeline.</li>
+                <li>Prediction error trial-by-trial.</li>
+                <li>Bayesian Nimbus model для confidence.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> MMN decoder.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> MMN — это прямой коррелят prediction error в иерархии, а не просто «отличие от баз».</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4B.7</span><span class="lesson-code bbs">4B.7</span><span class="lesson-code lab">Capstone step 7</span></div>
+              <h3>Hard problem · Consciousness pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>NCC analysis</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>NCC — поиск нейронных коррелятов сознания.</li>
+                <li>IIT (Integrated Information Theory).</li>
+                <li>Global Workspace.</li>
+                <li>P3b и conscious access.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Conscious vs unconscious trial split.</li>
+                <li>P3b как маркер access.</li>
+                <li>Complexity metrics (PCI, LZ).</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> NCC analysis report.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> «сознание в ЭЭГ» — это конкретные операционализированные маркеры, а не философия в данных.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4B.8</span><span class="lesson-code bbs">4B.8</span><span class="lesson-code lab">Capstone defense</span></div>
+              <h3>Интеграция · Cognitive capstone defense</h3></div>
+            <div class="lesson-meta">15 + 90 мин<br>защита когнитивного маркера</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Связное обоснование маркера на 1 страницу.</li>
+                <li>Confounds и их источники.</li>
+                <li>Ограничения интерпретации.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Task → feature → model → posterior → confound log.</li>
+                <li>Interpretability section в model card.</li>
+                <li>Замечательный демо-анализ.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> Cognitive capstone package.</div>
+            </div>
+          </div>
+        </article>
+
+        <div class="capstone-card">
+          <h4>Track B capstone · Cognitive marker pipeline</h4>
+          <p>Task → feature family → Nimbus model → posterior → confound log → interpretability. Защищается перед когнитивным ревьюером.</p>
+          <div class="meta"><span>Confound log</span><span>Interpretability</span><span>Effect size</span></div>
+        </div>
+
+        <!-- TRACK C PRODUCT -->
+        <h3 style="margin-top: 28px;">Трек C · Product</h3>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4C.1</span><span class="lesson-code bbs">4C.1</span><span class="lesson-code lab">Capstone step 1</span></div>
+              <h3>Нейронные потребности пользователя · Workload pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>workload monitor</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Mental workload и его маркеры.</li>
+                <li>Frontal theta + parietal alpha как ratio.</li>
+                <li>Subjective vs objective load.</li>
+                <li>Limits сухих электродов.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Workload feature: theta/alpha ratio.</li>
+                <li>NimbusLDA real-time monitor.</li>
+                <li>UX-friendly latency budget.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> workload monitor demo.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> ratio theta/alpha — биологически осмысленный proxy, не «случайный признак для UI».</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4C.2</span><span class="lesson-code bbs">4C.2</span><span class="lesson-code lab">Capstone step 2</span></div>
+              <h3>Восприятие задержки · Latency budget pipeline</h3></div>
+            <div class="lesson-meta">15 + 45 мин<br>latency budget spec</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>JND для визуальной / тактильной / аудиальной задержки.</li>
+                <li>Temporal binding window ~150 мс.</li>
+                <li>Embodiment и latency.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Latency budget по узлам.</li>
+                <li>Compensation strategies (prediction).</li>
+                <li>Measurement protocol.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> latency budget JSON.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> JND — конкретная физиологическая константа, ограничивающая product design.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4C.3</span><span class="lesson-code bbs">4C.3</span><span class="lesson-code lab">Capstone step 3</span></div>
+              <h3>Внимание и интерфейс · Sustained-attention pipeline</h3></div>
+            <div class="lesson-meta">15 + 45 мин<br>fatigue monitor</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Sustained vs selective attention.</li>
+                <li>Vigilance decrement.</li>
+                <li>BCI fatigue causes.</li>
+                <li>Mind wandering markers.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Drowsiness / vigilance features.</li>
+                <li>UI escalation thresholds.</li>
+                <li>Fallback behavior.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> fatigue monitor.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> усталость не «удобство UX», а нейрофизиологическое ограничение продукта.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4C.4</span><span class="lesson-code bbs">4C.4</span><span class="lesson-code lab">Capstone step 4</span></div>
+              <h3>Ecological validity · Real-world pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>real-world robustness</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Мозг в лаборатории vs мозг в жизни.</li>
+                <li>Motion artifacts.</li>
+                <li>Dual-task interference.</li>
+                <li>Ambient noise effects.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Motion-robust filtering.</li>
+                <li>Real-world dataset comparison.</li>
+                <li>Performance degradation curve.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> real-world robustness report.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> ecological validity — это разница, которая всегда стоит реальных денег у продукта.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4C.5</span><span class="lesson-code bbs">4C.5</span><span class="lesson-code lab">Capstone step 5</span></div>
+              <h3>Доверие к системе · Trust pipeline</h3></div>
+            <div class="lesson-meta">15 + 45 мин<br>trust UX spec</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Anterior insula и interoception.</li>
+                <li>Uncertainty → беспокойство.</li>
+                <li>Communication of confidence.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>UX-перевод confidence policy.</li>
+                <li>Visual / haptic confidence cues.</li>
+                <li>User testing protocol.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> trust UX spec.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> доверие — продуктовое следствие правильно показанной uncertainty.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4C.6</span><span class="lesson-code bbs">4C.6</span><span class="lesson-code lab">Capstone step 6</span></div>
+              <h3>Frustration и BCI · Error feedback pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>ErrP-based correction</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>ACC и performance monitoring.</li>
+                <li>ErrP компонент.</li>
+                <li>Frustration → muscle tension.</li>
+                <li>Feedback timing.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>ErrP detection pipeline.</li>
+                <li>Self-correcting BCI loop.</li>
+                <li>NimbusLDA на ErrP.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> self-correcting BCI demo.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> ErrP — буквальная встроенная коррекция от ACC; учитывая её, продукт становится самовосстанавливающимся.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4C.7</span><span class="lesson-code bbs">4C.7</span><span class="lesson-code lab">Capstone step 7</span></div>
+              <h3>Long-term use · Plasticity-aware pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>longitudinal adaptation</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>BCI long-term plasticity studies.</li>
+                <li>Skill transfer.</li>
+                <li>Adverse plasticity risk.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Longitudinal NimbusSTS pipeline.</li>
+                <li>User progress tracking.</li>
+                <li>Adaptation policy spec.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> longitudinal adaptation plan.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> продукт обязан учитывать, что пользователь меняется неделя за неделей — это и есть пластичность.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4C.8</span><span class="lesson-code bbs">4C.8</span><span class="lesson-code lab">Capstone defense</span></div>
+              <h3>Интеграция · Product capstone defense</h3></div>
+            <div class="lesson-meta">15 + 90 мин<br>защита продуктового прототипа</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>UX-обоснование через физиологию.</li>
+                <li>Failure modes на стороне пользователя.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>BrainFlow/LSL вход.</li>
+                <li>Real-time confidence + fallback.</li>
+                <li>Latency budget defended.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> Product capstone package.</div>
+            </div>
+          </div>
+        </article>
+
+        <div class="capstone-card">
+          <h4>Track C capstone · BCI product pipeline</h4>
+          <p>BrainFlow / LSL input · workload monitor · feedback latency · user safety · trust UX. Защищается как продуктовый прототип с decision memo.</p>
+          <div class="meta"><span>Latency budget</span><span>Trust UX</span><span>Fallback</span></div>
+        </div>
+
+        <!-- TRACK D COMPUTATIONAL -->
+        <h3 style="margin-top: 28px;">Трек D · Computational</h3>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4D.1</span><span class="lesson-code bbs">4D.1</span><span class="lesson-code lab">Capstone step 1</span></div>
+              <h3>Биофизика нейрона · Single-cell model</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>HH simulation</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Ионные каналы, потенциал действия.</li>
+                <li>Refractory period.</li>
+                <li>Подпороговые состояния.</li>
+                <li>Cable equation.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Hodgkin-Huxley simulation.</li>
+                <li>Single-cell PSP → field potential.</li>
+                <li>Преобразовать симуляцию в Nimbus feature.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> HH simulation notebook.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> цепочка «канал → спайк → PSP → field» — это и есть физический мост между биофизикой и ЭЭГ.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4D.2</span><span class="lesson-code bbs">4D.2</span><span class="lesson-code lab">Capstone step 2</span></div>
+              <h3>От нейрона к популяции · Wilson-Cowan</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>population dynamics</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Mean-field теория.</li>
+                <li>Wilson-Cowan модель.</li>
+                <li>Эмерджентные ритмы.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>WC simulation pipeline.</li>
+                <li>Frequency response из E/I balance.</li>
+                <li>Сравнить с реальным ЭЭГ.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> population dynamics notebook.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> ритмы — это эмерджентное свойство популяции, предсказуемое моделью.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4D.3</span><span class="lesson-code bbs">4D.3</span><span class="lesson-code lab">Capstone step 3</span></div>
+              <h3>Free Energy Principle · Active inference pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>active inference toy</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Markov blankets.</li>
+                <li>Variational inference в биологии.</li>
+                <li>Friston FEP.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Toy active inference agent.</li>
+                <li>Сравнить с Nimbus Bayesian model.</li>
+                <li>Map FEP → posterior.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> active inference toy.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> Nimbus Bayesian inference — практическая инкарнация FEP в инженерной форме.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4D.4</span><span class="lesson-code bbs">4D.4</span><span class="lesson-code lab">Capstone step 4</span></div>
+              <h3>Нелинейная динамика · Criticality pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>neuronal avalanches</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Criticality в мозге.</li>
+                <li>Avalanches и power laws.</li>
+                <li>Edge of chaos.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Avalanche detection.</li>
+                <li>Branching parameter.</li>
+                <li>Сравнить здоровых и патологических.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> criticality report.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> критичность — proxy «здоровья» мозга, измеримый через ЭЭГ.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4D.5</span><span class="lesson-code bbs">4D.5</span><span class="lesson-code lab">Capstone step 5</span></div>
+              <h3>Информационная геометрия · Fisher pipeline</h3></div>
+            <div class="lesson-meta">15 + 60 мин<br>Fisher info estimation</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Fisher information в нейронных кодах.</li>
+                <li>Efficient coding hypothesis.</li>
+                <li>Tuning curves.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Fisher information estimation pipeline.</li>
+                <li>Comparison с MVPA decoding accuracy.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> Fisher info notebook.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> теоретический верхний предел decoding accuracy задаётся Fisher info нейронного кода.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4D.6</span><span class="lesson-code bbs">4D.6</span><span class="lesson-code lab">Capstone step 6</span></div>
+              <h3>Connectome · Structure → function pipeline</h3></div>
+            <div class="lesson-meta">15 + 75 мин<br>structure-function map</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Connectome и функция.</li>
+                <li>Structural → functional connectivity.</li>
+                <li>Hub regions.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Map SC → FC через neural mass model.</li>
+                <li>Predict ЭЭГ network metrics.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> SC-FC mapping notebook.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> функциональная связность ограничена структурной — это предсказуемо моделью.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4D.7</span><span class="lesson-code bbs">4D.7</span><span class="lesson-code lab">Capstone step 7</span></div>
+              <h3>Модельная нейронаука · Theory comparison pipeline</h3></div>
+            <div class="lesson-meta">15 + 75 мин<br>model comparison</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Как отличить конкурирующие теории.</li>
+                <li>Crucial experiments.</li>
+                <li>Falsifiability.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Симуляция конкурирующих моделей.</li>
+                <li>Predicted features per theory.</li>
+                <li>Nimbus inference для разделения.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> theory comparison notebook.</div>
+            </div>
+          </div>
+          <div class="bridge"><strong>Связка →</strong> модель решает спор только если выдаёт falsifiable predictions на уровне feature-space.</div>
+        </article>
+
+        <article class="lesson">
+          <div class="lesson-head">
+            <div><div class="code-row"><span class="lesson-code">L4D.8</span><span class="lesson-code bbs">4D.8</span><span class="lesson-code lab">Capstone defense</span></div>
+              <h3>Интеграция · Computational capstone defense</h3></div>
+            <div class="lesson-meta">15 + 90 мин<br>защита вычислительной модели</div>
+          </div>
+          <div class="lesson-body">
+            <div class="lesson-half brain"><h5>🧠 Нейрофизиология</h5>
+              <ul>
+                <li>Полный chain биофизика → популяция → ЭЭГ.</li>
+                <li>Допущения и их обоснования.</li>
+              </ul>
+            </div>
+            <div class="lesson-half pipe"><h5>🛠 Сборка пайплайна</h5>
+              <ul>
+                <li>Simulated features → Nimbus inference.</li>
+                <li>Verifiable prediction.</li>
+                <li>Experimental validation plan.</li>
+              </ul>
+              <div class="deliv"><strong>→</strong> Computational capstone package.</div>
+            </div>
+          </div>
+        </article>
+
+        <div class="capstone-card">
+          <h4>Track D capstone · Computational neuroscience pipeline</h4>
+          <p>Model assumption · simulated features · Nimbus inference · verifiable prediction · experimental plan. Защищается как теоретическая модель с проверяемой гипотезой.</p>
+          <div class="meta"><span>Biophysics</span><span>Predictive test</span><span>Experimental plan</span></div>
+        </div>
+      </section>
+
+      <!-- ===================== CROSS-LEVEL ===================== -->
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow green">Сквозное портфолио</p>
+            <h2>Что собирается из всех уроков</h2>
+          </div>
+          <p class="lead">
+            На протяжении курса студент ведёт один репозиторий. Каждый урок добавляет новый слой:
+            Studio graph, preprocessing, feature contract, Nimbus-модель, confidence policy, streaming demo и специализацию.
+            Финальный результат — deployable BCI-пайплайн, который можно защитить перед работодателем, лабораторией или клиническим ревьюером.
+          </p>
+        </div>
+
+        <div class="principles">
+          <div class="principle"><strong>Data Layer</strong><h4>L1 уровень</h4>
+            <p>RawIntake + preprocessing config + feature contract + quality report — основа всего.</p></div>
+          <div class="principle"><strong>Nimbus Layer</strong><h4>L2 уровень</h4>
+            <p>Nimbus LDA/QDA/Softmax/STS model + normalization params + uncertainty calibration + model card.</p></div>
+          <div class="principle"><strong>Deployment Layer</strong><h4>L3–L4 уровень</h4>
+            <p>LSL/BrainFlow handoff + StreamingSession + latency budget + safety policy.</p></div>
+        </div>
+
+        <div class="callout violet" style="margin-top: 22px;">
+          <div class="icon">★</div>
+          <div>
+            <strong>Главный итоговый артефакт</strong>
+            <p>После прохождения курса студент сдаёт <em>один</em> репозиторий, в котором по каждому уроку лежит парная двойка:
+            <em>(1)</em> ответ на вопрос «какой нейрофизиологический механизм объясняет это решение?» и
+            <em>(2)</em> работающий фрагмент пайплайна. Эта двойка и есть «нейрофизиология как визитная карточка» Nimbus Academy.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== HOW TO TEACH ===================== -->
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow violet">Дидактика урока</p>
+            <h2>Как преподавать один атомарный урок</h2>
+          </div>
+          <p class="lead">
+            Каждый урок Nimbus Academy выглядит как единая страница, в которой нейрофизиология
+            не отдельно «лекция», а часть инструкции к сборке. Внутри урока работает следующая ритмика.
+          </p>
+        </div>
+
+        <div class="principles">
+          <div class="principle"><strong>00:00 – 00:05</strong>
+            <h4>Гипотеза-крючок</h4>
+            <p>Преподаватель показывает странность в данных (например, исчезающую альфу) — и обещает её объяснить через механизм.</p></div>
+          <div class="principle"><strong>00:05 – 00:20</strong>
+            <h4>Brain Behind the Signal</h4>
+            <p>Левая колонка карточки урока: 15 минут механизма с явными «связками с пайплайном».</p></div>
+          <div class="principle"><strong>00:20 – 00:25</strong>
+            <h4>Граф в Studio</h4>
+            <p>Преподаватель показывает граф — но <em>пока не запускает</em>. Студент рисует тот же граф у себя.</p></div>
+          <div class="principle"><strong>00:25 – 01:15</strong>
+            <h4>Pipeline Practice</h4>
+            <p>Правая колонка: студент собирает шаги пайплайна с кодом / Studio nodes, валидирует контракт, фиксирует риски.</p></div>
+          <div class="principle"><strong>01:15 – 01:30</strong>
+            <h4>Pipeline Review</h4>
+            <p>Голубая полоса карточки: студент отвечает на вопрос «какой механизм объясняет это решение?» в журнал.</p></div>
+          <div class="principle"><strong>01:30 – 01:35</strong>
+            <h4>Передача артефакта</h4>
+            <p>Артефакт коммитится в репозиторий портфолио с метаданными, и становится входом для следующего урока.</p></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- SIGN-OFF -->
+    <section class="signoff">
+      <h2>Нейрофизиология первой. Пайплайн вторым. В одном уроке.</h2>
+      <p>
+        Этот документ — единая программа Nimbus Academy, в которой больше нет отдельных страниц
+        «теория про мозг» и «практика про код». Каждый урок — это парная карточка: слева — механизм,
+        который рождает сигнал, справа — конкретные узлы Nimbus Studio / NimbusSDK, которые превращают
+        этот сигнал в осмысленный BCI-артефакт. К концу пути у студента есть не «знание ЭЭГ»
+        и не «умение писать пайплайны» — у него есть и то, и другое, склеенное в один защищаемый
+        deployable BCI-проект.
+      </p>
+      <div class="badges">
+        <span class="badge">4 уровня · 62 урока</span>
+        <span class="badge">Brain Behind the Signal · 35+ модулей</span>
+        <span class="badge">Pipeline Practice · 30+ лабораторных</span>
+        <span class="badge">Capstone × 4 трека</span>
+        <span class="badge">Один сквозной портфолио-репозиторий</span>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
