@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nimbus Academy · Brain Behind the Signal · Полное оглавление-перестановка</title>
+  <style>
+    :root {
+      --bg: #080b16; --paper: #f7f4ee; --paper-2: #fffaf0;
+      --ink: #141824; --muted: #657086;
+      --line: rgba(20, 24, 36, 0.12);
+      --blue: #3b82f6; --yellow: #f2b705; --orange: #f97316;
+      --red: #ef4444; --cyan: #22d3ee; --violet: #8b5cf6; --green: #14b8a6;
+      --shadow: 0 28px 90px rgba(2, 6, 23, 0.24);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 16% 8%, rgba(59,130,246,0.35), transparent 28rem),
+        radial-gradient(circle at 86% 2%, rgba(139,92,246,0.32), transparent 30rem),
+        radial-gradient(circle at 50% 60%, rgba(20,184,166,0.20), transparent 34rem),
+        linear-gradient(135deg, #070a13 0%, #111827 44%, #07111f 100%);
+      line-height: 1.62;
+    }
+    a { color: inherit; }
+    .page { width: min(1240px, calc(100% - 36px)); margin: 0 auto; padding: 34px 0 64px; }
+
+    /* HERO */
+    .hero {
+      position: relative; overflow: hidden;
+      min-height: 520px;
+      display: grid; align-items: end;
+      padding: clamp(32px, 6vw, 76px);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 38px; color: #fff;
+      background:
+        linear-gradient(135deg, rgba(8,11,22,0.90), rgba(17,24,39,0.74)),
+        radial-gradient(circle at 72% 24%, rgba(34,211,238,0.32), transparent 22rem),
+        radial-gradient(circle at 22% 82%, rgba(242,183,5,0.22), transparent 24rem);
+      box-shadow: var(--shadow);
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; opacity: 0.30;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: radial-gradient(circle at 68% 24%, #000, transparent 68%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 960px; }
+    .kicker {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 9px 14px;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.88);
+      font-size: 13px; font-weight: 750;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      backdrop-filter: blur(12px);
+    }
+    h1 { margin: 22px 0 18px; font-size: clamp(36px, 6vw, 72px);
+         line-height: 0.98; letter-spacing: -0.055em; }
+    .subtitle { max-width: 860px; margin: 0;
+                color: rgba(255,255,255,0.82);
+                font-size: clamp(17px, 2.1vw, 23px); }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .hero-tag {
+      padding: 8px 14px; border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 13px; color: rgba(255,255,255,0.86); font-weight: 600;
+    }
+    .hero-formula {
+      margin-top: 26px;
+      padding: 18px 22px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff; font-size: 15.5px;
+      font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+      backdrop-filter: blur(14px);
+    }
+    .hero-formula strong { color: var(--cyan); }
+
+    /* DOCUMENT */
+    .document {
+      margin-top: 22px; overflow: hidden;
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, rgba(255,250,240,0.96), rgba(247,244,238,0.98)),
+        var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .section {
+      padding: clamp(28px, 5vw, 58px);
+      border-bottom: 1px solid var(--line);
+    }
+    .section:last-child { border-bottom: 0; }
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(24px, 5vw, 54px);
+      align-items: start; margin-bottom: 24px;
+    }
+    @media (max-width: 880px) { .section-header { grid-template-columns: 1fr; } }
+    .eyebrow { margin: 0 0 10px; color: var(--blue); font-size: 12px;
+               font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; }
+    .eyebrow.violet { color: var(--violet); }
+    .eyebrow.orange { color: var(--orange); }
+    .eyebrow.green  { color: var(--green); }
+    .eyebrow.red    { color: var(--red); }
+    .eyebrow.yellow { color: #b07a05; }
+    h2 { margin: 0; font-size: clamp(28px, 4.2vw, 46px); line-height: 1.05; letter-spacing: -0.03em; }
+    h3 { margin: 0; font-size: clamp(20px, 2.6vw, 28px); line-height: 1.18; letter-spacing: -0.02em; }
+    h4 { margin: 0; font-size: 18px; line-height: 1.25; letter-spacing: -0.01em; }
+    h5 { margin: 0; font-size: 13px; text-transform: uppercase;
+         letter-spacing: 0.12em; color: var(--muted); }
+    p, li { font-size: 16px; }
+    .lead { margin: 0; color: var(--muted); font-size: 18px; }
+
+    /* Callout */
+    .callout {
+      display: grid; grid-template-columns: 48px 1fr; gap: 16px;
+      padding: 18px 22px; border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(59,130,246,0.10), rgba(34,211,238,0.10));
+      margin: 14px 0;
+    }
+    .callout .icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff; font-weight: 900; font-size: 20px;
+    }
+    .callout p { margin: 0; }
+    .callout strong { display: block; margin-bottom: 4px; }
+    .callout.green { background: linear-gradient(135deg, rgba(20,184,166,0.10), rgba(59,130,246,0.10)); }
+    .callout.green .icon { background: linear-gradient(135deg, var(--green), var(--blue)); }
+    .callout.violet { background: linear-gradient(135deg, rgba(139,92,246,0.10), rgba(34,211,238,0.10)); }
+    .callout.violet .icon { background: linear-gradient(135deg, var(--violet), var(--cyan)); }
+    .callout.warn { background: linear-gradient(135deg, rgba(249,115,22,0.10), rgba(239,68,68,0.10)); }
+    .callout.warn .icon { background: linear-gradient(135deg, var(--orange), var(--red)); }
+
+    /* TABLES */
+    .table-wrap {
+      overflow-x: auto; border-radius: 18px;
+      border: 1px solid var(--line); margin: 14px 0;
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      background: #fffdf8; font-size: 14.5px;
+    }
+    th, td {
+      padding: 12px 14px; text-align: left; vertical-align: top;
+      border-bottom: 1px solid var(--line);
+    }
+    th {
+      background: #faf3e3; font-weight: 800; font-size: 12.5px;
+      text-transform: uppercase; letter-spacing: 0.06em; color: #383f55;
+      white-space: nowrap;
+    }
+    tr:last-child td { border-bottom: 0; }
+    td .mono, .mono {
+      font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    .lvl1 th { background: linear-gradient(180deg, #e8efff, #dbe7ff); color: #1e3a8a; }
+    .lvl2 th { background: linear-gradient(180deg, #fff4cc, #ffe8a8); color: #7a5400; }
+    .lvl3 th { background: linear-gradient(180deg, #ffe1cf, #ffcfb0); color: #7a3b16; }
+    .lvl4a th { background: linear-gradient(180deg, #ffd7d7, #ffc1c1); color: #7a1f1f; }
+    .lvl4b th { background: linear-gradient(180deg, #d7e7ff, #bfd6ff); color: #1d3a7a; }
+    .lvl4c th { background: linear-gradient(180deg, #ffe3c2, #ffd09a); color: #80450b; }
+    .lvl4d th { background: linear-gradient(180deg, #e3d6ff, #cbb5ff); color: #4b1d8e; }
+
+    .lesson-code {
+      display: inline-block; padding: 3px 8px; border-radius: 8px;
+      background: rgba(59,130,246,0.14); color: var(--blue);
+      font-family: "JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+      font-weight: 800; font-size: 12px; letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .lesson-code.violet { background: rgba(139,92,246,0.14); color: var(--violet); }
+    .lesson-code.orange { background: rgba(249,115,22,0.14); color: var(--orange); }
+    .lesson-code.green  { background: rgba(20,184,166,0.14); color: var(--green); }
+    .lesson-code.red    { background: rgba(239,68,68,0.14); color: var(--red); }
+    .lesson-code.yellow { background: rgba(242,183,5,0.20); color: #7a5400; }
+
+    /* LEVEL BANNER */
+    .level-banner {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr);
+      gap: 22px; align-items: center;
+      padding: 22px 26px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(139,92,246,0.08));
+      border: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+    .level-banner.lvl2 { background: linear-gradient(135deg, rgba(242,183,5,0.16), rgba(249,115,22,0.08)); }
+    .level-banner.lvl3 { background: linear-gradient(135deg, rgba(249,115,22,0.18), rgba(239,68,68,0.10)); }
+    .level-banner.lvl4 { background: linear-gradient(135deg, rgba(239,68,68,0.16), rgba(139,92,246,0.12)); }
+    .level-num {
+      width: 110px; height: 110px; border-radius: 26px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff; display: grid; place-items: center;
+      font-size: 56px; font-weight: 900; letter-spacing: -0.04em;
+      box-shadow: 0 12px 30px rgba(2,6,23,0.18);
+    }
+    .level-banner.lvl2 .level-num { background: linear-gradient(135deg, var(--yellow), var(--orange)); }
+    .level-banner.lvl3 .level-num { background: linear-gradient(135deg, var(--orange), var(--red)); }
+    .level-banner.lvl4 .level-num { background: linear-gradient(135deg, var(--red), var(--violet)); }
+    .level-banner p { margin: 6px 0 0; color: var(--muted); font-size: 15.5px; }
+    @media (max-width: 560px) {
+      .level-banner { grid-template-columns: 1fr; }
+      .level-num { width: 80px; height: 80px; font-size: 40px; border-radius: 20px; }
+    }
+
+    /* Capstone card */
+    .capstone-card {
+      margin: 16px 0;
+      padding: 20px 24px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(139,92,246,0.10));
+      border: 1px solid var(--line);
+    }
+    .capstone-card h4 { margin-bottom: 6px; }
+    .capstone-card .pill {
+      display: inline-block; padding: 4px 10px; border-radius: 999px;
+      background: rgba(239,68,68,0.14); color: var(--red);
+      font-size: 11.5px; font-weight: 800;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .capstone-card.lvl1 { background: linear-gradient(135deg, rgba(59,130,246,0.10), rgba(139,92,246,0.08)); }
+    .capstone-card.lvl1 .pill { background: rgba(59,130,246,0.14); color: var(--blue); }
+    .capstone-card.lvl2 { background: linear-gradient(135deg, rgba(242,183,5,0.16), rgba(249,115,22,0.08)); }
+    .capstone-card.lvl2 .pill { background: rgba(242,183,5,0.22); color: #7a5400; }
+    .capstone-card.lvl3 { background: linear-gradient(135deg, rgba(249,115,22,0.16), rgba(239,68,68,0.08)); }
+    .capstone-card.lvl3 .pill { background: rgba(249,115,22,0.16); color: var(--orange); }
+
+    /* Track strip */
+    .track-strip {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px; margin: 16px 0;
+    }
+    @media (max-width: 880px) { .track-strip { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .track-strip { grid-template-columns: 1fr; } }
+    .track-chip {
+      padding: 16px 18px; border-radius: 18px;
+      border: 1px solid var(--line); background: #fffdf8;
+    }
+    .track-chip strong { display: block; font-size: 13px; letter-spacing: 0.10em;
+                         text-transform: uppercase; margin-bottom: 4px; }
+    .track-chip.clinical strong      { color: var(--red); }
+    .track-chip.cognitive strong     { color: var(--blue); }
+    .track-chip.product strong       { color: var(--orange); }
+    .track-chip.computational strong { color: var(--violet); }
+    .track-chip p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    /* TOC nav */
+    .toc {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px; margin-top: 14px;
+    }
+    @media (max-width: 720px) { .toc { grid-template-columns: 1fr; } }
+    .toc a {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 16px;
+      border: 1px solid var(--line); border-radius: 16px;
+      background: #fffdf8; text-decoration: none;
+      transition: transform .12s ease, border-color .12s ease;
+    }
+    .toc a:hover { transform: translateY(-2px); border-color: var(--blue); }
+    .toc-pill {
+      flex: 0 0 auto; padding: 6px 10px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff; font-weight: 900; font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+    .toc-pill.lvl2 { background: linear-gradient(135deg, var(--yellow), var(--orange)); }
+    .toc-pill.lvl3 { background: linear-gradient(135deg, var(--orange), var(--red)); }
+    .toc-pill.lvl4 { background: linear-gradient(135deg, var(--red), var(--violet)); }
+    .toc-pill.gray { background: linear-gradient(135deg, #475569, #1f2937); }
+    .toc strong { display: block; font-size: 14.5px; color: var(--ink); }
+    .toc span.note { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+    /* Footnote */
+    .footnote {
+      margin-top: 12px; padding: 12px 16px;
+      border-left: 4px solid var(--muted);
+      border-radius: 10px; background: #f4eedd;
+      color: #4a4a4a; font-size: 14px; font-style: italic;
+    }
+
+    /* Code block */
+    pre.code {
+      margin: 14px 0;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: #0b1020;
+      color: #e6edf3;
+      font-family: "JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+      font-size: 13.5px;
+      line-height: 1.55;
+      overflow-x: auto;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(2,6,23,0.35);
+    }
+    pre.code .c  { color: #7d8fa9; }
+    pre.code .k  { color: #79c0ff; }
+    pre.code .h  { color: #ffa657; }
+    pre.code .t  { color: #d2a8ff; }
+
+    code.i {
+      padding: 1px 6px; border-radius: 6px;
+      background: #f0e7d3; color: #2a3145;
+      font-family: "JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+      font-size: 13.5px;
+    }
+
+    /* Numbering grid */
+    .numbering {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px; margin-top: 14px;
+    }
+    @media (max-width: 720px) { .numbering { grid-template-columns: 1fr; } }
+    .num-row {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+    }
+    .num-row strong { display: block; color: var(--blue);
+                      font-family: "JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+                      font-size: 14px; }
+    .num-row span { display: block; font-size: 14.5px; color: var(--ink); margin-top: 4px; }
+
+    /* Totals strip */
+    .totals {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px; margin-top: 14px;
+    }
+    @media (max-width: 880px) { .totals { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 520px) { .totals { grid-template-columns: repeat(2, 1fr); } }
+    .total {
+      padding: 14px 16px; border-radius: 16px;
+      background: #fffdf8; border: 1px solid var(--line);
+      text-align: center;
+    }
+    .total strong { display: block; font-size: 26px; line-height: 1; letter-spacing: -0.02em; color: var(--ink); }
+    .total span { display: block; margin-top: 4px; color: var(--muted); font-size: 13px; }
+
+    .anchor { display: block; height: 0; visibility: hidden; }
+
+    /* Sign-off */
+    .signoff {
+      padding: clamp(28px, 5vw, 50px);
+      color: #fff;
+      background:
+        linear-gradient(135deg, rgba(8,11,22,0.92), rgba(17,24,39,0.84)),
+        radial-gradient(circle at 30% 30%, rgba(34,211,238,0.24), transparent 24rem);
+      border-radius: 32px;
+      margin-top: 22px;
+      box-shadow: var(--shadow);
+    }
+    .signoff h2 { font-size: clamp(24px, 3.4vw, 34px); margin-bottom: 12px; }
+    .signoff p { color: rgba(255,255,255,0.80); }
+    .badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .badge { padding: 8px 14px; border-radius: 999px;
+             background: rgba(255,255,255,0.10);
+             border: 1px solid rgba(255,255,255,0.18);
+             font-size: 13px; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-content">
+        <span class="kicker">Nimbus Academy · Brain Behind the Signal · TOC v1.0</span>
+        <h1>Полное оглавление-перестановка</h1>
+        <p class="subtitle">
+          Документ переставляет содержание исходной 41-страничной программы Nimbus Academy в новый порядок,
+          где каждый учебный урок — это связка нейрофизиологии и инженерной практики:
+          BBS → Practice → Review → Journal question. 4 уровня, 4 трека, ≈53 урока на одну специализацию.
+        </p>
+        <div class="hero-tags">
+          <span class="hero-tag">Brain Behind the Signal · 35+ модулей</span>
+          <span class="hero-tag">Pipeline Practice · 30+ лабораторных</span>
+          <span class="hero-tag">4 трека Level 4</span>
+          <span class="hero-tag">Сертифицируемое портфолио</span>
+        </div>
+        <div class="hero-formula">
+          <strong>Формула урока:</strong>
+          Brain Behind the Signal (≈15 мин) → Pipeline Practice (60–90 мин) → Pipeline Review (≈15 мин) → Journal question (журнал).
+        </div>
+      </div>
+    </header>
+
+    <!-- DOCUMENT -->
+    <main class="document">
+
+      <!-- INTRO -->
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Общая идея документа</p>
+            <h2>Перестановка исходной программы под BBS-first</h2>
+          </div>
+          <p class="lead">
+            Документ переставляет содержание исходного PDF «Nimbus Academy — Нейрофизиология как визитная карточка»
+            (41 стр.) в новый порядок, в котором каждый учебный урок собран по единой схеме.
+            Формат нумерации — <code class="i">Уровень.Номер</code>, сквозная внутри каждого уровня. Артефакты складываются
+            в портфолио-репозиторий (Studio graph, exported code, feature contract, model metadata, risk log).
+          </p>
+        </div>
+
+        <div class="callout violet">
+          <div class="icon">⤳</div>
+          <div>
+            <strong>Принцип</strong>
+            <p>Каждый учебный урок = <strong>Brain Behind the Signal</strong> (≈15 мин) →
+            <strong>Pipeline Practice</strong> (60–90 мин) → <strong>Pipeline Review</strong> (≈15 мин) →
+            <strong>Journal question</strong> (в нейронаучный журнал). Артефакты сохраняются в портфолио-репозиторий.</p>
+          </div>
+        </div>
+
+        <nav class="toc" style="margin-top: 18px;">
+          <a href="#part0"><span class="toc-pill gray">0</span><span><strong>Часть 0 · Введение в программу</strong><span class="note">10 разделов без практики</span></span></a>
+          <a href="#level1"><span class="toc-pill">L1</span><span><strong>Level 1 · EEG Analyst</strong><span class="note">«Откуда берётся то, что я вижу»</span></span></a>
+          <a href="#level2"><span class="toc-pill lvl2">L2</span><span><strong>Level 2 · BCI Engineer</strong><span class="note">«Почему парадигма работает»</span></span></a>
+          <a href="#level3"><span class="toc-pill lvl3">L3</span><span><strong>Level 3 · Researcher</strong><span class="note">«Механизм за результатом»</span></span></a>
+          <a href="#level4"><span class="toc-pill lvl4">L4</span><span><strong>Level 4 · Specialist</strong><span class="note">Clinical · Cognitive · Product · Computational</span></span></a>
+          <a href="#final"><span class="toc-pill gray">F</span><span><strong>Финальный capstone</strong><span class="note">Сквозная защита портфолио</span></span></a>
+          <a href="#summary"><span class="toc-pill gray">Σ</span><span><strong>Сводные таблицы</strong><span class="note">PDF → новый порядок · сквозная нумерация · итоги</span></span></a>
+          <a href="#template"><span class="toc-pill gray">T</span><span><strong>Шаблон карточки урока</strong><span class="note">Для авторов курса</span></span></a>
+        </nav>
+      </section>
+
+      <!-- ============== PART 0 ============== -->
+      <span id="part0" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Часть 0</p>
+            <h2>Введение в программу (без практики)</h2>
+          </div>
+          <p class="lead">
+            Раздел собирает обзорные элементы исходного PDF (стр. 1–8, 19–20, 39–41) в одну стартовую
+            часть курса. После Часть 0 студент переходит к BBS-first урокам уровней.
+          </p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="lvl1">
+            <thead>
+              <tr><th>Раздел</th><th>Содержание</th><th>Стр. исх. PDF</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Визитная карточка курса</strong></td><td>4 уровня, 35+ BBS-модулей, Nimbus Studio + SDK</td><td>1</td></tr>
+              <tr><td><strong>Концепция курса</strong></td><td>«Мозг, который создаёт сигнал»; BBS перед практикой</td><td>2</td></tr>
+              <tr><td><strong>Nimbus Platform Logic</strong></td><td>Визуальный граф + строгий data contract</td><td>3</td></tr>
+              <tr><td><strong>Pipeline contract</strong></td><td>raw EEG ≠ model input; 5 шагов Acquisition → Safety</td><td>4</td></tr>
+              <tr><td><strong>Visual Studio workflow</strong></td><td>Design → Validate → Benchmark → Export → Deploy</td><td>5</td></tr>
+              <tr><td><strong>Модельная карта Nimbus</strong></td><td>Парадигма → признаки → Nimbus model</td><td>6</td></tr>
+              <tr><td><strong>Структура урока (эталон)</strong></td><td>BBS → Practice → Review → Journal</td><td>7–8</td></tr>
+              <tr><td><strong>Сквозной портфолио-проект</strong></td><td>Data / Nimbus / Deployment / Portfolio layers</td><td>19–20</td></tr>
+              <tr><td><strong>Academy × Studio × SDK</strong></td><td>Рефлексионный вопрос после практики</td><td>39–40</td></tr>
+              <tr><td><strong>Итоговая визитная карточка</strong></td><td>Сертификация, deployable pipeline</td><td>41</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============== LEVEL 1 ============== -->
+      <span id="level1" class="anchor"></span>
+      <section class="section">
+        <div class="level-banner">
+          <div class="level-num">1</div>
+          <div>
+            <p class="eyebrow">Level 1 · EEG Analyst</p>
+            <h2>«Откуда берётся то, что я вижу»</h2>
+            <p><strong>Цель уровня:</strong> сырой EEG → Nimbus-ready feature dataset + quality report.</p>
+          </div>
+        </div>
+
+        <h3>Модуль 1.0 — Обзор уровня (15 мин, без lab)</h3>
+        <div class="table-wrap">
+          <table class="lvl1">
+            <thead>
+              <tr><th>Brain Behind the Signal</th><th>Pipeline Practice</th><th>Review / Journal</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Зачем аналитику нейрофизиология; обзор Level 1 Practice (сырой EEG → feature contract → quality report)</td>
+                <td>—</td>
+                <td>«Какие решения preprocessing меняют физиологический смысл сигнала?»</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color: var(--muted); font-size: 14px; margin: 8px 0 0;">
+          Исходный блок: <em>Level 1 Practice — EEG Analyst Pipeline</em> (стр. 9–10 исходного PDF).
+        </p>
+
+        <h3 style="margin-top: 26px;">Уроки 1.1 – 1.7 (BBS + Lab)</h3>
+        <div class="table-wrap">
+          <table class="lvl1">
+            <thead>
+              <tr>
+                <th>Brain Behind the Signal</th>
+                <th>Pipeline Practice (Lab)</th>
+                <th>Артефакт</th>
+                <th>Pipeline Review + Journal question</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="lesson-code violet">BBs-1.1</span> «Что мы измеряем»: пирамидные нейроны; апикальные дендриты; open vs closed field; синхронизация; таламус как «дирижёр»</td>
+                <td><span class="lesson-code orange">L1-P1</span> Studio graph intake: data source, montage, channel types, events, sampling rate, metadata validation</td>
+                <td>Pipeline graph + notebook проверки структуры и списка рисков</td>
+                <td>Почему референс — следствие измерения потенциалов, а не «настройка софта»?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-1.2</span> «Анатомия сигнала»: таламо-кортикальные петли (α); δ, θ, β, γ; GABA-торможение</td>
+                <td><span class="lesson-code orange">L1-P2</span> Referencing + filtering: average/mastoid, notch, paradigm-specific bandpass</td>
+                <td>Сравнение спектров + Nimbus preprocessing config</td>
+                <td>Какая полоса соответствует какому генератору; что вы отсекаете биологически?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-1.3</span> «Артефакты»: ЭМГ, ЭОГ, ЭКГ, КГР; мышцы лица vs кора</td>
+                <td><span class="lesson-code orange">L1-P3</span> Artifact annotation: EOG/EMG/ECG detection, bad channels, epoch rejection rules</td>
+                <td>Размеченный датасет + таблица источников артефактов</td>
+                <td>Для каждого отклонённого epoch: физиологический источник и метод</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-1.4</span> «Препроцессинг»: нестационарность; нейромодуляторы; habituation; циркадные ритмы; межсубъектные различия</td>
+                <td><span class="lesson-code orange">L1-P2*</span> (расширение): baseline correction, epoch windows, session notes; задел под нормализацию L2</td>
+                <td>Notebook: baseline policy + session metadata</td>
+                <td>Почему baseline correction обязательна; чем межсессионная и межсубъектная нормализация различаются?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-1.5</span> «ICA»: функциональная сегрегация; статистическая независимость; DMN; дипольная модель; ограничения</td>
+                <td><span class="lesson-code orange">L1-P4</span> ICA cleaning: fit, inspect, label, remove components, validate before/after</td>
+                <td>ICA report: topomaps, time courses, PSD до/после</td>
+                <td>Какой компонент — артефакт тела, какой вредна?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-1.6</span> «Качество данных»: импеданс; кожа как фильтр; тревога/усталость; SNR по блокам</td>
+                <td><span class="lesson-code orange">L1-P6</span> Quality dashboard: SNR, PSD, rejected epochs, alpha peak, channel variance, finite values</td>
+                <td>HTML/PDF dashboard + diagnose_preprocessing notes</td>
+                <td>Как протокол сбора и состояние испытуемого читаются в метриках?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-1.7</span> «Публичные датасеты»: биологическая вариабельность; α-пик; наследуемость; BCI-naive vs trained</td>
+                <td><span class="lesson-code orange">L1-P5 + L1-P7</span>: Nimbus feature contract (CSP/bandpower/ERP) + MOABB/OpenNeuro replication</td>
+                <td>Feature dataset + metadata JSON + validation checklist + reproducible script/README</td>
+                <td>Что переносится между датасетами при transfer learning, а что остаётся локальным?</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="footnote">
+          Урок 1.4 использует узлы baseline из цепочки L1-P2; при публикации можно объединить с 1.2 или выделить отдельную mini-lab «baseline &amp; nonstationarity».
+        </div>
+
+        <div class="capstone-card lvl1" style="margin-top: 22px;">
+          <span class="pill">Capstone Level 1 · 1.CAP</span>
+          <h4>Полный Analyst Pipeline (интеграция 1.1–1.7)</h4>
+          <p><strong>Содержание:</strong> data source → filters → artifacts → epochs → features → diagnostics → export.<br>
+          <strong>Артефакт:</strong> Nimbus-ready feature dataset + preprocessing notebook + HTML/PDF quality report + Studio graph export.</p>
+          <p style="margin-top: 10px;"><strong>Защита 1.CAP:</strong> Studio graph, data contract checklist, quality report, ответ на вопрос
+          «какой шаг preprocessing больше всего изменил бы интерпретацию, если бы его убрали?».</p>
+        </div>
+      </section>
+
+      <!-- ============== LEVEL 2 ============== -->
+      <span id="level2" class="anchor"></span>
+      <section class="section">
+        <div class="level-banner lvl2">
+          <div class="level-num">2</div>
+          <div>
+            <p class="eyebrow yellow">Level 2 · BCI Engineer</p>
+            <h2>«Почему парадигма работает»</h2>
+            <p><strong>Цель уровня:</strong> декодеры P300 / SSVEP / MI + uncertainty + online loop.</p>
+          </div>
+        </div>
+
+        <h3>Модуль 2.0 — Обзор уровня</h3>
+        <div class="table-wrap">
+          <table class="lvl2">
+            <thead><tr><th>BBS</th><th>Practice</th><th>Journal</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Обзор Level 2 Practice: paradigm-to-model mapping, streaming, metrics</td>
+                <td>—</td>
+                <td>«Почему сырой EEG нельзя отдавать в NimbusSDK напрямую?»</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color: var(--muted); font-size: 14px; margin: 8px 0 0;">
+          Исходный блок: <em>Level 2 Practice — BCI Decoder Pipeline</em> (стр. 10–11).
+        </p>
+
+        <h3 style="margin-top: 26px;">Уроки 2.1 – 2.9</h3>
+        <div class="table-wrap">
+          <table class="lvl2">
+            <thead>
+              <tr><th>Brain Behind the Signal</th><th>Pipeline Practice (Lab)</th><th>Артефакт</th><th>Journal question</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.1a</span> (P300): locus coeruleus, oddball, context updating</td>
+                <td><span class="lesson-code yellow">L2-P1</span> P300 NimbusQDA: 0.5–10 Hz, ERP 300–500 ms, class covariance, posterior</td>
+                <td>P300 decoder + error/confidence report</td>
+                <td>Какой нейронный субстрат объясняет окно и выбор QDA?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.1b</span> (SSVEP): резонанс V1/V2, гармоники</td>
+                <td><span class="lesson-code yellow">L2-P2</span> SSVEP NimbusLDA/QDA: target ±2 Hz, CCA/bandpower, harmonic analysis</td>
+                <td>SSVEP classifier + обоснование модели</td>
+                <td>Почему SSVEP — резонанс, а не «просто частота»?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.1c</span> (MI): зеркальные нейроны, ERD/ERS, non-responders</td>
+                <td><span class="lesson-code yellow">L2-P3</span> Motor Imagery NimbusLDA: 8–30 Hz, CSP/FBCSP, log-variance, ERD/ERS maps</td>
+                <td>MI classifier + CSP discrimination maps</td>
+                <td>Где в пространстве CSP лежит дезингибиция таламо-кортикальной петли?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.2</span> Feature Engineering: α idle; θ–WM; β rebound; high-gamma; CSP; coherence</td>
+                <td>Углубление feature nodes в L2-P1–P3 (bandpower, FBCSP, межканальные признаки)</td>
+                <td>Feature metadata table по парадигмам</td>
+                <td>Какие признаки несут биологический смысл, а какие — артефакт?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.3</span> Байесовские модели: predictive coding; priors; precision; NimbusQDA</td>
+                <td><span class="lesson-code yellow">L2-P1</span> (углубление): posterior analysis, сравнение QDA vs LDA на P300</td>
+                <td>Calibration notes + posterior plots</td>
+                <td>В чём QDA похож на обновление belief с разными ковариациями по классам?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.4</span> Uncertainty: neural noise; population coding; PFC confidence; ACC conflict</td>
+                <td><span class="lesson-code yellow">L2-P5</span> Bayesian uncertainty: posterior, entropy, thresholds, abstention, calibration curve</td>
+                <td>Модель «умеет сказать не уверен» + safety policy</td>
+                <td>Почему reject trial — физиологичнее, чем угадывать?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.5</span> Neural drift: LTP/LTD; homeostasis; нейромодуляторы; сон; maladaptive plasticity</td>
+                <td><span class="lesson-code yellow">L2-P6</span> NimbusSTS: session split, latent state, adaptive update, drift metrics</td>
+                <td>Static LDA/QDA vs STS comparison</td>
+                <td>Почему NimbusSTS честнее static model по отношению к мозгу?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.6</span> Реальное железо: volume conduction; кость/ЛКС; spatial smearing; impedance</td>
+                <td>Ревизия montage + CSP/CCA во L2-P1–P3; checklist ограничений устройства</td>
+                <td>Hardware limitation memo</td>
+                <td>Как smearing влияет на число каналов и интерпретацию топографий?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.7</span> Online: проводимость; sensory latency 50–100 ms; efference copy; temporal binding</td>
+                <td><span class="lesson-code yellow">L2-P4 + L2-P7</span>: train-only normalization + online simulation (StreamingSession, latency)</td>
+                <td>Norm params (no leakage) + real-time demo на записи</td>
+                <td>Какое окно анализа совместимо с нейронным budget latency?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.8</span> Метрики BCI: Shannon; capacity; rate/temporal coding; ITR</td>
+                <td><span class="lesson-code yellow">L2-P8</span> BCI metrics: accuracy, ITR, latency, calibration error, rejection rate</td>
+                <td>Metrics dashboard сравнения моделей</td>
+                <td>ITR — мера приближения к пропускной способности нервной системы, а не «красивая цифра»</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-2.9</span> Этика BCI: декодируемое vs миф; нейроприватность; нейроправа</td>
+                <td>Cross-cutting к <span class="lesson-code yellow">L2-P5</span>, safety policy всех декодеров</td>
+                <td>Ethics + risk log для deployment</td>
+                <td>Что система не имеет права обещать пользователю?</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="footnote">
+          Урок 2.7: L2-P4 (normalization) логично пройти до или внутри online-lab; в оглавлении объединён как «нормализация + streaming».
+        </div>
+
+        <div class="capstone-card lvl2" style="margin-top: 22px;">
+          <span class="pill">Capstone Level 2 · 2.CAP</span>
+          <h4>Полный BCI Decoder Package</h4>
+          <p><strong>Содержание:</strong> mapping парадигм, normalization, training, safety gate, streaming, metrics.<br>
+          <strong>Артефакт:</strong> Nimbus decoder package — model, norm params, metadata, confidence policy, streaming demo.</p>
+          <p style="margin-top: 10px;"><strong>Защита 2.CAP:</strong> paradigm → feature → model → safety; демо с abstention; ITR/latency на одном dashboard.</p>
+        </div>
+      </section>
+
+      <!-- ============== LEVEL 3 ============== -->
+      <span id="level3" class="anchor"></span>
+      <section class="section">
+        <div class="level-banner lvl3">
+          <div class="level-num">3</div>
+          <div>
+            <p class="eyebrow orange">Level 3 · Researcher</p>
+            <h2>«Механизм за результатом»</h2>
+            <p><strong>Цель уровня:</strong> воспроизводимый research pipeline + mini-paper.</p>
+          </div>
+        </div>
+
+        <h3>Модуль 3.0 — Обзор уровня</h3>
+        <div class="table-wrap">
+          <table class="lvl3">
+            <thead><tr><th>BBS</th><th>Practice</th><th>Journal</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Обзор Level 3 Practice: hypothesis → ERP/TF → statistics → reproducibility → paper</td>
+                <td>—</td>
+                <td>«Как data contract заменяет „магию preprocessing“ в Methods?»</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color: var(--muted); font-size: 14px; margin: 8px 0 0;">
+          Исходный блок: <em>Level 3 Practice — Research Pipeline</em> (стр. 11–12).
+        </p>
+
+        <h3 style="margin-top: 26px;">Уроки 3.1 – 3.10</h3>
+        <div class="table-wrap">
+          <table class="lvl3">
+            <thead>
+              <tr><th>Brain Behind the Signal</th><th>Pipeline Practice (Lab)</th><th>Артефакт</th><th>Journal question</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.1</span> Дизайн эксперимента: oddball/MMN; flanker/Stroop; N-back; practice effects; arousal</td>
+                <td><span class="lesson-code red">L3-P1</span> Experiment design: hypothesis, task, feature contract, validation split, preregistration draft</td>
+                <td>Preregistration + pipeline spec</td>
+                <td>Какой нейронный механизм измеряет ваша задача и что будет confound?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.2</span> ERP углублённо: N100, P200, N200, P300, N400, P600, CNV</td>
+                <td><span class="lesson-code red">L3-P2</span> ERP-to-Nimbus: component windows, ERP features, NimbusQDA, posterior interpretation</td>
+                <td>ERP figures + Methods paragraph via data contract</td>
+                <td>Почему окно feature привязано к латентности генератора, а не к «удобному» интервалу?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.3</span> Time-frequency: PING; θ–γ coupling; α inhibition; β status-quo; phase precession</td>
+                <td><span class="lesson-code red">L3-P3</span> TF pipeline: wavelets/STFT, ERD/ERS features, model comparison</td>
+                <td>TF maps + feature table + interpretation</td>
+                <td>Какая осцилляция — механизм, а какая — эффект объёма проводимости?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.4</span> Connectivity: трактография; DMN; salience; executive; dynamic FC; axonal delays</td>
+                <td><span class="lesson-code red">L3-P4</span> Connectivity-to-feature: coherence/PLV, graph metrics, leakage controls</td>
+                <td>Connectivity report + anatomical caveats</td>
+                <td>Почему connectivity без анатомии — «числа без смысла»?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.5</span> Source localization: Brodmann; геометрия коры; глубокие источники; индивидуальный MRI</td>
+                <td><span class="lesson-code red">L3-P4*</span> или <span class="lesson-code red">L3-P5</span> (ветка): source hypothesis + ограничения depth sensitivity</td>
+                <td>Source localization memo (гипотеза, не «истина»)</td>
+                <td>Что именно вы локализуете — источник или fit?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.6</span> MVPA: population codes; manifolds; temporal dynamics; RSA</td>
+                <td><span class="lesson-code red">L3-P6</span> MVPA/Nimbus: temporal decoding, CV, permutation, posterior confidence</td>
+                <td>Decoding analysis + interpretation boundary</td>
+                <td>Что декодирует MVPA с точки зрения нейронауки, а не только accuracy?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.7</span> Статистика: multiple comparisons; cluster assumption; autocorrelation; Bayesian priors; effect size</td>
+                <td>Встроено в <span class="lesson-code red">L3-P5</span> Configuration sweep + statistical comparison</td>
+                <td>Benchmark matrix + stats appendix</td>
+                <td>Почему выбранный тест соответствует пространственно-временной структуре EEG?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.8</span> Воспроизводимость: biological variability; state-dependency; demand characteristics; between-lab</td>
+                <td><span class="lesson-code red">L3-P7</span> Reproducibility: BIDS-like data, exported code, SDK version, seeds, audit log</td>
+                <td>Reproducibility bundle</td>
+                <td>Что BIDS/стандарты контролируют из биологической вариабельности?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.9</span> Написание статьи: preprocessing ↔ physiology; ERP windows; Discussion via mechanism</td>
+                <td><span class="lesson-code red">L3-P8</span> Paper pipeline: figures, Methods, Results, Discussion, model card</td>
+                <td>Mini-paper 4–6 стр. + Nimbus model card</td>
+                <td>Прошёл бы Methods рецензент-нейрофизиолог?</td>
+              </tr>
+              <tr>
+                <td><span class="lesson-code violet">BBs-3.10</span> Нейрофидбек: operant conditioning; Hebb; SMR; α/θ; неспецифичность эффектов</td>
+                <td><span class="lesson-code red">L3-P5</span> (опциональная ветка) или extension lab: NF protocol sketch tied to plasticity</td>
+                <td>NF protocol draft (механизм → частота → feedback)</td>
+                <td>Какой механизм пластичности обосновывает ваш протокол?</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="capstone-card lvl3" style="margin-top: 22px;">
+          <span class="pill">Capstone Level 3 · 3.CAP</span>
+          <h4>Полный Research Pipeline</h4>
+          <p><strong>Содержание:</strong> protocol → ERP/TF → sweep → reproducibility → paper-style reporting.<br>
+          <strong>Артефакт:</strong> mini-paper + reproducible Nimbus pipeline spec + exported code/notebook.</p>
+          <p style="margin-top: 10px;"><strong>Защита 3.CAP:</strong> preregistration ↔ results; limitations через volume conduction &amp; nonstationarity.</p>
+        </div>
+      </section>
+
+      <!-- ============== LEVEL 4 ============== -->
+      <span id="level4" class="anchor"></span>
+      <section class="section">
+        <div class="level-banner lvl4">
+          <div class="level-num">4</div>
+          <div>
+            <p class="eyebrow red">Level 4 · Specialist</p>
+            <h2>«Клиника, когниция, продукт, теория»</h2>
+            <p><strong>Цель уровня:</strong> deployable pipeline под выбранный трек.</p>
+          </div>
+        </div>
+
+        <h3>Модуль 4.0 — Выбор трека</h3>
+        <p style="color: var(--muted); font-size: 15px;">
+          Обзор Level 4 Practice; выбор трека A/B/C/D; требования capstone (стр. 12–13 исходного PDF).
+        </p>
+
+        <div class="track-strip">
+          <div class="track-chip clinical"><strong>Трек A · Clinical</strong><p>Патофизиология за клиническим сигналом</p></div>
+          <div class="track-chip cognitive"><strong>Трек B · Cognitive</strong><p>Нейромеханизмы когнитивных функций</p></div>
+          <div class="track-chip product"><strong>Трек C · Product</strong><p>Нейрофизиология как продуктовое ограничение</p></div>
+          <div class="track-chip computational"><strong>Трек D · Computational</strong><p>Нейрофизиология как источник теорий</p></div>
+        </div>
+
+        <!-- TRACK A -->
+        <h3 style="margin-top: 22px;">Трек A — Clinical</h3>
+        <div class="table-wrap">
+          <table class="lvl4a">
+            <thead>
+              <tr><th>Brain Behind the Signal</th><th>Pipeline Practice</th><th>Артефакт / Capstone-слой</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Патологические осцилляции: GABAergic failure, иктальные паттерны</td><td>Clinical QC nodes: bandpower / spike detection rationale</td><td>QC checklist</td></tr>
+              <tr><td>Seizure substrate: spreading depolarization, onset zones</td><td>Pipeline segment: focal vs generalized patterns</td><td>Annotation protocol</td></tr>
+              <tr><td>Сознание: GNW, thalamocortical disconnection, MCS</td><td>Feature contract для states of consciousness (conceptual)</td><td>State interpretation memo</td></tr>
+              <tr><td>Пластичность после инсульта: periinfarct, diaschisis</td><td>Longitudinal feature stability + norm policy</td><td>Session drift log</td></tr>
+              <tr><td>Сон: NREM/REM, spindles, slow oscillations</td><td>Sleep-stage feature pipeline (epoch rules)</td><td>Sleep QC report</td></tr>
+              <tr><td>Нейроразвитие: миелинизация, созревание α</td><td>Age-stratified normative references</td><td>Population caveat doc</td></tr>
+              <tr><td>Biomarkers для регуляторики: FDA-qualified rationale</td><td>Confidence thresholds + false positive analysis</td><td>Regulatory rationale section</td></tr>
+              <tr>
+                <td><strong>Интеграция патофизиологии в протокол</strong></td>
+                <td><strong>Clinical Capstone:</strong> biomarker pipeline — QC, patient report, thresholds, risk log</td>
+                <td><strong>Защита:</strong> clinical protocol + rejection policy</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TRACK B -->
+        <h3 style="margin-top: 22px;">Трек B — Cognitive</h3>
+        <div class="table-wrap">
+          <table class="lvl4b">
+            <thead><tr><th>Brain Behind the Signal</th><th>Pipeline Practice</th><th>Артефакт</th></tr></thead>
+            <tbody>
+              <tr><td>Attention networks: dorsal/ventral, top-down/bottom-up</td><td>Task → frontal/parietal features</td><td>Attention marker spec</td></tr>
+              <tr><td>Working memory: persistent firing, gamma bursts, capacity</td><td>N-back / WM paradigm pipeline</td><td>WM decoder or marker</td></tr>
+              <tr><td>Neuroeconomics: DLPFC reward, insula risk, dopamine PE</td><td>Decision task features + Nimbus model</td><td>Posterior interpretation</td></tr>
+              <tr><td>Language: dual-stream, Broca/Wernicke</td><td>Language ERP/TF windows (N400/P600)</td><td>Component-linked features</td></tr>
+              <tr><td>Affective neuroscience: valence, arousal, embodied emotion</td><td>Asymmetry / limbic-proxy features (с caveats)</td><td>Confound log</td></tr>
+              <tr><td>Predictive coding &amp; precision</td><td>Hierarchical model comparison in feature space</td><td>Model comparison memo</td></tr>
+              <tr><td>Consciousness theories: NCC, IIT, GWT (обзор для интерпретации)</td><td>Limits of EEG inference document</td><td>Interpretation boundaries</td></tr>
+              <tr>
+                <td><strong>Интеграция когнитивного маркера</strong></td>
+                <td><strong>Cognitive Capstone:</strong> task → feature → Nimbus → validation → confounds</td>
+                <td><strong>Защита:</strong> experimental design + demo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TRACK C -->
+        <h3 style="margin-top: 22px;">Трек C — Product</h3>
+        <div class="table-wrap">
+          <table class="lvl4c">
+            <thead><tr><th>Brain Behind the Signal</th><th>Pipeline Practice</th><th>Артефакт</th></tr></thead>
+            <tbody>
+              <tr><td>Mental workload: frontal θ, parietal α</td><td>Workload monitoring features in streaming graph</td><td>Workload marker spec</td></tr>
+              <tr><td>Perceived latency: JND по модальностям</td><td>Latency budget table vs neural timing (BBs-2.7)</td><td>Latency memo</td></tr>
+              <tr><td>Attention &amp; interface fatigue</td><td>UI paradigm + sustained attention effects on EEG</td><td>UX-neuro checklist</td></tr>
+              <tr><td>Ecological validity: lab vs life</td><td>Dual-task / motion / noise test protocol</td><td>Validity report</td></tr>
+              <tr><td>Trust &amp; interoception: insula, uncertainty aversion</td><td>Confidence UX + explanation strings</td><td>Safety copy doc</td></tr>
+              <tr><td>Frustration: ACC performance monitoring</td><td>Error-related feature impact on decoder</td><td>Fallback behavior spec</td></tr>
+              <tr><td>Long-term BCI use &amp; plasticity</td><td>Longitudinal session protocol</td><td>Long-term risk log</td></tr>
+              <tr>
+                <td><strong>Интеграция в продукт</strong></td>
+                <td><strong>Product Capstone:</strong> BrainFlow/LSL, real-time confidence, fallback, safety</td>
+                <td><strong>Защита:</strong> prototype + latency budget</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TRACK D -->
+        <h3 style="margin-top: 22px;">Трек D — Computational</h3>
+        <div class="table-wrap">
+          <table class="lvl4d">
+            <thead><tr><th>Brain Behind the Signal</th><th>Pipeline Practice</th><th>Артефакт</th></tr></thead>
+            <tbody>
+              <tr><td>Biophysics: ion channels, AP, refractory period</td><td>Simulate single-neuron / population proxy signal</td><td>Simulation notebook</td></tr>
+              <tr><td>Mean-field, Wilson-Cowan</td><td>Generate population dynamics → features</td><td>Simulated feature set</td></tr>
+              <tr><td>Free Energy Principle (инженерная версия)</td><td>Variational inference toy → Nimbus posterior analogy</td><td>Theory-to-SDK mapping</td></tr>
+              <tr><td>Criticality, avalanches, edge of chaos</td><td>Nonlinear metrics on simulated data</td><td>Dynamics report</td></tr>
+              <tr><td>Information geometry, efficient coding</td><td>Fisher information / feature efficiency analysis</td><td>Coding efficiency memo</td></tr>
+              <tr><td>Connectome → function</td><td>Structural prior in connectivity features</td><td>Structural hypothesis doc</td></tr>
+              <tr><td>Model competition in neuroscience</td><td>Two theories → two feature sets → Nimbus comparison</td><td>Pre-registered model test</td></tr>
+              <tr>
+                <td><strong>Интеграция модели</strong></td>
+                <td><strong>Computational Capstone:</strong> assumption → simulated features → Nimbus inference → validation plan</td>
+                <td><strong>Защита:</strong> model + falsifiable prediction</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============== FINAL ============== -->
+      <span id="final" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow red">Финал программы</p>
+            <h2>Финальный Capstone (все уровни) · FINAL</h2>
+          </div>
+          <p class="lead">
+            Сквозная защита портфолио после 4A/B/C/D.8. Все четыре слоя архитектуры курса
+            (Data / Nimbus / Deployment / Portfolio) собираются в один защищаемый артефакт.
+          </p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Содержание</th><th>Когда</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Защита сквозного портфолио: Data layer + Nimbus layer + Deployment layer + Portfolio layer (demo, risk log, defense deck)</td>
+                <td>После 4A/B/C/D.8</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <div class="icon">✓</div>
+          <div>
+            <strong>Чек-лист FINAL (из стр. 19–20 исходного PDF)</strong>
+            <p>Studio graph · preprocessing config · feature contract · quality report · Nimbus model(s) · norm params ·
+            uncertainty calibration · LSL/BrainFlow handoff · StreamingSession · latency budget · safety policy ·
+            exported Python · demo video/replay.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============== SUMMARY TABLES ============== -->
+      <span id="summary" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Сводные таблицы</p>
+            <h2>PDF → новый порядок и сквозная нумерация</h2>
+          </div>
+          <p class="lead">
+            Две таблицы для авторов и LMS-команды: соответствие разделов исходного PDF новому
+            оглавлению и сквозная нумерация уроков для Notion / LMS.
+          </p>
+        </div>
+
+        <h3>Сводная таблица: исходный PDF → новый порядок</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Было (исх. PDF)</th><th>Стало (порядок)</th></tr></thead>
+            <tbody>
+              <tr><td>0 (обзор)</td><td>1.0, 2.0, 3.0, 4.0 + 1.CAP, 2.CAP, 3.CAP, FINAL</td></tr>
+              <tr><td>Level 1 Practice (стр. 9–10)</td><td>1.1 – 1.7 (после соответствующего BBs-1.x)</td></tr>
+              <tr><td>Level 2 Practice (стр. 10–11)</td><td>2.1a–c, 2.2 – 2.9</td></tr>
+              <tr><td>Level 3 Practice (стр. 11–12)</td><td>3.1 – 3.9 (+ 3.10 опционально)</td></tr>
+              <tr><td>BBs Level 1 (стр. 21–24)</td><td>Встроены в 1.1 – 1.7 (перед lab)</td></tr>
+              <tr><td>BBs Level 2 (стр. 25–29)</td><td>Встроены в 2.1 – 2.9</td></tr>
+              <tr><td>BBs Level 3 (стр. 30–35)</td><td>Встроены в 3.1 – 3.10</td></tr>
+              <tr><td>Level 4 Specialist (стр. 13, 36–39)</td><td>4A.1–4A.8 … 4D.1–4D.8 (BBS → capstone-слой → CAP)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 style="margin-top: 22px;">Сквозная нумерация уроков (для LMS / Notion)</h3>
+        <div class="numbering">
+          <div class="num-row"><strong>0.1–0.10</strong><span>Введение</span></div>
+          <div class="num-row"><strong>1.0, 1.1–1.7, 1.CAP</strong><span>Level 1</span></div>
+          <div class="num-row"><strong>2.0, 2.1a–c, 2.2–2.9, 2.CAP</strong><span>Level 2</span></div>
+          <div class="num-row"><strong>3.0, 3.1–3.10, 3.CAP</strong><span>Level 3</span></div>
+          <div class="num-row"><strong>4.0, 4A.1–4A.8 / 4B / 4C / 4D</strong><span>Level 4 (один трек = 9 уроков)</span></div>
+          <div class="num-row"><strong>FINAL</strong><span>Портфолио-защита</span></div>
+        </div>
+
+        <h3 style="margin-top: 22px;">Всего учебных единиц (один трек L4)</h3>
+        <div class="totals">
+          <div class="total"><strong>10</strong><span>Введение</span></div>
+          <div class="total"><strong>9</strong><span>L1 (вкл. capstone)</span></div>
+          <div class="total"><strong>12</strong><span>L2 (2.1 = a/b/c)</span></div>
+          <div class="total"><strong>12</strong><span>L3 (вкл. 3.10)</span></div>
+          <div class="total"><strong>9</strong><span>L4 (4.0 + 8 трека + capstone)</span></div>
+          <div class="total"><strong>1</strong><span>FINAL</span></div>
+        </div>
+        <p style="margin-top: 12px; color: var(--ink); font-size: 17px;">
+          <strong>≈ 53 урока</strong> при прохождении одного specialist-трека.
+        </p>
+      </section>
+
+      <!-- ============== LESSON TEMPLATE ============== -->
+      <span id="template" class="anchor"></span>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow violet">Для авторов</p>
+            <h2>Шаблон карточки урока</h2>
+          </div>
+          <p class="lead">
+            Авторы заполняют один и тот же шаблон для каждого из ≈53 уроков программы.
+            Шаблон фиксирует 4 обязательные секции: BBS, Practice, Review, Journal.
+          </p>
+        </div>
+
+<pre class="code"><span class="h">## Урок X.Y — [Название]</span>
+
+<span class="h">### A. Brain Behind the Signal (15 мин)</span>
+- Механизм 1
+- Механизм 2
+- Ограничение измерения (что EEG не видит)
+
+<span class="h">### B. Pipeline Practice (60–90 мин)</span>
+- Lab ID: L?-P?
+- Studio graph: узел → узел → …
+- Data contract: <span class="t">fs, channels, bands, window_ms, feature_type, shape, labels</span>
+- Nimbus: model / или только features
+- Deliverable: [из таблицы labs]
+
+<span class="h">### C. Pipeline Review (15 мин)</span>
+- [ ] Data contract violations
+- [ ] Confidence / rejection events
+- [ ] Assumptions broken
+
+<span class="h">### D. Journal question</span>
+&gt; [Один вопрос: механизм ↔ выбранный узел/признак/модель]</pre>
+
+        <div class="callout">
+          <div class="icon">i</div>
+          <div>
+            <strong>Источник документа</strong>
+            <p>Документ сгенерирован по PDF «Nimbus Academy — Нейрофизиология как визитная карточка» (41 стр.).
+            Версия оглавления-перестановки: <strong>1.0</strong>.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- SIGN-OFF -->
+    <section class="signoff">
+      <h2>BBS → Practice → Review → Journal</h2>
+      <p>
+        Этот документ — нормализованное оглавление Nimbus Academy в формате
+        «нейрофизиология первой, пайплайн вторым». Каждый из ≈53 уроков получает один и тот же
+        контракт структуры, а авторы курса заполняют единый шаблон карточки урока. Артефакты
+        складываются в единый портфолио-репозиторий, и студент сдаёт сквозной deployable
+        BCI-проект на финальной защите FINAL.
+      </p>
+      <div class="badges">
+        <span class="badge">4 уровня · 4 трека L4</span>
+        <span class="badge">≈ 53 урока на трек</span>
+        <span class="badge">BBS-first порядок</span>
+        <span class="badge">Один шаблон карточки</span>
+        <span class="badge">TOC v1.0</span>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
