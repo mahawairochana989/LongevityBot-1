@@ -505,6 +505,13 @@ $$ R_{\text{block}} = \frac{n_{\text{rejected}}}{n_{\text{total}}} \times 100\,\
 [filter] → [epochs baseline=None] → [z_score_full_session] → [random_split] → [features]
 ```
 
+| Ошибка | Следствие |
+|---|---|
+| `baseline=None` | Pre-stimulus drift в каждой эпохе |
+| Z-score по всей сессии | Leakage + смешение состояний мозга |
+| Random split | Соседние эпохи в train и test |
+| Нет session_metadata | Усталость невидима |
+
 ### Шаг 5. ✅ Правильный пайплайн
 
 ```
@@ -579,25 +586,69 @@ $$ s_k^{\text{eog}} = |\rho(s_k(t), x_{\text{EOG}}(t))| $$
 
 ## Развёртка решения
 
+### Шаг 1. Логическая гипотеза
+
+ICA без HP 1 Гц и без inspect — **статистически вероятно** удалит корковую α-компоненту. α-retention — минимальная количественная страховка.
+
+### Шаг 2. Точка расчёта
+
+- Rank после average reference.
+- $s_k^{\text{eog}}$ для каждой IC.
+- $\Delta_\alpha$ на O1/O2 до и после apply.
+
 ### Шаг 3. Расчёт
 
-Rank = 21 (22 ch, average ref). O1: $P_{\text{before}}(10.2) = 14.7$, $P_{\text{after}} = 13.6$ → $\Delta_\alpha = -0.075$ ✓.
+- 22 EEG, average ref → rank ICA = **21**.
+- O1: $P_{\text{before}}(10.2) = 14.7$ µV²/Hz; после удаления 2 IC (`eog`, `ecg`): $P_{\text{after}} = 13.6$.
+- $\Delta_\alpha = (13.6 - 14.7)/14.7 = -0.075 > -0.30$ ✓.
 
-### Шаг 4. ❌ Наивный
-
-```
-[raw] → [ICA n=22] → [drop IC 3,7] → [downstream]
-```
-
-### Шаг 5. ✅ Правильный
+### Шаг 4. ❌ Наивный пайплайн с ошибками
 
 ```
-[filtered] → [HP 1 Hz for fit] → [rank_estimator]
-  → [ICA picard n=rank] → [IC_inspector] → [label_eog_ecg]
-  → [apply_exclude] → [psd_alpha_validator] → [save W + labels]
+[raw] → [ICA n_components=22] → [drop IC 3, 7] → [downstream]
 ```
 
-### Шаг 6. Сравнение + Шаг 7. Журнал
+| Ошибка | Следствие |
+|---|---|
+| Нет HP 1 Гц перед fit | ICA не сходится / смешивает drift и кору |
+| `n_components = n_channels` | Rank-deficient → ложные IC |
+| Удаление по индексу без inspect | Случайное уничтожение α/DMN |
+| Нет сохранения $W$ | Невоспроизводимо в L2 streaming |
+| Нет α-retention check | Ошибка не обнаруживается |
+
+### Шаг 5. ✅ Правильный пайплайн (Studio graph + JSON)
+
+```
+[reference_filtered_raw]
+  → [highpass 1 Hz — только для fit ICA]
+  → [rank_estimator]
+  → [ICA_fit: picard, n_components = rank]
+  → [IC_inspector: topomap + time + PSD]
+  → [auto_labeller: eog/ecg/emg]
+  → [manual_confirm]
+  → [apply_exclude_to_original]
+  → [psd_alpha_validator]
+  → [save: W.npy + ica_labels.json + ica_report.html]
+```
+
+```json
+{
+  "ica": { "method": "picard", "n_components": "rank_aware", "highpass_for_fit_hz": 1.0 },
+  "labelling": { "eog_threshold": 0.5, "ecg_threshold": 0.5, "manual_confirm": true },
+  "validation": { "alpha_retention_min": -0.30, "posterior_channels": ["O1", "O2", "Pz"] }
+}
+```
+
+### Шаг 6. Прямое сравнение
+
+| Аспект | ❌ Наивный | ✅ Правильный |
+|---|---|---|
+| Подготовка | raw | HP 1 Гц + rank |
+| Выбор IC | по номеру | inspect + label + confirm |
+| Страховка | нет | α-retention |
+| Артефакты | нет | W.npy + label_map + report |
+
+### Шаг 7. Строка в журнал
 
 > *«ICA отделяет статистически независимые источники; метка «артефакт / мозг» — физиологическое решение; α-retention — его количественная страховка.»*
 
@@ -638,25 +689,73 @@ $$ R = \frac{n_{\text{rejected}}}{n_{\text{total}}} \times 100\,\% $$
 
 ## Развёртка решения
 
+### Шаг 1. Логическая гипотеза
+
+Quality verdict должен быть **отделён от декодера**. Метрики читают протокол и состояние субъекта; accuracy отвечает на другой вопрос.
+
+### Шаг 2. Точка расчёта
+
+SNR per channel; $f_\alpha$; $R$ overall и per block; finite_rate; variance ratio.
+
 ### Шаг 3. Расчёт (пример)
 
-SNR median 6.2 dB; 2 ch < 3 → WARN. $f_\alpha = 10.3$ → PASS. R = 18 % → PASS; по блокам 6→22 % → caveat fatigue. Verdict: **PASS with WARN**.
+- SNR median = 6.2 dB; 2 канала < 3 dB → **WARN**.
+- $f_\alpha = 10.3$ Гц → **PASS**.
+- $R = 18\%$ → **PASS**; по блокам: 6 % → 9 % → 14 % → 22 % → caveat *fatigue*.
+- finite_rate = 1.0 → **PASS**.
+- Итог: **PASS with WARN**.
 
-### Шаг 4. ❌ Наивный
-
-```
-[clean] → [train] → [accuracy] → OK
-```
-
-### Шаг 5. ✅ Правильный
+### Шаг 4. ❌ Наивный пайплайн
 
 ```
-[clean_epochs] → [per_channel_snr] → [psd] → [alpha_peak_finder]
-  → [rejection_per_block] → [region_grouper] → [finite_check]
-  → [verdict_writer] → [quality_dashboard.html]
+[clean_data] → [train_decoder] → [accuracy] → «OK»
 ```
 
-### Шаг 7. Журнал
+| Ошибка | Следствие |
+|---|---|
+| Одна метрика (accuracy) | Путает качество сигнала и качество модели |
+| Нет per-channel SNR | Не видно bad electrodes |
+| Нет α-пика | Не видно уничтоженной корковой компоненты |
+| Нет finite check | NaN проходят молча |
+| Нет physiological caveats | Ревьюер не интерпретирует вердикт |
+
+### Шаг 5. ✅ Правильный пайплайн
+
+```
+[clean_epochs]
+  → [per_channel_snr]
+  → [psd_estimator]
+  → [alpha_peak_finder: O1, O2, Pz]
+  → [rejection_rate_per_block]
+  → [region_grouper: frontal/central/parietal/occipital]
+  → [finite_value_check]
+  → [paradigm_aware_gate]
+  → [verdict_writer]
+  → [quality_dashboard.html]
+```
+
+```json
+{
+  "gates": {
+    "snr_min_db": 3.0,
+    "alpha_peak_band_hz": [7.0, 14.0],
+    "rejection_rate_max": 0.40,
+    "finite_rate": 1.0
+  },
+  "report": { "out": "artifacts/quality_dashboard.html", "include_caveats": true }
+}
+```
+
+### Шаг 6. Прямое сравнение
+
+| Аспект | ❌ | ✅ |
+|---|---|---|
+| Что измеряем | Accuracy | SNR, PSD, α, reject%, finite |
+| Разрешение | Одно число | Per channel + per block + per region |
+| Caveats | Нет | Секция physiological caveats |
+| Verdict | OK / not OK | PASS / WARN / FAIL per gate |
+
+### Шаг 7. Строка в журнал
 
 > *«Dashboard — предложение о субъекте и протоколе, а не о декодере: «два канала у висков с низким SNR, α дрейфует к блоку 4».»*
 
@@ -703,25 +802,77 @@ Norm: $\mu_{\text{train}}, \sigma_{\text{train}}$ (или median/MAD) → в met
 
 ## Развёртка решения
 
+### Шаг 1. Логическая гипотеза
+
+Pipeline, работающий только на train=test, неотличим от запоминания датасета. Replication runner **выставляет assumptions наружу** как contract и заставляет честно документировать biological variability.
+
+### Шаг 2. Точка расчёта
+
+- Распределение каждого feature local vs MOABB.
+- $D_{\text{KL}}$ per feature.
+- $\sigma^2_{\text{subject}}$ vs $\sigma^2_{\text{session}}$.
+
 ### Шаг 3. Расчёт (пример)
 
-Local 1 subj / 4 sess: $\sigma^2_{\text{session}} = 0.13$. MOABB 9 subj: $\sigma^2_{\text{subject}} = 0.42$. KL(C3 mu power) = 0.18 ✓; KL(Fp1 variance) = 0.92 → **local-only**, flag.
+- Local (1 subj, 4 sess): $\sigma^2_{\text{session}} = 0.13$.
+- MOABB (9 subj): $\sigma^2_{\text{subject}} = 0.42$, $\sigma^2_{\text{session}} = 0.11$.
+- Feature «C3 mu power»: $D_{\text{KL}} = 0.18$ → переносим, документировать.
+- Feature «Fp1 broadband variance»: $D_{\text{KL}} = 0.92$ → **local-only**, flag в metadata.
 
-### Шаг 4. ❌ Наивный
-
-```
-[moabb] → [CSP on all] → [z-score all] → [export]
-```
-
-### Шаг 5. ✅ Правильный
+### Шаг 4. ❌ Наивный пайплайн
 
 ```
-[full_L1_chain] → [time_split] → [feature_extractor paradigm]
-  → [norm_fit_train] → [distribution_diagnostic]
-  → [cross_dataset_comparator] → [features.npz + metadata + README]
+[moabb_download] → [CSP на всех данных] → [z-score по всем] → [export без metadata]
 ```
 
-### Шаг 7. Журнал
+| Ошибка | Следствие |
+|---|---|
+| CSP fit на всех данных | Spatial filter «видит» test |
+| Z-score по всем | Leakage (см. 1.4) |
+| Нет `feature_metadata.json` | L2 не может валидировать вход |
+| Нет cross-dataset report | Subject/session variance скрыта |
+| Нет README / one-command | Репликация невозможна |
+
+### Шаг 5. ✅ Правильный пайплайн
+
+```
+[full_L1_chain (1.1–1.6)]
+  → [time_aware_train_val_test_split]
+  → [feature_extractor: paradigm_specific — CSP log-var для MI]
+  → [norm_fit_train_only → norm_params.json]
+  → [feature_distribution_diagnostic]
+  → [cross_dataset_comparator]
+  → [export: features.npz + feature_metadata.json]
+  → [replication_script.py + README.md]
+```
+
+```json
+{
+  "features": {
+    "paradigm": "motor_imagery",
+    "family": "csp_logvar",
+    "n_csp": 6,
+    "band_hz": [8.0, 30.0]
+  },
+  "split": { "method": "time_aware", "train": 0.6, "val": 0.2, "test": 0.2 },
+  "normalisation": { "scheme": "median_mad", "fit_on": "train" },
+  "replication": {
+    "entry_point": "python -m nimbus.l1.replication --config artifacts/l1_config.json"
+  }
+}
+```
+
+### Шаг 6. Прямое сравнение
+
+| Аспект | ❌ | ✅ |
+|---|---|---|
+| CSP | На всех данных | Только train fold |
+| Нормализация | По всем | Train-only, артефакт |
+| Contract | Нет | feature_metadata.json |
+| Cross-dataset | Нет | KL + variance report |
+| Запуск | Notebook «у меня» | Одна команда + README |
+
+### Шаг 7. Строка в журнал
 
 > *«Переносятся paradigm-grounded features и полосы; локальны абсолютные амплитуды и impedance/blink-профиль — contract явно проводит эту границу.»*
 
