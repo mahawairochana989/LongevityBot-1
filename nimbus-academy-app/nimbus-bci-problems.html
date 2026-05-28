@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nimbus BCI Problems</title>
+  <style>
+    * {{ box-sizing: border-box; }}
+    html, body {{ height: 100%; margin: 0; }}
+    body {{
+      min-height: 100vh;
+      background: #010409;
+      color: #e6edf3;
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+    }}
+    .header {{
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+      border-bottom: 1px solid #21262d;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }}
+    .logo {{
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #00e5ff, #7c4dff);
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-size: 18px; flex-shrink: 0;
+    }}
+    .header-title {{ font-size: 16px; font-weight: 700; }}
+    .header-sub {{ font-size: 11px; color: #8b949e; margin-top: 1px; }}
+    .level-dots {{ margin-left: auto; display: flex; gap: 8px; }}
+    .dot {{ width: 8px; height: 8px; border-radius: 50%; background: #21262d; }}
+    .dot.done {{ background: #00c853; }}
+    .layout {{ display: flex; flex: 1; min-height: 0; }}
+    .sidebar {{
+      width: 300px; border-right: 1px solid #21262d;
+      overflow-y: auto; background: #0d1117; flex-shrink: 0;
+    }}
+    .level-head {{
+      padding: 10px 16px 6px; font-size: 10px; color: #8b949e;
+      font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      border-bottom: 1px solid #21262d; background: #010409;
+      position: sticky; top: 0;
+    }}
+    .level-badge {{
+      background: #21262d; color: #e6edf3; padding: 2px 6px;
+      border-radius: 4px; margin-right: 6px; font-size: 9px;
+    }}
+    .prob-item {{
+      padding: 12px 16px; cursor: pointer;
+      border-bottom: 1px solid #161b22;
+      border-left: 3px solid transparent;
+      transition: background 0.15s;
+    }}
+    .prob-item:hover {{ background: #161b22; }}
+    .prob-item.active {{ background: #161b22; }}
+    .prob-row {{ display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }}
+    .prob-title {{ font-size: 12px; font-weight: 600; color: #c9d1d9; flex: 1; }}
+    .prob-item.active .prob-title {{ color: #e6edf3; }}
+    .prob-meta {{ display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }}
+    .tag {{
+      font-size: 9px; padding: 1px 6px; border-radius: 3px; font-weight: 600;
+    }}
+    .main {{ flex: 1; overflow-y: auto; }}
+    .empty {{
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 60vh; color: #8b949e; gap: 16px; padding: 24px;
+    }}
+    .empty h2 {{ font-size: 18px; font-weight: 600; color: #c9d1d9; margin: 0; }}
+    .empty p {{ font-size: 13px; max-width: 400px; text-align: center; line-height: 1.6; margin: 0; }}
+    .tags-row {{ display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; max-width: 500px; }}
+    .prob-header {{ padding: 24px; border-bottom: 1px solid #21262d; background: #0d1117; }}
+    .prob-header-inner {{ display: flex; align-items: flex-start; gap: 16px; }}
+    .prob-icon {{
+      width: 48px; height: 48px; flex-shrink: 0; border-radius: 12px;
+      display: grid; place-items: center; font-size: 22px;
+    }}
+    .prob-badges {{ display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }}
+    .badge {{
+      font-size: 10px; padding: 2px 8px; border-radius: 4px;
+      background: #21262d; color: #8b949e; font-family: ui-monospace, monospace;
+    }}
+    .prob-h2 {{ font-size: 20px; font-weight: 700; margin: 8px 0 0; }}
+    .btn-solved {{
+      padding: 8px 16px; border-radius: 8px; cursor: pointer;
+      font-size: 12px; font-weight: 600; flex-shrink: 0;
+      background: #21262d; border: 1px solid #30363d; color: #8b949e;
+    }}
+    .btn-solved.done {{ background: #00c85330; border-color: #00c853; color: #00c853; }}
+    .tabs {{ display: flex; border-bottom: 1px solid #21262d; background: #0d1117; padding: 0 24px; }}
+    .tab {{
+      padding: 12px 20px; background: transparent; border: none;
+      border-bottom: 2px solid transparent; color: #8b949e;
+      cursor: pointer; font-size: 13px;
+    }}
+    .tab.active {{ color: #e6edf3; font-weight: 600; }}
+    .content {{ padding: 24px; max-width: 860px; }}
+    .content h3 {{ color: #e6edf3; font-size: 15px; font-weight: 700; margin: 16px 0 8px; }}
+    .content h4 {{ color: #8b949e; font-size: 13px; font-weight: 600; margin: 12px 0 4px; text-transform: uppercase; letter-spacing: 0.5px; }}
+    .content p {{ color: #c9d1d9; font-size: 13px; line-height: 1.7; margin: 4px 0; }}
+    .content li {{ color: #c9d1d9; font-size: 13px; line-height: 1.7; margin-left: 16px; }}
+    .content code {{
+      background: #161b22; border: 1px solid #30363d; border-radius: 4px;
+      padding: 1px 5px; color: #79c0ff; font-size: 12px;
+    }}
+    pre {{
+      background: #0d1117; border: 1px solid #30363d; border-radius: 8px;
+      padding: 16px; overflow-x: auto; font-size: 12px; line-height: 1.6;
+      color: #e6edf3; margin: 12px 0;
+      font-family: ui-monospace, "JetBrains Mono", monospace;
+    }}
+    .table-line {{ color: #8b949e; font-size: 12px; font-family: monospace; line-height: 1.8; }}
+    @media (max-width: 768px) {{
+      .layout {{ flex-direction: column; }}
+      .sidebar {{ width: 100%; max-height: 40vh; border-right: 0; border-bottom: 1px solid #21262d; }}
+    }}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">🧠</div>
+    <div>
+      <div class="header-title">Nimbus BCI Problems</div>
+      <div class="header-sub" id="subtitle"></div>
+    </div>
+    <div class="level-dots" id="level-dots"></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <main class="main" id="main"></main>
+  </div>
+  <script>
+    const PROBLEMS = [{"id": "EEG", "title": "Частота спайков и f-I кривая", "level": 1, "tag": "Нейрофизиология", "color": "#00e5ff", "emoji": "⚡", "difficulty": "★☆☆ Базовый", "description": "## Условие\n\nНейрон LIF (leaky integrate-and-fire) получает **постоянный ток** $I$. При $I < I_{\\min}$ частота спайков $f = 0$ Гц; при больших $I$ частота растёт. Зависимость $f(I)$ называется **f-I кривой**.\n\n**Дано:**\n- Период рефрактерности: $\\tau_{\\text{ref}} = 3$ мс\n- Порог $I_{\\min} = 0{,}5$ нА — ниже этого тока спайков нет\n- Линейный участок: $f = k \\cdot (I - I_{\\min})$, $k = 80$ Гц/нА\n\n**Задачи:**\n1. Какова **максимальная** частота спайков этого нейрона?\n2. Вычислите $f$ при $I = 2{,}5$ нА.\n3. Почему на скальпе мы видим **синхронность популяции**, а не отдельные спайки?\n\n### Контекст BCI\n\nEEG — это сумма полей **~10⁸ синхронных нейронов**. Частота ритма (например, α ≈ 10 Гц) — это не firing rate одного нейрона, а **осцилляция согласованности** популяции.", "solution": "## Шаг 1. Максимальная частота\n\nРефрактерность ограничивает минимальный интервал между спайками:\n\n$$f_{\\max} = \\frac{1}{\\tau_{\\text{ref}}} = \\frac{1}{0{,}003} \\approx 333 \\text{ Гц}$$\n\nНа практике реальные нейроны редко превышают 200–300 Гц из-за адаптации.\n\n## Шаг 2. Расчёт f(I)\n\n$$f = k \\cdot (I - I_{\\min}) = 80 \\cdot (2{,}5 - 0{,}5) = 160 \\text{ Гц}$$\n\n160 Гц < 333 Гц → ограничение рефрактерности **не активно**.\n\n## Шаг 3. Связь с EEG\n\n| Масштаб | Что измеряем | Частота |\n| --- | --- | --- |\n| Один нейрон | Спайки | 0–300 Гц |\n| Популяция (~1 см²) | Поле диполей | 0.5–100 Гц (EEG) |\n| Скальп | Разность потенциалов | µV-диапазон |\n\n```python\nimport numpy as np\n\ndef f_I_curve(I_nA, I_min=0.5, k=80.0, tau_ref_ms=3.0):\n    f = np.maximum(0.0, k * (I_nA - I_min))\n    f_max = 1000.0 / tau_ref_ms\n    return np.minimum(f, f_max)\n\nI = 2.5\nprint(f\"f({I} nA) = {f_I_curve(I):.0f} Hz\")\nprint(f\"f_max = {1000/tau_ref_ms:.0f} Hz\")\n```\n\n**Вывод:** f-I кривая описывает **одиночный нейрон**; EEG отражает **согласованность ансамбля**, а не сумму индивидуальных firing rates."}, {"id": "MV", "title": "Уравнение Goldman и мембранный потенциал", "level": 1, "tag": "Нейрофизиология", "color": "#00e5ff", "emoji": "🔋", "difficulty": "★☆☆ Базовый", "description": "## Условие\n\nВы записываете **resting potential** нейрона и хотите понять, как ионы определяют $V_m$.\n\n**Уравнение Goldman–Hodgkin–Katz (GHK):**\n\n$$V_m = \\frac{RT}{F} \\ln \\frac{P_K [K^+]_{out} + P_{Na} [Na^+]_{out} + P_{Cl} [Cl^-]_{in}}{P_K [K^+]_{in} + P_{Na} [Na^+]_{in} + P_{Cl} [Cl^-]_{out}}$$\n\n**Дано (мМ):**\n| Ион | $[in]$ | $[out]$ | $P$ (относ.) |\n| --- | --- | --- | --- |\n| K⁺ | 140 | 5 | 1.0 |\n| Na⁺ | 15 | 145 | 0.04 |\n| Cl⁻ | 10 | 110 | 0.45 |\n\n$RT/F ≈ 25{,}7$ мВ при 37°C.\n\n**Задачи:**\n1. Вычислите $V_m$ (мВ).\n2. Что произойдёт с $V_m$, если **удвоить** $P_{Na}$ (открытие Na-каналов)?\n3. Почему **depolarization** на EEG ≠ «больше спайков»?", "solution": "## Шаг 1. Подстановка в GHK\n\nЧислитель:\n$$N = 1.0 \\cdot 5 + 0.04 \\cdot 145 + 0.45 \\cdot 10 = 5 + 5.8 + 4.5 = 15.3$$\n\nЗнаменатель:\n$$D = 1.0 \\cdot 140 + 0.04 \\cdot 15 + 0.45 \\cdot 110 = 140 + 0.6 + 49.5 = 190.1$$\n\n$$V_m = 25.7 \\cdot \\ln(15.3 / 190.1) = 25.7 \\cdot (-2.51) \\approx \\mathbf{-64.5 \\text{ мВ}}$$\n\nТипичный resting potential ✓\n\n## Шаг 2. Удвоение P_Na\n\nПри $P_{Na} = 0.08$:\n$$N' = 5 + 11.6 + 4.5 = 21.1 \\quad \\Rightarrow \\quad V_m' \\approx -58 \\text{ мВ}$$\n\n→ **Depolarization** на ~6 мВ — приближение к порогу спайка.\n\n## Шаг 3. Связь с EEG\n\nDepolarization **локальной популяции** создаёт **отрицательный** потенциал на активном электроде (если диполи направлены к pia). Но EEG — **разность** $V_A - V_B$, и знак зависит от **референса** и **геометрии**.\n\n```python\nimport numpy as np\n\nRT_F = 25.7  # mV at 37°C\n\ndef goldman(P, conc_in, conc_out):\n    num = P[\"K\"]*conc_out[\"K\"] + P[\"Na\"]*conc_out[\"Na\"] + P[\"Cl\"]*conc_in[\"Cl\"]\n    den = P[\"K\"]*conc_in[\"K\"] + P[\"Na\"]*conc_in[\"Na\"] + P[\"Cl\"]*conc_out[\"Cl\"]\n    return RT_F * np.log(num / den)\n\nP = {\"K\": 1.0, \"Na\": 0.04, \"Cl\": 0.45}\ncin = {\"K\": 140, \"Na\": 15, \"Cl\": 10}\ncout = {\"K\": 5, \"Na\": 145, \"Cl\": 110}\nprint(f\"Vm = {goldman(P, cin, cout):.1f} mV\")\n```\n\n**Вывод:** Goldman задаёт **равновесный потенциал**; firing rate зависит от **динамики** каналов, а не только от $V_m$."}, {"id": "PWR", "title": "Band power через FFT", "level": 2, "tag": "Обработка сигналов", "color": "#7c4dff", "emoji": "📊", "difficulty": "★★☆ Средний", "description": "## Условие\n\nДан 10-секундный фрагмент EEG канала **O1** (`sfreq = 250` Гц). Нужно оценить **band power** в полосах:\n- **θ:** 4–8 Гц\n- **α:** 8–13 Гц\n- **β:** 13–30 Гц\n\n**Задачи:**\n1. Реализуйте Welch PSD и интегрируйте мощность по полосам.\n2. Вычислите **относительную** α-мощность: $P_\\alpha / P_{total}$.\n3. Субъект закрыл глаза → α(O1) выросла с 15% до 40%. Как это интерпретировать биологически?\n\n### Ограничения\n\n- Используйте **односторонний** спектр (удвоение, кроме DC и Nyquist).\n- Полоса анализа: 1–40 Гц.", "solution": "## Шаг 1. Welch PSD\n\n```python\nimport numpy as np\nfrom scipy.signal import welch\n\ndef bandpower(data, sfreq, fmin, fmax):\n    freqs, psd = welch(data, fs=sfreq, nperseg=int(2 * sfreq))\n    idx = (freqs >= fmin) & (freqs <= fmax)\n    # односторонний спектр: df * sum(PSD)\n    return np.trapz(psd[idx], freqs[idx])\n\nsfreq = 250\n# data: np.ndarray shape (2500,) — 10 s @ 250 Hz\n# data = ...\n\ntheta = bandpower(data, sfreq, 4, 8)\nalpha = bandpower(data, sfreq, 8, 13)\nbeta  = bandpower(data, sfreq, 13, 30)\ntotal = bandpower(data, sfreq, 1, 40)\n\nprint(f\"θ={theta:.2e}, α={alpha:.2e}, β={beta:.2e} µV²/Hz integrated\")\nprint(f\"Relative α = {alpha/total:.1%}\")\n```\n\n## Шаг 2. Интерпретация α-blocking\n\n| Состояние | α(O1/O2) | Механизм |\n| --- | --- | --- |\n| Глаза закрыты | ↑ (15→40%) | Таламо-кортикальные осцилляторы **синхронизированы** |\n| Глаза открыты, внимание | ↓ (α-blocking) | Дезсинхронизация затылочной коры |\n\n## Шаг 3. Связь с BCI\n\nBand power — **стандартная фича** для SSVEP и neurofeedback. Nimbus ожидает **предобработанные** признаки, не raw EEG.\n\n**Вывод:** FFT/Welch переводит временной ряд в **энергию по полосам** — первый шаг feature extraction."}, {"id": "ART", "title": "Детектор артефактов", "level": 2, "tag": "Обработка сигналов", "color": "#7c4dff", "emoji": "👁", "difficulty": "★★☆ Средний", "description": "## Условие\n\nСырой EEG содержит **EOG** (моргания), **EMG** (жевание) и **bad channels** (отвалившийся электрод). Нужен **автоматический детектор** для epoch rejection.\n\n**Правила:**\n| Артефакт | Критерий | Полоса |\n| --- | --- | --- |\n| EOG | Peak-to-peak на Fp1/Fp2 > 150 µV | — |\n| EMG | Bandpower > 30 Гц, z-score > 3 | 30–80 Гц |\n| Bad channel | Variance < 0.01 µV² или flat line | — |\n\n**Задачи:**\n1. Реализуйте `detect_artifacts(epoch, sfreq) -> dict`.\n2. Почему **ICA до** маркировки bad channels опасна?\n3. Сколько эпох отбросится, если 3 из 22 каналов — bad?", "solution": "## Шаг 1. Детектор\n\n```python\nimport numpy as np\n\ndef detect_artifacts(epoch, sfreq, eog_ch=(\"Fp1\", \"Fp2\"), ch_names=None):\n    # epoch: (n_channels, n_samples)\n    flags = {\"eog\": False, \"emg\": False, \"bad_ch\": []}\n    # EOG: peak-to-peak on frontal channels\n    if ch_names:\n        for ch in eog_ch:\n            if ch in ch_names:\n                idx = ch_names.index(ch)\n                ptp = epoch[idx].ptp()\n                if ptp > 150e-6:  # 150 µV\n                    flags[\"eog\"] = True\n\n    # EMG: high-gamma bandpower z-score (simplified)\n    from scipy.signal import welch\n    freqs, psd = welch(epoch.mean(axis=0), fs=sfreq, nperseg=256)\n    emg_power = psd[(freqs >= 30) & (freqs <= 80)].sum()\n    if emg_power > 3.0:  # threshold after z-scoring on train\n        flags[\"emg\"] = True\n\n    # Bad channels\n    for i in range(epoch.shape[0]):\n        if epoch[i].var() < 0.01e-12:\n            flags[\"bad_ch\"].append(i)\n\n    flags[\"reject\"] = flags[\"eog\"] or flags[\"emg\"] or len(flags[\"bad_ch\"]) > 0\n    return flags\n```\n\n## Шаг 2. ICA и bad channels\n\nBad channel с **нулевой** дисперсией создаёт **singular covariance** → ICA ломается или «размазывает» артефакт на все компоненты. **Порядок:** mark bad → interpolate/exclude → ICA.\n\n## Шаг 3. Rejection rate\n\nBad channels **не всегда** = reject epoch. Если bad channel **исключён** из average reference, эпоха может быть валидной. Но если bad channel участвует в spatial filter (CSP) — **вся эпоха отравлена**.\n\n**Вывод:** Artifact gate — **физический фильтр** до ML; без него декодер учится на шуме."}, {"id": "ERD", "title": "ERD/ERS при motor imagery", "level": 3, "tag": "Ритмы и паттерны", "color": "#00e676", "emoji": "🌀", "difficulty": "★★☆ Средний", "description": "## Условие\n\nСубъект **воображает сжатие правой кисти** (MI). Запись: C3, C4, `sfreq=250` Гц, эпоха 0–4 с после cue.\n\n**Определения:**\n- **ERD** (desynchronization): **снижение** mu/beta (8–30 Гц) над **контралатеральной** моторной корой (C4 для правой руки)\n- **ERS** (synchronization): **рост** mu/beta над **ипсилатеральной** корой (C3)\n\n**Задачи:**\n1. Вычислите ERD% = $(P_{baseline} - P_{task}) / P_{baseline} \\times 100$ в 8–30 Гц.\n2. Постройте time-frequency (или bandpower по окнам).\n3. Почему **реальное** сокращение мышцы даёт **другой** спектр, чем чистый MI?", "solution": "## Шаг 1. ERD%\n\n```python\nimport numpy as np\nfrom scipy.signal import welch\n\ndef erd_percent(data, sfreq, t_base=(-0.5, 0), t_task=(1.0, 3.0)):\n    def power_window(t0, t1):\n        i0, i1 = int(t0*sfreq), int(t1*sfreq)\n        seg = data[i0:i1]\n        f, psd = welch(seg, fs=sfreq, nperseg=256)\n        band = (f >= 8) & (f <= 30)\n        return psd[band].sum()\n    p_base = power_window(*t_base)\n    p_task = power_window(*t_task)\n    return 100 * (p_base - p_task) / p_base\n\n# C4 for right-hand MI — expect ERD > 10%\n# erd_c4 = erd_percent(epoch_c4, 250)\n```\n\n## Шаг 2. Биологическая интерпретация\n\n```\nПланирование движения (MI)\n  → снижение синхронности mu/beta над contralateral M1\n  → ERD на C4 (правая рука)\n\nРеальное EMG-сокращение\n  → широкополосный EMG > 30 Гц\n  → co-contraction → «размазанный» mu, не чистый ERD\n```\n\n## Шаг 3. BCI-применение\n\nMI-BCI (BNCI 2014-001) использует **8–30 Гц + CSP + log-variance**. ERD — **биологический маркер**, который CSP усиливает пространственно.\n\n| Канал | Правая рука MI | Ожидание |\n| --- | --- | --- |\n| C4 | Contralateral | ERD ↓ power |\n| C3 | Ipsilateral | ERS ↑ power (часто слабее) |\n\n**Вывод:** ERD — **снижение синхронности**, не «больше электричества». Чистый MI без EMG критичен для декодера."}, {"id": "P300", "title": "Детекция P300 (ERP)", "level": 3, "tag": "Ритмы и паттерны", "color": "#00e676", "emoji": "🎯", "difficulty": "★★☆ Средний", "description": "## Условие\n\n**Oddball paradigm:** редкий target (15%) vs frequent standard (85%). Нужно извлечь **P300** — положительный пик **300–500 мс** после стимула на **Pz/Cz**.\n\n**Параметры:**\n- Фильтр: 0.5–10 Гц (Butterworth)\n- Эпоха: -0.2 … +0.8 с\n- Baseline: -0.2 … 0 с\n\n**Задачи:**\n1. Усредните ERP по target vs standard trials.\n2. Найдите latency и amplitude P300 (максимум в окне 300–500 мс).\n3. Почему для P300 нужен **mastoid reference**, а не average ref?", "solution": "## Шаг 1. ERP extraction\n\n```python\nimport numpy as np\nimport mne\n\n# epochs: mne.Epochs, event_id={\"target\": 1, \"standard\": 2}\nepochs.filter(0.5, 10., fir_design=\"firwin\")\nevoked_target = epochs[\"target\"].average()\nevoked_std = epochs[\"standard\"].average()\ndiff = mne.combine_evoked([evoked_target, evoked_std], weights=[1, -1])\n\n# P300 window\ntimes = diff.times\ndata_pz = diff.copy().pick(\"Pz\").data[0]\nwin = (times >= 0.3) & (times <= 0.5)\np300_amp = data_pz[win].max()\np300_lat = times[win][np.argmax(data_pz[win])]\nprint(f\"P300: {p300_amp*1e6:.1f} µV @ {p300_lat*1000:.0f} ms\")\n```\n\n## Шаг 2. Reference\n\n| Reference | P300 | Почему |\n| --- | --- | --- |\n| Mastoid (M1/M2) | Стабильный baseline | Якорь на кости, мало корковой активности |\n| Average ref | Смещает все каналы | P300 «размазывается» по montage |\n\n## Шаг 3. Nimbus pipeline\n\nP300 speller → **NimbusQDA** на ERP-амplitude 300–500 мс, 0.5–10 Гц, class-specific covariance.\n\n**Вывод:** P300 — **когнитивный ERP**, не ритм. Полоса 0.5–10 Гц сохраняет медленную волну."}, {"id": "CSP", "title": "Common Spatial Patterns (CSP)", "level": 4, "tag": "Машинное обучение", "color": "#ffd740", "emoji": "🧩", "difficulty": "★★★ Продвинутый", "description": "## Условие\n\nДатасет **BNCI 2014-001**, 2 класса MI (левая/правая рука). Нужно извлечь **CSP** признаки в полосе 8–30 Гц.\n\n**Задачи:**\n1. Fit CSP **только на train fold** (6 компонент → 12 log-variance features).\n2. Объясните: $\\mathbf{w}^T \\Sigma_1 \\mathbf{w}$ vs $\\mathbf{w}^T \\Sigma_2 \\mathbf{w}$.\n3. Почему CSP fit на **всех данных** — data leakage?\n\n### Формула\n\nCSP находит фильтры $\\mathbf{W}$, максимизирующие дисперсию для одного класса и минимизирующие для другого.", "solution": "## Шаг 1. Pipeline (MNE + scikit-learn)\n\n```python\nimport numpy as np\nfrom mne.decoding import CSP\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.model_selection import cross_val_score\nfrom sklearn.discriminant_analysis import LinearDiscriminantAnalysis\n\nn_components = 6\ncsp = CSP(n_components=n_components, reg=None, log=True, norm_trace=False)\nclf = LinearDiscriminantAnalysis()\npipe = Pipeline([(\"csp\", csp), (\"lda\", clf)])\n\n# X: (n_trials, n_channels, n_times), y: labels\n# Fit ONLY on X_train, y_train\npipe.fit(X_train, y_train)\nscore = pipe.score(X_test, y_test)\nprint(f\"Accuracy: {score:.1%}\")\n\n# Spatial patterns\npatterns = csp.patterns_  # (n_components, n_channels)\n```\n\n## Шаг 2. Математика\n\nОбобщённая задача собственных значений:\n$$\\Sigma_1 \\mathbf{w} = \\lambda \\Sigma_2 \\mathbf{w}$$\n\nФильтры с $\\lambda$ близким к 0 → **высокая** дисперсия class 1, **низкая** class 2.\n\n## Шаг 3. Data leakage\n\n```\n❌ [CSP fit ALL] → [CV split] → accuracy завышена\n✅ [CV split] → [CSP fit train fold only] → [test fold]\n```\n\nCSP «видит» test trials → spatial filter **подгоняется** под тест.\n\n**Вывод:** CSP — **supervised spatial filter** для MI; log-variance — стандартная фича для NimbusLDA."}, {"id": "XDAWN", "title": "xDAWN spatial filtering", "level": 4, "tag": "Машинное обучение", "color": "#ffd740", "emoji": "✨", "difficulty": "★★★ Продвинутый", "description": "## Условие\n\nДля **P300 speller** (ERP) CSP не оптимален — нужен **xDAWN**: фильтр, максимизирующий **SNR ERP** относительно фона.\n\n**Задачи:**\n1. Примените `Xdawn` (MNE) с `n_filters=4` на train data.\n2. Сравните topomap xDAWN vs raw ERP.\n3. Когда xDAWN лучше CSP? Когда хуже?\n\n### Контекст\n\nxDAWN — **supervised** метод для **evoked responses** (P300, N170), CSP — для **oscillations** (MI, ERD).", "solution": "## Шаг 1. xDAWN в MNE\n\n```python\nfrom mne.preprocessing import Xdawn\nfrom mne import Epochs\n\n# epochs: target vs non-target, already filtered 0.5-10 Hz\nxdawn = Xdawn(n_filters=4, signal_cov=None, correct_overlap=\"auto\")\nxdawn.fit(epochs)\n\n# Transform\nepochs_xd = xdawn.apply(epochs)\nevoked = epochs_xd[\"target\"].average()\n\n# Filters enhance target ERP at ~300 ms\nfilters = xdawn.filters_  # (n_filters, n_channels)\n```\n\n## Шаг 2. xDAWN vs CSP\n\n| Метод | Парадигма | Оптимизирует |\n| --- | --- | --- |\n| xDAWN | ERP (P300) | SNR evoked response |\n| CSP | MI (ERD) | Ratio of band variances |\n\n## Шаг 3. Pipeline\n\n```\n[filter 0.5-10 Hz] → [xDAWN fit train] → [epochs transform]\n  → [mean amplitude 300-500 ms] → [NimbusQDA]\n```\n\nxDAWN **хуже** для MI, потому что ERD — **oscillatory desync**, не time-locked peak.\n\n**Вывод:** xDAWN — spatial filter **для ERP**; обязателен fit только на train."}, {"id": "BAYES", "title": "Байесовский BCI (NimbusLDA/QDA)", "level": 5, "tag": "Байесовский вывод", "color": "#69f0ae", "emoji": "📐", "difficulty": "★★★ Продвинутый", "description": "## Условие\n\nПосле CSP+log-variance (12 features) нужен **классификатор с posterior** для MI-BCI.\n\n**Модели Nimbus:**\n| Модель | Ковариация | Когда |\n| --- | --- | --- |\n| NimbusLDA | Shared | MI, well-separated |\n| NimbusQDA | Class-specific | P300, overlapping |\n\n**Задачи:**\n1. Обучите NimbusLDA, получите `predict_proba`.\n2. Реализуйте **abstention**: если max posterior < 0.6 → «не уверен».\n3. Почему posterior лучше argmax для **real-time feedback**?", "solution": "## Шаг 1. Nimbus inference\n\n```python\nfrom nimbus_bci import NimbusLDA\nimport numpy as np\n\n# X_train: (n_trials, n_features), y_train: labels\nmodel = NimbusLDA()\nmodel.fit(X_train, y_train)\n\nproba = model.predict_proba(X_test)  # (n_trials, n_classes)\npred = proba.argmax(axis=1)\nconfidence = proba.max(axis=1)\n\n# Abstention\nthreshold = 0.6\nuncertain = confidence < threshold\nprint(f\"Abstained: {uncertain.mean():.1%} trials\")\n```\n\n## Шаг 2. Posterior vs argmax\n\n| Подход | Feedback | Риск |\n| --- | --- | --- |\n| argmax | Всегда команда | Ложные срабатывания при 51% |\n| posterior + threshold | Команда только при уверенности | Меньше ошибок, больше «no decision» |\n\n## Шаг 3. Model selection\n\n- **MI (4-class, CSP):** NimbusLDA — быстрее, меньше параметров\n- **P300 (overlapping ERP):** NimbusQDA — class-specific covariance\n- **Long session drift:** NimbusSTS — adaptive state-space\n\n**Вывод:** Bayesian BCI = **posterior + uncertainty**; abstention — production guardrail."}, {"id": "PIPE1", "title": "P300 speller pipeline", "level": 6, "tag": "Пайплайны Nimbus", "color": "#448aff", "emoji": "⌨", "difficulty": "★★★ Продвинутый", "description": "## Условие\n\nСоберите **полный pipeline** P300 row-column speller (6×6, 36 символов).\n\n**Цепочка Nimbus Studio:**\n```\n[load] → [filter 0.5-10] → [epochs -0.2..0.8]\n  → [xDAWN] → [ERP 300-500ms] → [NimbusQDA] → [spell]\n```\n\n**Задачи:**\n1. Опишите **flash sequence** и как накапливаются scores по rows/columns.\n2. Рассчитайте **ITR** (bits/min) при accuracy 90%, 2.5 s/trial.\n3. Какие 3 узла **нельзя** менять местами?", "solution": "## Шаг 1. Speller logic\n\n```python\nimport numpy as np\n\ndef update_scores(scores, flash_idx, is_row, posterior_target):\n    # scores: 6 rows + 6 cols = 12 scores\n    if is_row:\n        scores[flash_idx] += posterior_target\n    else:\n        scores[6 + flash_idx] += posterior_target\n    return scores\n\ndef decode_char(row_scores, col_scores):\n    r = np.argmax(row_scores)\n    c = np.argmax(col_scores)\n    return r, c  # index into 6x6 grid\n```\n\n## Шаг 2. ITR\n\n$$ITR = \\left[ \\log_2 N + P \\log_2 P + (1-P) \\log_2 \\frac{1-P}{N-1} \\right] \\cdot \\frac{60}{T}$$\n\nПри $N=36$, $P=0.9$, $T=2.5$ s:\n$$ITR \\approx 40.5 \\text{ bits/min}$$\n\n## Шаг 3. Порядок узлов\n\n| ❌ Нельзя | Почему |\n| --- | --- |\n| xDAWN до filter | ERP smeared by broadband noise |\n| QDA до feature extraction | Raw EEG не в feature space |\n| Normalization fit on test | Scale leakage |\n\n**Правильный порядок:**\n```\nfilter → epoch → xDAWN (train) → ERP feature → z-score (train params) → QDA\n```\n\n**Вывод:** P300 speller = **ERP pipeline + Bayesian decoder + row/col accumulation**."}, {"id": "PIPE2", "title": "Adaptive MI pipeline", "level": 6, "tag": "Пайплайны Nimbus", "color": "#448aff", "emoji": "🔄", "difficulty": "★★★ Продвинутый", "description": "## Условие\n\nMI-BCI сессия **45 минут**. Accuracy падает с 78% до 62% — **neural drift**.\n\n**Pipeline:**\n```\n[CSP train calib] → [NimbusLDA] → [online feedback]\n  → [drift monitor] → [partial_fit / NimbusSTS]\n```\n\n**Задачи:**\n1. Когда переключаться на **NimbusSTS**?\n2. Реализуйте **rolling calibration**: partial_fit каждые 20 trials.\n3. Почему **пересчёт CSP online** опасен?", "solution": "## Шаг 1. Drift detection\n\n```python\nfrom collections import deque\nimport numpy as np\n\nwindow = deque(maxlen=20)\nbaseline_acc = 0.78\n\ndef check_drift(recent_correct):\n    window.append(recent_correct)\n    if len(window) == 20:\n        acc = np.mean(window)\n        if acc < baseline_acc - 0.10:\n            return \"DRIFT_DETECTED\"\n    return \"OK\"\n```\n\n## Шаг 2. Adaptive strategies\n\n| Стратегия | Что адаптируется | Риск |\n| --- | --- | --- |\n| `partial_fit` (LDA) | Decision boundary | Med |\n| NimbusSTS | Latent state + decoder | Low (designed for drift) |\n| Re-fit CSP online | Spatial filters | **High** — unstable, non-causal |\n\n## Шаг 3. NimbusSTS switch\n\nПереключайтесь когда:\n- Session > 30 min\n- Confidence trend ↓ over 10+ trials\n- Accuracy drop > 10% from calibration\n\n```python\nfrom nimbus_bci import NimbusSTS\n\nsts = NimbusSTS()\nsts.fit(X_calib, y_calib)\n\nfor chunk in stream:\n    pred, proba, state = sts.predict_with_state(chunk)\n    if proba.max() < 0.5:\n        trigger_recalibration()\n```\n\n**Вывод:** Адаптируйте **decision boundary** (LDA/STS), не **spatial filter** (CSP) mid-session."}, {"id": "SSVEP", "title": "SSVEP + Canonical Correlation Analysis", "level": 7, "tag": "Нелинейные методы", "color": "#ff4081", "emoji": "👀", "difficulty": "★★★★ Эксперт", "description": "## Условие\n\nSSVEP: 3 мигания **15, 17, 19 Гц**. Субъект смотрит на 17 Гц.\n\n**Задачи:**\n1. Реализуйте **CCA** между EEG и reference signals $[\\sin(2\\pi f t), \\cos(2\\pi f t)]$.\n2. Добавьте **2-ю гармонику** (2f) — почему она важна?\n3. Сравните CCA vs bandpower @ target frequency.\n\n### Биология\n\nSSVEP — **резонанс** зрительной коры (V1/V2) на частоту мерцания, не просто «пик в FFT».", "solution": "## Шаг 1. CCA (scikit-learn)\n\n```python\nimport numpy as np\nfrom sklearn.cross_decomposition import CCA\n\nfreqs = [15, 17, 19]\nsfreq = 250\nduration = 2.0\nt = np.arange(0, duration, 1/sfreq)\n\ndef ref_signals(f, t):\n    refs = []\n    for h in [1, 2]:  # fundamental + 2nd harmonic\n        refs.append(np.sin(2 * np.pi * h * f * t))\n        refs.append(np.cos(2 * np.pi * h * f * t))\n    return np.column_stack(refs)\n\n# X: (n_samples, n_channels) — one SSVEP epoch\nscores = {}\nfor f in freqs:\n    Y = ref_signals(f, t)\n    cca = CCA(n_components=1)\n    cca.fit(X, Y)\n    X_c, Y_c = cca.transform(X, Y)\n    scores[f] = np.corrcoef(X_c[:, 0], Y_c[:, 0])[0, 1]\n\npred_freq = max(scores, key=scores.get)\nprint(f\"Detected: {pred_freq} Hz (scores: {scores})\")\n```\n\n## Шаг 2. Гармоники\n\nV1 генерирует **nonlinear response** → энергия на 2f, 3f. CCA с 2f ↑ SNR для низких частот (< 20 Гц).\n\n## Шаг 3. CCA vs bandpower\n\n| Метод | Плюс | Мinus |\n| --- | --- | --- |\n| Bandpower @ f | Простой | Чувствителен к шуму, нет phase |\n| CCA | Phase-aware, multichannel | Медленнее, нужен чистый ref |\n\nNimbus: **NimbusLDA/QDA** на CCA features или bandpower (f, 2f, 3f).\n\n**Вывод:** SSVEP = **phase-locked resonance**; CCA — стандартный нелинейный детектор."}, {"id": "EEGNET", "title": "EEGNet (PyTorch)", "level": 8, "tag": "Нейронные сети", "color": "#e040fb", "emoji": "🧠", "difficulty": "★★★★ Эксперт", "description": "## Условие\n\nОбучите **EEGNet** для 4-class MI (BNCI 2014-001).\n\n**Архитектура (упрощённо):**\n- Temporal conv → Depthwise spatial conv → Separable conv → Dense\n\n**Задачи:**\n1. Подготовьте данные: `(n_trials, 1, n_channels, n_times)`, bandpass 4–38 Гц.\n2. Train/val/test split **по sessions**, не по trials.\n3. Почему split by trials — **leakage**? Как EEGNet сравнить честно с CSP+LDA?", "solution": "## Шаг 1. Data prep\n\n```python\nimport torch\nimport torch.nn as nn\nfrom braindecode.models import EEGNetv4\n\n# X: (n_trials, n_channels, n_times) after bandpass 4-38 Hz\nX = X[:, np.newaxis, :, :]  # add channel dim for EEGNet\nX_tensor = torch.FloatTensor(X)\ny_tensor = torch.LongTensor(y)\n\nmodel = EEGNetv4(n_chans=22, n_outputs=4, n_times=1000, final_conv_length=\"auto\")\noptimizer = torch.optim.Adam(model.parameters(), lr=1e-3)\ncriterion = nn.CrossEntropyLoss()\n```\n\n## Шаг 2. Training loop (sketch)\n\n```python\nfor epoch in range(100):\n    model.train()\n    optimizer.zero_grad()\n    out = model(X_train)\n    loss = criterion(out, y_train)\n    loss.backward()\n    optimizer.step()\n\nmodel.eval()\nwith torch.no_grad():\n    acc = (model(X_test).argmax(1) == y_test).float().mean()\n```\n\n## Шаг 3. Fair comparison\n\n| Split | Leakage? |\n| --- | --- |\n| Random trials | ✓ same session → correlated |\n| By session/subject | ✗ честная generalization |\n\nСравнение с CSP+LDA:\n- **Same splits**, same bandpass\n- Report **mean ± std** over subjects (LOSO)\n- EEGNet может ↑ accuracy, но ↓ interpretability\n\n**Вывод:** EEGNet — end-to-end; честная оценка требует **session-level CV**."}, {"id": "RT", "title": "Real-time OpenBCI streaming", "level": 9, "tag": "Real-Time системы", "color": "#ff6e40", "emoji": "📡", "difficulty": "★★★★ Эксперт", "description": "## Условие\n\nРазверните **online MI-BCI** с OpenBCI Cyton (8 каналов, 250 Hz).\n\n**Требования:**\n- Latency end-to-end < 100 ms\n- Causal filter (filtfilt **запрещён**)\n- Chunk-based inference (250 samples = 1 s)\n\n**Задачи:**\n1. Подключите LSL stream → ring buffer → causal bandpass.\n2. Примените **pre-trained** CSP+LDA/NimbusLDA на каждый chunk.\n3. Что делать при `confidence < 0.5` три chunks подряд?\n\n### Hardware\n\nOpenBCI → USB/serial → Python (`brainflow` или `pylsl`).", "solution": "## Шаг 1. Causal streaming\n\n```python\nimport numpy as np\nfrom scipy.signal import lfilter, butter\nfrom collections import deque\n\nsfreq = 250\nchunk_size = 250  # 1 second\nbuffer = deque(maxlen=4 * sfreq)  # 4 s history for CSP epoch\n\nb, a = butter(4, [8, 30], btype=\"bandpass\", fs=sfreq)\n\n# Pre-trained from offline calibration\n# csp_filters, lda_model loaded from disk\n\nzi = np.zeros(max(len(a), len(b)) - 1)\n\ndef process_chunk(raw_chunk):\n    global zi\n    filtered, zi = lfilter(b, a, raw_chunk, zi=zi)\n    buffer.extend(filtered)\n    if len(buffer) >= 2 * sfreq:\n        epoch = np.array(buffer)[-2*sfreq:]  # last 2 s\n        features = extract_csp_logvar(epoch, csp_filters)\n        proba = lda_model.predict_proba(features.reshape(1, -1))[0]\n        return proba.argmax(), proba.max()\n    return None, 0.0\n```\n\n## Шаг 2. Latency budget\n\n| Stage | ms |\n| --- | --- |\n| Acquisition buffer | 1000 (1 s epoch) |\n| Filter + CSP | 5–15 |\n| NimbusLDA | 10–25 |\n| **Total** | ~1020–1040 ms |\n\n→ Для < 100 ms нужен **shorter epoch** или **overlap-add** с trade-off SNR.\n\n## Шаг 3. Fallback policy\n\n```python\nlow_conf_streak = 0\n\ndef on_prediction(pred, conf):\n    global low_conf_streak\n    if conf < 0.5:\n        low_conf_streak += 1\n        if low_conf_streak >= 3:\n            send_feedback(\"RECALIBRATE\")\n            pause_feedback()\n    else:\n        low_conf_streak = 0\n        send_feedback(pred)\n```\n\n**Вывод:** Real-time = **causal processing + pre-trained model + confidence gating + drift monitoring**."}];
+    const LEVEL_NAMES = {"1": "Основы нейросигналов", "2": "Обработка ЭЭГ", "3": "Ритмы и паттерны", "4": "Машинное обучение", "5": "Байесовский вывод", "6": "Пайплайны Nimbus", "7": "Нелинейные методы", "8": "Нейронные сети", "9": "Real-Time системы"};
+    const TAG_COLORS = {"Нейрофизиология": "#00e5ff", "Обработка сигналов": "#7c4dff", "Ритмы и паттерны": "#00e676", "Машинное обучение": "#ffd740", "Байесовский вывод": "#69f0ae", "Пайплайны Nimbus": "#448aff", "Нелинейные методы": "#ff4081", "Нейронные сети": "#e040fb", "Real-Time системы": "#ff6e40"};
+
+    let selectedId = null;
+    let tab = "problem";
+    const solved = JSON.parse(localStorage.getItem("nimbus-bci-solved") || "{{}}");
+
+    function saveSolved() {{
+      localStorage.setItem("nimbus-bci-solved", JSON.stringify(solved));
+    }}
+
+    function renderContent(text) {{
+      const parts = text.split(/(```[\s\S]*?```)/g);
+      const frag = document.createDocumentFragment();
+      parts.forEach(part => {{
+        if (part.startsWith("```")) {{
+          const pre = document.createElement("pre");
+          pre.textContent = part.replace(/^```\w*\n?/, "").replace(/```$/, "");
+          frag.appendChild(pre);
+          return;
+        }}
+        part.split("\n").forEach(line => {{
+          if (line.startsWith("## ")) {{
+            const h = document.createElement("h3");
+            h.textContent = line.slice(3);
+            frag.appendChild(h);
+          }} else if (line.startsWith("### ")) {{
+            const h = document.createElement("h4");
+            h.textContent = line.slice(4);
+            frag.appendChild(h);
+          }} else if (line.startsWith("- ")) {{
+            const li = document.createElement("li");
+            li.textContent = line.slice(2);
+            frag.appendChild(li);
+          }} else if (line.startsWith("| ")) {{
+            const d = document.createElement("div");
+            d.className = "table-line";
+            d.textContent = line;
+            frag.appendChild(d);
+          }} else if (line.trim() === "") {{
+            frag.appendChild(document.createElement("br"));
+          }} else {{
+            const p = document.createElement("p");
+            p.innerHTML = line
+              .replace(/\*\*(.+?)\*\*/g, "<strong style=\"color:#e6edf3\">$1</strong>")
+              .replace(/`([^`]+)`/g, '<code>$1</code>');
+            frag.appendChild(p);
+          }}
+        }});
+      }});
+      return frag;
+    }}
+
+    function renderDots() {{
+      const el = document.getElementById("level-dots");
+      el.innerHTML = "";
+      for (let l = 1; l <= 9; l++) {{
+        const all = PROBLEMS.filter(p => p.level === l);
+        const done = all.every(p => solved[p.id]);
+        const d = document.createElement("div");
+        d.className = "dot" + (done && all.length ? " done" : "");
+        d.title = "Уровень " + l;
+        el.appendChild(d);
+      }}
+    }}
+
+    function renderSidebar() {{
+      const el = document.getElementById("sidebar");
+      el.innerHTML = "";
+      const levels = [...new Set(PROBLEMS.map(p => p.level))].sort((a,b) => a-b);
+      levels.forEach(level => {{
+        const head = document.createElement("div");
+        head.className = "level-head";
+        head.innerHTML = '<span class="level-badge">Ур.' + level + '</span>' + (LEVEL_NAMES[level] || "");
+        el.appendChild(head);
+        PROBLEMS.filter(p => p.level === level).forEach(p => {{
+          const item = document.createElement("div");
+          item.className = "prob-item" + (selectedId === p.id ? " active" : "");
+          item.style.borderLeftColor = selectedId === p.id ? p.color : "transparent";
+          item.innerHTML =
+            '<div class="prob-row"><span>' + p.emoji + '</span>' +
+            '<span class="prob-title">' + p.title + '</span>' +
+            (solved[p.id] ? '<span style="color:#00c853">✓</span>' : '') +
+            '</div><div class="prob-meta">' +
+            '<span class="tag" style="color:' + p.color + ';background:' + p.color + '18;border:1px solid ' + p.color + '40">' + p.tag + '</span>' +
+            '<span style="font-size:9px;color:#8b949e">' + p.difficulty + '</span>' +
+            '<span style="font-size:9px;color:#8b949e;background:#21262d;padding:1px 5px;border-radius:3px;margin-left:auto">' + p.id + '</span>' +
+            '</div>';
+          item.onclick = () => {{ selectedId = p.id; tab = "problem"; render(); }};
+          el.appendChild(item);
+        }});
+      }});
+    }}
+
+    function renderMain() {{
+      const el = document.getElementById("main");
+      const prob = PROBLEMS.find(p => p.id === selectedId);
+      if (!prob) {{
+        el.innerHTML = '<div class="empty"><div style="font-size:48px">🧠</div>' +
+          '<h2>Выбери задачу из списка</h2>' +
+          '<p>9 уровней сложности · от нейрофизиологии до real-time BCI-системы</p>' +
+          '<div class="tags-row">' +
+          Object.entries(TAG_COLORS).map(([t,c]) =>
+            '<span class="tag" style="color:' + c + ';background:' + c + '18;border:1px solid ' + c + '40">' + t + '</span>'
+          ).join("") + '</div></div>';
+        return;
+      }}
+      el.innerHTML = "";
+      const wrap = document.createElement("div");
+      wrap.innerHTML =
+        '<div class="prob-header"><div class="prob-header-inner">' +
+        '<div class="prob-icon" style="background:' + prob.color + '20;border:2px solid ' + prob.color + '60">' + prob.emoji + '</div>' +
+        '<div style="flex:1"><div class="prob-badges">' +
+        '<span class="badge">' + prob.id + '</span>' +
+        '<span class="tag" style="color:' + prob.color + ';background:' + prob.color + '18;border:1px solid ' + prob.color + '40">' + prob.tag + '</span>' +
+        '<span class="badge">Уровень ' + prob.level + ' · ' + prob.difficulty + '</span>' +
+        '</div><h2 class="prob-h2">' + prob.title + '</h2></div>' +
+        '<button class="btn-solved' + (solved[prob.id] ? " done" : "") + '" id="btn-solved">' +
+        (solved[prob.id] ? "✓ Решено" : "○ Отметить") + '</button></div></div>' +
+        '<div class="tabs"><button class="tab' + (tab === "problem" ? " active" : "") + '" data-tab="problem">📋 Задача</button>' +
+        '<button class="tab' + (tab === "solution" ? " active" : "") + '" data-tab="solution" style="border-color:' + (tab === "solution" ? prob.color : "transparent") + '">💡 Ход решения</button></div>' +
+        '<div class="content" id="prob-content"></div>';
+      el.appendChild(wrap);
+      document.getElementById("btn-solved").onclick = () => {{
+        solved[prob.id] = !solved[prob.id];
+        saveSolved();
+        render();
+      }};
+      wrap.querySelectorAll(".tab").forEach(btn => {{
+        btn.onclick = () => {{ tab = btn.dataset.tab; renderMain(); renderSidebar(); renderDots(); }};
+        if (btn.dataset.tab === tab) btn.style.borderBottomColor = prob.color;
+      }});
+      const content = document.getElementById("prob-content");
+      content.appendChild(renderContent(tab === "problem" ? prob.description : prob.solution));
+    }}
+
+    function render() {{
+      document.getElementById("subtitle").textContent =
+        PROBLEMS.length + " задач · от нейрофизиологии до real-time систем";
+      renderDots();
+      renderSidebar();
+      renderMain();
+    }}
+
+    render();
+  </script>
+</body>
+</html>
