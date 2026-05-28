@@ -1,64 +1,81 @@
 import asyncio
 import logging
 import os
+from pathlib import Path
+
 from aiohttp import web
+
 from bot import main as bot_main
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
-async def start_bot():
-    """Starts the Telegram bot."""
+APP_ROOT = Path(__file__).resolve().parent / "nimbus-academy-app"
+
+
+async def start_bot() -> None:
     logger.info("Запуск бота научного сообщества...")
     try:
         await bot_main()
     except KeyboardInterrupt:
         logger.info("Бот остановлен пользователем")
-    except Exception as e:
-        logger.error(f"Ошибка запуска бота: {e}")
+    except Exception as exc:
+        logger.error("Ошибка запуска бота: %s", exc)
 
-async def health_check(request):
-    """Simple health check endpoint."""
+
+async def health_check(_request: web.Request) -> web.Response:
     return web.Response(text="Bot is running!")
 
-async def main_web_service():
-    """Main function to run the bot as a web service."""
-    # Start the bot in the background
+
+async def academy_index(_request: web.Request) -> web.FileResponse:
+    return web.FileResponse(APP_ROOT / "index.html")
+
+
+def setup_academy_routes(app: web.Application) -> None:
+    if not APP_ROOT.exists():
+        logger.warning("Nimbus Academy app folder not found: %s", APP_ROOT)
+        return
+
+    app.router.add_get("/", academy_index)
+    app.router.add_get("/index.html", academy_index)
+
+    for name in ("css", "js", "icons", "content"):
+        path = APP_ROOT / name
+        if path.exists():
+            app.router.add_static(f"/{name}", path)
+
+    for filename in ("manifest.json", "sw.js"):
+        file_path = APP_ROOT / filename
+        if file_path.exists():
+            app.router.add_get(f"/{filename}", lambda _r, p=file_path: web.FileResponse(p))
+
+
+async def main_web_service() -> None:
     asyncio.create_task(start_bot())
 
-    # Setup a simple web server for health checks (required by Render Web Service)
     app = web.Application()
-    app.router.add_get('/health', health_check)
+    setup_academy_routes(app)
+    app.router.add_get("/health", health_check)
 
-    # Обработка порта с защитой от $PORT
     port_env = os.getenv("PORT", "8000")
-    logger.info(f"Получен PORT из окружения: '{port_env}'")
-    
-    if port_env == '$PORT' or port_env == '$PORT' or not str(port_env).isdigit():
-        PORT = 8000
-        logger.warning(f"Неверный формат PORT ('{port_env}'), используем {PORT}")
+    if port_env in ("$PORT",) or not str(port_env).isdigit():
+        port = 8000
+        logger.warning("Неверный PORT (%r), используем %s", port_env, port)
     else:
-        try:
-            PORT = int(port_env)
-            logger.info(f"Используем PORT: {PORT}")
-        except (ValueError, TypeError):
-            PORT = 8000
-            logger.warning(f"Ошибка преобразования PORT ('{port_env}'), используем {PORT}")
-    
-    logger.info(f"Web Service будет доступен на порту: {PORT}")
+        port = int(port_env)
+
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, host="0.0.0.0", port=PORT)
+    site = web.TCPSite(runner, host="0.0.0.0", port=port)
     await site.start()
-    logger.info(f"Web Service запущен на http://0.0.0.0:{PORT}")
+    logger.info("Web + Nimbus Academy PWA: http://0.0.0.0:%s/", port)
 
-    # Keep the main task running indefinitely
     while True:
-        await asyncio.sleep(3600) # Sleep for an hour, or until interrupted
+        await asyncio.sleep(3600)
+
 
 if __name__ == "__main__":
     asyncio.run(main_web_service())

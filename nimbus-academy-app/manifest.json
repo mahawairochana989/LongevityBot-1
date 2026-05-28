@@ -1,0 +1,20 @@
+{
+  "name": "Nimbus Academy",
+  "short_name": "Nimbus",
+  "description": "Level 1 — нейрофизиология и EEG pipeline. Работает офлайн.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#080b16",
+  "theme_color": "#080b16",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
